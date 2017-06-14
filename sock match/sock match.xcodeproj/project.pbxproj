@@ -305,6 +305,7 @@
 				408E6B5F1EEF88180011C450 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
