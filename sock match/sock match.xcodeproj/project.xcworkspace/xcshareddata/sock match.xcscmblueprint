@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "69214BD79F2264738C7EF16D3E566BCBA076D728",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "69214BD79F2264738C7EF16D3E566BCBA076D728" : 9223372036854775807,
+    "267C17AB4D290CD9188BD4274E48C86BC20346B5" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "2EA86EB3-86F3-4DD1-9927-4B148DB717BD",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "69214BD79F2264738C7EF16D3E566BCBA076D728" : "SockMatch\/",
+    "267C17AB4D290CD9188BD4274E48C86BC20346B5" : "transal\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "sock match",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "sock match\/sock match.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/satvikb\/transal.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "267C17AB4D290CD9188BD4274E48C86BC20346B5"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/satvikb\/SockMatch.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "69214BD79F2264738C7EF16D3E566BCBA076D728"
+    }
+  ]
+}

@@ -59,7 +59,7 @@
     }
 }
 
--(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+-(void)touchesMoved:(NSSet<UITouch*> *)touches withEvent:(UIEvent *)event {
     
     if(!inAPair || mainSockInPair){
         UITouch *touch = [touches anyObject];

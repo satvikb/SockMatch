@@ -22,6 +22,7 @@
     
     CGRect convayorBeltRect;
     CGFloat beltMoveSpeed;
+    NSMutableArray <UIImageView*>* conveyorBeltTiles;
     
     CGRect pairSocksConvayorBelt;
     CGFloat pairSocksBeltMoveSpeed;
@@ -35,6 +36,8 @@
     UILabel* bottomTutorialLabel;
     
     int score;
+    
+    CGFloat _beltImagesSideExtra;
 }
 
 @end
@@ -115,22 +118,22 @@
     [self performSelector:@selector(removeFromView:) withObject:bottomTutorialLabel afterDelay:25];
     
     
-    [self scaleImage:[UIImage imageNamed:@"belt_3"] toSize:CGSizeMake(convayorBeltRect.size.width, convayorBeltRect.size.height)];
-    NSArray *imagesArray = [NSArray arrayWithObjects:[UIImage imageNamed:@"belt_2"], [UIImage imageNamed:@"belt_1"], [UIImage imageNamed:@"belt_0"], nil];
+    [self scaleImage:[UIImage imageNamed:@"beltPeice"] toSize:CGSizeMake(convayorBeltRect.size.width, convayorBeltRect.size.height)];
+    NSArray *imagesArray = [NSArray arrayWithObjects:[UIImage imageNamed:@"beltTile"], [UIImage imageNamed:@"beltTile"], [UIImage imageNamed:@"beltTile"], nil];
 //    NSArray *imagesArray = [NSArray arrayWithObjects:[self scaleImage:[UIImage imageNamed:@"belt_3"] toSize:CGSizeMake(convayorBeltRect.size.width, convayorBeltRect.size.height)], [self scaleImage:[UIImage imageNamed:@"belt_2"] toSize:CGSizeMake(convayorBeltRect.size.width, convayorBeltRect.size.height)], [self scaleImage:[UIImage imageNamed:@"belt_1"] toSize:CGSizeMake(convayorBeltRect.size.width, convayorBeltRect.size.height)], [self scaleImage:[UIImage imageNamed:@"belt_0"] toSize:CGSizeMake(convayorBeltRect.size.width, convayorBeltRect.size.height)], nil];
     
-    UIImageView* animatedImageView = [[UIImageView alloc] initWithFrame: convayorBeltRect];
-    animatedImageView.animationImages = imagesArray;
-    animatedImageView.animationDuration = 1.5f;
-    animatedImageView.animationRepeatCount = 0;
+//    UIImageView* animatedImageView = [[UIImageView alloc] initWithFrame: convayorBeltRect];
+//    animatedImageView.animationImages = imagesArray;
+//    animatedImageView.animationDuration = 1.5f;
+//    animatedImageView.animationRepeatCount = 0;
 //    animatedImageView.layer.borderWidth = 2;
-//    animatedImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-    
-    animatedImageView.contentMode = UIViewContentModeScaleAspectFill;
-    animatedImageView.layer.magnificationFilter = kCAFilterNearest;
-    [animatedImageView startAnimating];
-    [self.view addSubview: animatedImageView];
-    
+//    animatedImageView.layer.borderColor = [UIColor grayColor].CGColor;
+//
+//    animatedImageView.contentMode = UIViewContentModeScaleAspectFit;//UIViewContentModeScaleAspectFill;
+//    animatedImageView.layer.magnificationFilter = kCAFilterNearest;
+//    [animatedImageView startAnimating];
+//    [self.view addSubview: animatedImageView];
+    conveyorBeltTiles = [self createConveyorBelt:convayorBeltRect];
     
     UIImageView* pairSockBelt = [[UIImageView alloc] initWithFrame: pairSocksConvayorBelt];
     pairSockBelt.animationImages = imagesArray;
@@ -152,21 +155,45 @@
     [self.view addSubview:pairBeltPackageImage];
 }
 
-- (UIImage*) scaleImage:(UIImage*)image toSize:(CGSize)newSize {
-//    CGSize scaledSize = newSize;
-//    float scaleFactor = 1.0;
-//    if( image.size.width > image.size.height ) {
-//        scaleFactor = image.size.width / image.size.height;
-//        scaledSize.width = newSize.width;
-//        scaledSize.height = newSize.height;// / scaleFactor;
-//    }
-//    else {
-//        scaleFactor = image.size.height / image.size.width;
-//        scaledSize.height = newSize.height;
-//        scaledSize.width = newSize.width;// / scaleFactor;
-//    }
+-(NSMutableArray*) createConveyorBelt:(CGRect)frame {
+    NSMutableArray <UIImageView*>* beltTiles = [[NSMutableArray alloc] init];
     
+    UIImage* beltTileImage = [UIImage imageNamed:@"beltTile"];
+    
+    CGFloat aspectRatio = frame.size.height / beltTileImage.size.height;
+    CGFloat imageWidth = beltTileImage.size.width*aspectRatio;
+    
+    int numOfBeltTiles = (frame.size.width / imageWidth)+5;
+    NSLog(@"tiles %i %f %f", numOfBeltTiles, aspectRatio, imageWidth);
+    
+    _beltImagesSideExtra = (numOfBeltTiles*imageWidth);//-frame.size.width;
+    
+    for(int i = 0; i < numOfBeltTiles; i++){
+        UIImageView* beltTile = [[UIImageView alloc] initWithImage:beltTileImage];
+        beltTile.frame = CGRectMake(frame.origin.x+(i*imageWidth), frame.origin.y, imageWidth, frame.size.height);
+//        beltTile.layer.borderWidth = 2;
+//        beltTile.layer.borderColor = [UIColor whiteColor].CGColor;
+//        beltTile = UIViewContentModeScaleAspectFit;//UIViewContentModeScaleAspectFill;
+        beltTile.layer.magnificationFilter = kCAFilterNearest;
+        beltTile.tag = i;
+        [self.view addSubview:beltTile];
+        [beltTiles addObject:beltTile];
+        
+        NSLog(@"Created belt tile %i %@", i, NSStringFromCGRect(beltTile.frame));
+    }
+    
+    return beltTiles;
+}
+
+
+/*
+ INSEAD OF RESIZING THE IMAGE TO TILE IT, JUST CREATE A IMAGE SET WITH ACTUAL 1X 2X AND 3X RESOLUTIONS.
+ SO THEN PIXEL ART IS NOT MESSED UP WHEN RESIZED.
+ */
+
+- (UIImage*) scaleImage:(UIImage*)image toSize:(CGSize)newSize {
     UIGraphicsBeginImageContextWithOptions( newSize, NO, 1.0 );
+    
     CGRect scaledImageRect = CGRectMake( 0.0, 0.0, newSize.width, newSize.height );
     [image drawInRect:scaledImageRect];
     UIImage* scaledImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -176,6 +203,7 @@
 }
 
 -(void) gameFrame:(CADisplayLink*)tmr {
+    [self animateBelt:tmr.duration];
     [self updateSocksOnBeltWithDelta:tmr.duration];
     
     generateSockTimer += tmr.duration;
@@ -183,6 +211,26 @@
     if(generateSockTimer >= timeToGenerateSock){
         [self generateSock];
         generateSockTimer = 0;
+    }
+}
+
+-(void)animateBelt:(CGFloat)delta {
+//    for(int i = 0; i < )
+    for (UIImageView* img in conveyorBeltTiles) {
+        CGFloat propMoveX = beltMoveSpeed/100.0;
+        CGFloat moveX = [self propX:propMoveX];
+        
+        img.frame = CGRectOffset(img.frame, -moveX*delta, 0);
+        
+        if(img.frame.origin.x == -img.frame.size.width){
+            CGRect f = img.frame;
+            f.origin.x = _beltImagesSideExtra;
+            img.frame = f;
+        }else if(img.frame.origin.x < -img.frame.size.width){
+            CGRect f = img.frame;
+            f.origin.x = _beltImagesSideExtra+(img.frame.origin.x-img.frame.size.width);
+            img.frame = f;
+        }
     }
 }
 
@@ -319,10 +367,9 @@
         bool onBelt = CGRectContainsPoint(convayorBeltRect, p);
         s.onConvayorBelt = onBelt;
         
-        if(!onBelt){
-            bool onPairBelt = CGRectContainsPoint(pairSocksConvayorBelt, p);
-            s.onPairConvayorBelt = onPairBelt;
-        }
+        bool onPairBelt = CGRectContainsPoint(pairSocksConvayorBelt, p);
+        s.onPairConvayorBelt = onPairBelt;
+        
         // does not have to be out of the best to check for pairs (directly match on the belt)
 //        if(onBelt == false){
             // check for sock pairs

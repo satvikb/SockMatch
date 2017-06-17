@@ -10,9 +10,9 @@
 
 @implementation Functions
 
-const CGFloat SmallSockPropSize = 0.1;
-const CGFloat MediumSockPropSize = 0.15;
-const CGFloat LargeSockPropSize = 0.2;
+const CGFloat SmallSockPropSize = 0.075;
+const CGFloat MediumSockPropSize = 0.1235;
+const CGFloat LargeSockPropSize = 0.15;
 
 + (int)randomNumberBetween:(int)min maxNumber:(int)max {
     return arc4random_uniform(max - min + 1) + min;
