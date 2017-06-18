@@ -37,12 +37,13 @@
     UILabel* scoreLabel;
     
     UIView* greenLight;
-    UIView* redLight;
     
     UILabel* tutorialLabel;
     UILabel* bottomTutorialLabel;
     
     int score;
+    int lives;
+    NSMutableArray <UIImageView*>* lifeLights;
     
     CGFloat _beltImagesSideExtra;
     
@@ -69,6 +70,8 @@
 
 -(void)setupGameValues {
     score = 0;
+    lives = 3;
+    lifeLights = [[NSMutableArray alloc] init];
     timeToGenerateSock = 1.5;
     generateSockTimer = 0;
     sockMatchThreshold = [self propX:0.06];
@@ -88,7 +91,12 @@
 }
 
 -(void)createUI {
-    scoreLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.15, 0.05, 0.7, 0.1)]];
+    UIView* topBackground = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 1, 0.15)]];
+    topBackground.backgroundColor = [UIColor colorWithRed:0.9960784314 green:0.8549019608 blue:0.1176470588 alpha:1];
+    topBackground.layer.zPosition = -50;
+    [self.view addSubview:topBackground];
+    
+    scoreLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.6, 0.05, 0.3, 0.1)]];
     scoreLabel.layer.borderColor = [UIColor blackColor].CGColor;
     scoreLabel.layer.borderWidth = 2;
     scoreLabel.textAlignment = NSTextAlignmentCenter;
@@ -99,11 +107,19 @@
     
     CGSize lightSize = [self propToRect:CGRectMake(0, 0.05, 0.15, 0.1)].size;
     
-    CGPoint redLightPos = [self propToRect:CGRectMake(0, 0.05, 0, 0)].origin;
-    redLight = [[UIView alloc] initWithFrame: CGRectMake(redLightPos.x, redLightPos.y, lightSize.width, lightSize.width)];
-    redLight.layer.cornerRadius = lightSize.width/2;
-    redLight.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:redLight];
+//    CGPoint startPoint = CGPointMake(0, 0);
+    for(int i = 0; i < 3; i++){
+        CGRect lightRect = [self propToRect:CGRectMake(0.05+(i*0.16), 0.025, 0.15, 0)];
+        UIImageView* rl = [[UIImageView alloc] initWithFrame: CGRectMake(lightRect.origin.x, lightRect.origin.y, lightRect.size.width, lightRect.size.width)];
+        rl.layer.zPosition = 50;
+        rl.contentMode = UIViewContentModeScaleAspectFill;
+        rl.layer.magnificationFilter = kCAFilterNearest;
+        
+        [rl setImage:[UIImage imageNamed:@"redlightoff"]];
+        [self.view addSubview:rl];
+        [lifeLights addObject:rl];
+        NSLog(@"added light %i", i);
+    }
     
     CGPoint greenLightPos = [self propToRect:CGRectMake(0.85, 0.05, 0, 0)].origin;
     greenLight = [[UIView alloc] initWithFrame: CGRectMake(greenLightPos.x, greenLightPos.y, lightSize.width, lightSize.width)];
@@ -215,7 +231,6 @@
         [framesArray addObject:[NSNumber numberWithInt:0]];
     }
     
-    
     for(int i = 0; i < numOfWheelTiles; i++){
         UIImageView* beltWheel = [[UIImageView alloc] initWithImage:beltWheelImage];
         beltWheel.frame = CGRectMake(frame.origin.x+(i*imageWidth), frame.origin.y, imageWidth, frame.size.height);
@@ -307,17 +322,24 @@
 //                    CGFloat moveDelta = -moveX*delta;
                     
 //                    sock.frame = CGRectOffset(sock.frame, moveDelta, 0);
-                    sock.frame = CGRectOffset(sock.frame, -moveX*delta, 0);
 //                    NSLog(@"d %f", delta);
                     
                     if(sock.frame.origin.x < -sock.frame.size.width){
+                        NSLog(@"LL %@", NSStringFromCGRect(sock.frame));
+                        [self lostLife];
+                        sock.onConvayorBelt = false;
                         
-                        [sock removeFromSuperview];
-                        [socks removeObject:sock];
-                        
-                        redLight.backgroundColor = [UIColor redColor];
-                        [self performSelector:@selector(setBackgroundColorClear:) withObject:redLight afterDelay:0.05];
+                        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+                            //Background Thread
+                            [socks removeObject:sock];
+                            dispatch_async(dispatch_get_main_queue(), ^(void){
+                                //Run UI Updates
+                                [sock removeFromSuperview];
+                            });
+                        });
                     }
+                    
+                    sock.frame = CGRectOffset(sock.frame, -moveX*delta, 0);
                 }
             }
                 else if(sock.onPairConvayorBelt == true){
@@ -353,8 +375,6 @@
                                 scoreLabel.text = [NSString stringWithFormat:@"%i", score];
                             }
                         }else{
-                            redLight.backgroundColor = [UIColor redColor];
-                            [self performSelector:@selector(setBackgroundColorClear:) withObject:redLight afterDelay:1];
                             NSLog(@"Single sock in pair belt!");
                         }
                     }
@@ -366,6 +386,20 @@
     }
 }
 
+-(void) lostLife {
+    NSLog(@"lost life");
+    if(lives > 0 && lives <= 3){
+        UIImageView* light = [lifeLights objectAtIndex:3-lives];
+        [light setImage:[UIImage imageNamed:@"redlighton"]];
+    }
+    
+    lives -= 1;
+    if(lives <= 0){
+        NSLog(@"Game Over!");
+    }
+}
+
+//TODO the perform selector causes the closest(why?) sock to jerk back...?
 -(void)setBackgroundColorClear:(UIView*)view {
     view.backgroundColor = [UIColor clearColor];
 }
