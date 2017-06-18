@@ -33,6 +33,7 @@
     imageName = imgName;
     onConvayorBelt = startOnBelt;
     onPairConvayorBelt = false;
+    inAPair = false;
     
     CGFloat heightAspectMutliplier = image.size.height/image.size.width;
     CGRect boxFrame = CGRectMake(pos.x, pos.y, width, width*heightAspectMutliplier);
