@@ -21,6 +21,8 @@
 -(id) initClawWithSock:(Sock*)sockPackage {
 //    self = [super initWithFrame:frame];
 //    [self initWithFrame:frame];
+    // Create a claw based off sock frame.
+    
     
     return self;
 }
