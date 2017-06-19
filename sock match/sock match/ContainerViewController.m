@@ -75,19 +75,13 @@
     
     [self animateFromViewController:gameOver toPoint:[self propToRect:CGRectMake(1, 0, 0, 0)].origin toViewController:menuController toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin animationFinished:^{
         NSLog(@"transitioned from game over to menu %@", NSStringFromCGRect(gameController.view.frame));
+        [gameController stopGameLoop];
     }];
 }
 
 -(void)animateFromViewController:(UIViewController*)vc toPoint:(CGPoint)point toViewController:(UIViewController*)otherVc toPoint:(CGPoint)otherPoint animationFinished:(void (^)(void)) completion{
-//    [self transitionFromViewController:vc toViewController:otherVc duration:2 options:0 animations:^{
-//        otherVc.view.frame = CGRectMake(otherPoint.x, otherPoint.y, otherVc.view.frame.size.width, otherVc.view.frame.size.height);
-//        vc.view.frame = CGRectMake(point.x, point.y, vc.view.frame.size.width, vc.view.frame.size.height);
-//    } completion:^(BOOL finished){
-//        [otherVc didMoveToParentViewController:self];
-//        completion();
-//    }];
-    
-    [UIView animateWithDuration:2 animations:^{
+
+    [UIView animateWithDuration:0.25 animations:^{
         otherVc.view.frame = CGRectMake(otherPoint.x, otherPoint.y, otherVc.view.frame.size.width, otherVc.view.frame.size.height);
         vc.view.frame = CGRectMake(point.x, point.y, vc.view.frame.size.width, vc.view.frame.size.height);
     } completion:^(BOOL finished){

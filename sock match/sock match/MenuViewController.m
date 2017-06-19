@@ -22,13 +22,14 @@
     self.view.userInteractionEnabled = true;
     
     
-    UILabel* testLabel = [[UILabel alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.125, 0.5, 0.2)]];
+    UIImageView* testLabel = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.195, 0.5, 0.2)]];
     //    NSLog(@"%@", CGRectMake(0.25, 0.25, 0.5, 0.2));
-    testLabel.text = @"sock match";
-    testLabel.layer.borderWidth = 5;
-    testLabel.textAlignment = NSTextAlignmentCenter;
-    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
-    testLabel.textColor = [UIColor whiteColor];
+//    testLabel.layer.borderWidth = 5;
+//    testLabel.textAlignment = NSTextAlignmentCenter;
+//    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
+    [testLabel setImage:[UIImage imageNamed:@"title"]];
+    testLabel.layer.magnificationFilter = kCAFilterNearest;
+    testLabel.contentMode = UIViewContentModeScaleAspectFit;
     [self.view addSubview:testLabel];
     
     UIButton *playButton = [UIButton buttonWithType:UIButtonTypeCustom];

@@ -18,6 +18,7 @@
 
 -(void)beginGame;
 -(void)endGame;
+-(void)stopGameLoop;
 @end
 
 @protocol GameTransition <NSObject>
