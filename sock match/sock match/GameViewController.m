@@ -80,7 +80,7 @@
 -(void)endGame {
     gameActive = false;
     endingGame = true;
-    [self finishEndingGame];
+//    [self finishEndingGame];
 }
 
 -(void) finishEndingGame {    
@@ -319,16 +319,32 @@
     }
     
     if(endingGame == true){
-        //TODO keep belt moving until no more socks on belt, then slow down
-        beltMoveSpeed -= tmr.duration*6;
-        timeToAnimateWheels += tmr.duration/4;
         
-        if(beltMoveSpeed <= 0){
-            [self stopGameLoop];
+        if([self anySocksOnConveyorBelt]){
+            
+        }else{
+            //TODO keep belt moving until no more socks on belt, then slow down
+            beltMoveSpeed -= tmr.duration*6;
+            timeToAnimateWheels += tmr.duration/4;
+            
+            if(beltMoveSpeed <= 0){
+                [self finishEndingGame];
+                [self stopGameLoop];
+            }
         }
     }
 }
 
+-(BOOL) anySocksOnConveyorBelt {
+    bool anySockOnBelt = false;
+    for (Sock* sock in socks) {
+        bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(sock.frame), CGRectGetMidY(sock.frame)));
+        if(onBelt == true){
+            anySockOnBelt = true;
+        }
+    }
+    return anySockOnBelt;
+}
 
 -(void)animateBelt:(CGFloat)delta {
     for (UIImageView* img in conveyorBeltTiles) {

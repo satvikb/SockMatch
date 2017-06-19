@@ -23,7 +23,7 @@
     self.view.userInteractionEnabled = true;
     
     
-    testLabel = [[UILabel alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.125, 0.5, 0.2)]];
+    testLabel = [[UILabel alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.175, 0.5, 0.2)]];
     //    NSLog(@"%@", CGRectMake(0.25, 0.25, 0.5, 0.2));
     testLabel.text = @"game over";
     testLabel.layer.borderWidth = 5;
