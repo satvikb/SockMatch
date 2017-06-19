@@ -35,8 +35,8 @@
     CGFloat pairSocksBeltMoveSpeed;
     
     UILabel* scoreLabel;
-    
-    UIView* greenLight;
+    NSMutableArray <UIImageView*>* scoreDigits;
+    NSMutableArray <UIImage*>* scoreDigitImages;
     
     UILabel* tutorialLabel;
     UILabel* bottomTutorialLabel;
@@ -103,13 +103,32 @@
     scoreLabel.textColor = [UIColor blackColor];
     scoreLabel.font = [UIFont fontWithName:@"Helvetica" size:26];
     scoreLabel.text = @"0";
-    [self.view addSubview:scoreLabel];
+//    [self.view addSubview:scoreLabel];
     
-    CGSize lightSize = [self propToRect:CGRectMake(0, 0.05, 0.15, 0.1)].size;
+    scoreDigitImages = [[NSMutableArray alloc] init];
+    for(int i = 0; i < 10; i++){
+        UIImage* digitImg = [UIImage imageNamed:[NSString stringWithFormat:@"digit_%i", i]];
+        [scoreDigitImages addObject:digitImg];
+    }
     
-//    CGPoint startPoint = CGPointMake(0, 0);
+    
+    scoreDigits = [[NSMutableArray alloc] init];
+    CGPoint scoreDigitStartPos = CGPointMake(0.545, 0.035);
+    CGSize scoreDigitSize = CGSizeMake(0.11, 0.08);
+    for(int i = 0; i < 4; i++){
+        UIImageView* scoreDig = [[UIImageView alloc] initWithFrame:[self propToRect:CGRectMake(scoreDigitStartPos.x+(i*scoreDigitSize.width), scoreDigitStartPos.y, scoreDigitSize.width, scoreDigitSize.height)]];
+        scoreDig.tag = -i;
+        scoreDig.contentMode = UIViewContentModeScaleAspectFit;
+        scoreDig.layer.magnificationFilter = kCAFilterNearest;
+//        scoreDig.layer.borderWidth = 2;
+//        scoreDig.layer.borderColor = [UIColor grayColor].CGColor;
+        [scoreDigits addObject:scoreDig];
+        [self.view addSubview:scoreDig];
+    }
+    [self setScoreImages:score];
+    
     for(int i = 0; i < 3; i++){
-        CGRect lightRect = [self propToRect:CGRectMake(0.05+(i*0.16), 0.025, 0.15, 0)];
+        CGRect lightRect = [self propToRect:CGRectMake(0.05+(i*0.16), 0.03, 0.15, 0)];
         UIImageView* rl = [[UIImageView alloc] initWithFrame: CGRectMake(lightRect.origin.x, lightRect.origin.y, lightRect.size.width, lightRect.size.width)];
         rl.layer.zPosition = 50;
         rl.contentMode = UIViewContentModeScaleAspectFill;
@@ -120,13 +139,6 @@
         [lifeLights addObject:rl];
         NSLog(@"added light %i", i);
     }
-    
-    CGPoint greenLightPos = [self propToRect:CGRectMake(0.85, 0.05, 0, 0)].origin;
-    greenLight = [[UIView alloc] initWithFrame: CGRectMake(greenLightPos.x, greenLightPos.y, lightSize.width, lightSize.width)];
-    greenLight.layer.cornerRadius = lightSize.width/2;
-    greenLight.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:greenLight];
-    
     
     tutorialLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.45, 1, 0.075)]];
     tutorialLabel.text = @"match socks together based on style and size";
@@ -325,7 +337,6 @@
 //                    NSLog(@"d %f", delta);
                     
                     if(sock.frame.origin.x < -sock.frame.size.width){
-                        NSLog(@"LL %@", NSStringFromCGRect(sock.frame));
                         [self lostLife];
                         sock.onConvayorBelt = false;
                         
@@ -368,11 +379,8 @@
                                 NSLog(@"POINT!!!!");
                                 
                                 timeToGenerateSock = timeToGenerateSock >= 1 ? timeToGenerateSock -= 0.025 : 1;
-                                greenLight.backgroundColor = [UIColor greenColor];
-                                [self performSelector:@selector(setBackgroundColorClear:) withObject:greenLight afterDelay:1];
                                 
-                                score += 1;
-                                scoreLabel.text = [NSString stringWithFormat:@"%i", score];
+                                [self addScore];
                             }
                         }else{
                             NSLog(@"Single sock in pair belt!");
@@ -383,6 +391,31 @@
         }else{
             NSLog(@"NO SOCK WHILE UPDATING BELT");
         }
+    }
+}
+
+-(void) addScore {
+    score += 1;
+    [self setScoreImages:score];
+}
+
+-(void) setScoreImages:(int) s {
+    NSString* scoreStr = [NSString stringWithFormat:@"%i", s];
+    
+    if(scoreStr.length <= 4){
+        for (int i = 0; i < scoreStr.length; i++) {
+            int ni = scoreStr.length-i-1;
+            int ii = scoreDigits.count-i-1; //imageview index
+            unichar ch = [scoreStr characterAtIndex:ni];
+            NSString* digit = [NSString stringWithFormat:@"%c", ch];
+            UIImageView* digitView = [scoreDigits objectAtIndex:ii];
+            NSLog(@"SCORE %i %i %i %i", s, score, ni, digit.intValue);
+            UIImage* digitImage = [scoreDigitImages objectAtIndex:digit.intValue];
+            
+            [digitView setImage: digitImage];
+        }
+    }else{
+        NSLog(@"MORE THAN FOUR DIGITS %@", scoreStr);
     }
 }
 
