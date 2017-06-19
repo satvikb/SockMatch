@@ -1,19 +1,20 @@
 //
-//  MenuViewController.m
-//  transal
+//  GameOverViewController.m
+//  sock match
 //
-//  Created by Satvik Borra on 6/1/17.
+//  Created by Satvik Borra on 6/19/17.
 //  Copyright © 2017 sborra. All rights reserved.
 //
 
-#import "MenuViewController.h"
-#import "Sock.h"
+#import "GameOverViewController.h"
 
-@interface MenuViewController ()
+@interface GameOverViewController (){
+    UILabel* testLabel;
+}
 
 @end
 
-@implementation MenuViewController
+@implementation GameOverViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -22,32 +23,36 @@
     self.view.userInteractionEnabled = true;
     
     
-    UILabel* testLabel = [[UILabel alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.125, 0.5, 0.2)]];
+    testLabel = [[UILabel alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.125, 0.5, 0.2)]];
     //    NSLog(@"%@", CGRectMake(0.25, 0.25, 0.5, 0.2));
-    testLabel.text = @"sock match";
+    testLabel.text = @"game over";
     testLabel.layer.borderWidth = 5;
     testLabel.textAlignment = NSTextAlignmentCenter;
-    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
+    testLabel.layer.borderColor = [UIColor blueColor].CGColor;
     testLabel.textColor = [UIColor whiteColor];
     [self.view addSubview:testLabel];
     
     UIButton *playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [playButton addTarget:self action:@selector(pressPlayButton:) forControlEvents:UIControlEventTouchUpInside];
-    [playButton setTitle:@"Play" forState:UIControlStateNormal];
+    [playButton addTarget:self action:@selector(pressMenuButton:) forControlEvents:UIControlEventTouchUpInside];
+    [playButton setTitle:@"menu" forState:UIControlStateNormal];
     [playButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     playButton.layer.borderWidth = 2;
     playButton.layer.zPosition = 3000000;
-    playButton.layer.borderColor = [UIColor blackColor].CGColor;
+    playButton.layer.borderColor = [UIColor blueColor].CGColor;
     playButton.frame = [self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)];
     [self.view addSubview:playButton];
 }
 
--(void)pressPlayButton:(UIButton*)sender{
+-(void)setScore:(int)score{
+    testLabel.text = [NSString stringWithFormat:@"game over %i", score];
+}
+
+-(void)pressMenuButton:(UIButton*)sender{
     NSLog(@"play button press");
-    id<MenuTransition> strongDelegate = self.delegate;
+    id<GameOverTransition> strongDelegate = self.delegate;
     
-    if([strongDelegate respondsToSelector:@selector(switchFromMenuToGame:)]){
-        [strongDelegate switchFromMenuToGame:self];
+    if([strongDelegate respondsToSelector:@selector(switchFromGameOverToMenu:)]){
+        [strongDelegate switchFromGameOverToMenu:self];
     }
 }
 

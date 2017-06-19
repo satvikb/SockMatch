@@ -7,24 +7,28 @@
 //
 
 #import "AppDelegate.h"
+#import "ContainerViewController.h"
 #import "GameViewController.h"
+#import "MenuViewController.h"
 
 @interface AppDelegate ()
 
 @end
 
 @implementation AppDelegate
-
+@synthesize containerController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    
     srand48(time(0));
+    
+    containerController = [[ContainerViewController alloc] init];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.window.rootViewController = [[GameViewController alloc] init];
-    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.rootViewController = containerController;
+    
+    self.window.backgroundColor = [UIColor clearColor];
     [self.window makeKeyAndVisible];
     return YES;
 }

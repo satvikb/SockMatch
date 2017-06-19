@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		403A89281EF7B2D700C81DB4 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403A89271EF7B2D700C81DB4 /* ContainerViewController.m */; };
+		403A892C1EF7C56800C81DB4 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403A892A1EF7C49000C81DB4 /* MenuViewController.m */; };
+		403A892F1EF7CEA500C81DB4 /* GameOverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403A892E1EF7CEA500C81DB4 /* GameOverViewController.m */; };
 		408E6B4C1EEF88180011C450 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B4B1EEF88180011C450 /* AppDelegate.m */; };
 		408E6B541EEF88180011C450 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 408E6B531EEF88180011C450 /* Assets.xcassets */; };
 		408E6B5A1EEF88180011C450 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B591EEF88180011C450 /* main.m */; };
-		408E6B621EEF88AA0011C450 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B601EEF88AA0011C450 /* MenuViewController.m */; };
 		408E6B651EEFA5EA0011C450 /* Sock.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B641EEFA5EA0011C450 /* Sock.m */; };
 		408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B671EEFCA1B0011C450 /* GameViewController.m */; };
 		408E6B6F1EEFF2530011C450 /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B6E1EEFF2530011C450 /* Functions.m */; };
@@ -18,14 +20,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		403A89261EF7B2D700C81DB4 /* ContainerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContainerViewController.h; sourceTree = "<group>"; };
+		403A89271EF7B2D700C81DB4 /* ContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContainerViewController.m; sourceTree = "<group>"; };
+		403A89291EF7C49000C81DB4 /* MenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
+		403A892A1EF7C49000C81DB4 /* MenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
+		403A892D1EF7CEA500C81DB4 /* GameOverViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameOverViewController.h; sourceTree = "<group>"; };
+		403A892E1EF7CEA500C81DB4 /* GameOverViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameOverViewController.m; sourceTree = "<group>"; };
 		408E6B471EEF88180011C450 /* sock match.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "sock match.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		408E6B4A1EEF88180011C450 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		408E6B4B1EEF88180011C450 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		408E6B531EEF88180011C450 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		408E6B581EEF88180011C450 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		408E6B591EEF88180011C450 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		408E6B601EEF88AA0011C450 /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MenuViewController.m; path = ../../../transal/transal/transal/MenuViewController.m; sourceTree = "<group>"; };
-		408E6B611EEF88AA0011C450 /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuViewController.h; path = ../../../transal/transal/transal/MenuViewController.h; sourceTree = "<group>"; };
 		408E6B631EEFA5EA0011C450 /* Sock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sock.h; sourceTree = "<group>"; };
 		408E6B641EEFA5EA0011C450 /* Sock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sock.m; sourceTree = "<group>"; };
 		408E6B661EEFCA1B0011C450 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
@@ -67,17 +73,21 @@
 			children = (
 				408E6B4A1EEF88180011C450 /* AppDelegate.h */,
 				408E6B4B1EEF88180011C450 /* AppDelegate.m */,
-				408E6B611EEF88AA0011C450 /* MenuViewController.h */,
-				408E6B601EEF88AA0011C450 /* MenuViewController.m */,
+				403A89261EF7B2D700C81DB4 /* ContainerViewController.h */,
+				403A89271EF7B2D700C81DB4 /* ContainerViewController.m */,
+				403A89291EF7C49000C81DB4 /* MenuViewController.h */,
+				403A892A1EF7C49000C81DB4 /* MenuViewController.m */,
 				408E6B661EEFCA1B0011C450 /* GameViewController.h */,
 				408E6B671EEFCA1B0011C450 /* GameViewController.m */,
+				403A892D1EF7CEA500C81DB4 /* GameOverViewController.h */,
+				403A892E1EF7CEA500C81DB4 /* GameOverViewController.m */,
 				408E6B631EEFA5EA0011C450 /* Sock.h */,
 				408E6B641EEFA5EA0011C450 /* Sock.m */,
-				408E6B581EEF88180011C450 /* Info.plist */,
-				408E6B591EEF88180011C450 /* main.m */,
-				408E6B531EEF88180011C450 /* Assets.xcassets */,
 				408E6B6D1EEFF1920011C450 /* Functions.h */,
 				408E6B6E1EEFF2530011C450 /* Functions.m */,
+				408E6B531EEF88180011C450 /* Assets.xcassets */,
+				408E6B591EEF88180011C450 /* main.m */,
+				408E6B581EEF88180011C450 /* Info.plist */,
 				4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */,
 			);
 			path = "sock match";
@@ -152,12 +162,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				403A892F1EF7CEA500C81DB4 /* GameOverViewController.m in Sources */,
+				403A892C1EF7C56800C81DB4 /* MenuViewController.m in Sources */,
 				408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */,
 				408E6B5A1EEF88180011C450 /* main.m in Sources */,
+				403A89281EF7B2D700C81DB4 /* ContainerViewController.m in Sources */,
 				408E6B651EEFA5EA0011C450 /* Sock.m in Sources */,
 				408E6B6F1EEFF2530011C450 /* Functions.m in Sources */,
 				408E6B4C1EEF88180011C450 /* AppDelegate.m in Sources */,
-				408E6B621EEF88AA0011C450 /* MenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

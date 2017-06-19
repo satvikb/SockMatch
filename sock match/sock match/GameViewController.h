@@ -8,6 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GameViewController : UIViewController
+@protocol GameTransition;
 
+@interface GameViewController : UIViewController{
+    
+}
+
+@property (nonatomic, weak) id<GameTransition> delegate;
+
+-(void)beginGame;
+-(void)endGame;
+@end
+
+@protocol GameTransition <NSObject>
+- (void) switchFromGameToGameOver:(GameViewController *)game withScore:(int)score;
 @end

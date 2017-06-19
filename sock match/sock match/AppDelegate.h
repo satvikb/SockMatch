@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@class GameViewController;
+@class ContainerViewController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (strong, nonatomic) GameViewController *viewController;
+@property (strong, nonatomic) ContainerViewController *containerController;
 
 @end
 

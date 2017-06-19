@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MenuViewController : UIViewController
+@protocol MenuTransition;
 
+@interface MenuViewController : UIViewController
+@property (nonatomic, weak) id<MenuTransition> delegate;
+@end
+
+@protocol MenuTransition <NSObject>
+-(void)switchFromMenuToGame:(MenuViewController*) menu;
 @end

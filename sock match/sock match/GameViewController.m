@@ -11,6 +11,8 @@
 #import "Functions.h"
 
 @interface GameViewController () {
+    BOOL gameActive;
+    
     CADisplayLink* gameTimer;
     
     CGFloat timeToGenerateSock;
@@ -31,9 +33,6 @@
     
     NSMutableArray <UIImage*>* wheelFrames;
     
-    CGRect pairSocksConvayorBelt;
-    CGFloat pairSocksBeltMoveSpeed;
-    
     UILabel* scoreLabel;
     NSMutableArray <UIImageView*>* scoreDigits;
     NSMutableArray <UIImage*>* scoreDigitImages;
@@ -44,6 +43,8 @@
     int score;
     int lives;
     NSMutableArray <UIImageView*>* lifeLights;
+    UIImage* lifeLightOff;
+    UIImage* lifeLightOn;
     
     CGFloat _beltImagesSideExtra;
     
@@ -63,34 +64,88 @@
     [self setupGameValues];
     [self createUI];
     [self createBeltAndWheels];
-    
+}
+
+-(void)beginGame {
+    [self resetGame];
+
+    gameActive = true;
+    NSLog(@"Begin game");
+    [self startGameLoop];
+    [self performSelector:@selector(removeFromView:) withObject:tutorialLabel afterDelay:15];
+    [self performSelector:@selector(removeFromView:) withObject:bottomTutorialLabel afterDelay:25];
+}
+
+-(void)endGame {
+    gameActive = false;
+    // slow down the belt
+    [UIView animateWithDuration:3 animations:^{
+        beltMoveSpeed = 0;
+        timeToAnimateWheels = 0;
+    } completion:^(BOOL completed){
+        [self stopGameLoop];
+        
+        NSLog(@"transitioning to game over");
+        id<GameTransition> strongDelegate = self.delegate;
+        
+        if([strongDelegate respondsToSelector:@selector(switchFromGameToGameOver:withScore:)]){
+            [strongDelegate switchFromGameToGameOver:self withScore:score];
+        }
+    }];
+}
+
+-(void)startGameLoop {
     gameTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(gameFrame:)];
+    gameTimer.preferredFramesPerSecond = 60;
     [gameTimer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
+-(void)pauseGameLoop {
+    gameActive = false;
+    [gameTimer setPaused:true];
+}
+
+-(void)resumeGameLoop {
+    gameActive = true;
+    [gameTimer setPaused:false];
+}
+
+-(void)stopGameLoop {
+    [gameTimer setPaused:true];
+    [gameTimer removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    gameTimer = nil;
+}
+
+-(void)resetGame {
+    [self setupGameValues];
+    
+    for (Sock* sock in socks) {
+        [sock removeFromSuperview];
+    }
+    
+    for(UIImageView* img in lifeLights){
+        [img setImage:lifeLightOff];
+    }
+}
+
 -(void)setupGameValues {
+    gameActive = false;
     score = 0;
     lives = 3;
-    lifeLights = [[NSMutableArray alloc] init];
     timeToGenerateSock = 1.5;
     generateSockTimer = 0;
     sockMatchThreshold = [self propX:0.06];
     socks = [[NSMutableArray alloc] init];
-    convayorBeltRect = [self propToRect:CGRectMake(0, 0.15, 1, 0.3)];
     beltMoveSpeed = 20.0;
     
     timeToAnimateWheels = 0.05;
     animateWheelTimer = 0;
-    
-    CGRect pkImageRect = [self propToRect:CGRectMake(1, 1, 0.2, 0)];
-    CGRect pairSocksConvayorBeltMetaRect = [self propToRect:CGRectMake(0, 1, 1, 0)];
-    
-    pairSocksConvayorBelt = CGRectMake(pairSocksConvayorBeltMetaRect.origin.x, pairSocksConvayorBeltMetaRect.origin.y-pkImageRect.size.width, pairSocksConvayorBeltMetaRect.size.width-pkImageRect.size.width, pkImageRect.size.width);
-    pairSocksBeltMoveSpeed = 20.0;
-    
 }
 
 -(void)createUI {
+    lifeLights = [[NSMutableArray alloc] init];
+    convayorBeltRect = [self propToRect:CGRectMake(0, 0.15, 1, 0.3)];
+
     UIView* topBackground = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 1, 0.15)]];
     topBackground.backgroundColor = [UIColor colorWithRed:0.9960784314 green:0.8549019608 blue:0.1176470588 alpha:1];
     topBackground.layer.zPosition = -50;
@@ -111,7 +166,6 @@
         [scoreDigitImages addObject:digitImg];
     }
     
-    
     scoreDigits = [[NSMutableArray alloc] init];
     CGPoint scoreDigitStartPos = CGPointMake(0.545, 0.035);
     CGSize scoreDigitSize = CGSizeMake(0.11, 0.08);
@@ -127,6 +181,9 @@
     }
     [self setScoreImages:score];
     
+    lifeLightOff = [UIImage imageNamed:@"redlightoff"];
+    lifeLightOn = [UIImage imageNamed:@"redlighton"];
+    
     for(int i = 0; i < 3; i++){
         CGRect lightRect = [self propToRect:CGRectMake(0.05+(i*0.16), 0.03, 0.15, 0)];
         UIImageView* rl = [[UIImageView alloc] initWithFrame: CGRectMake(lightRect.origin.x, lightRect.origin.y, lightRect.size.width, lightRect.size.width)];
@@ -134,7 +191,7 @@
         rl.contentMode = UIViewContentModeScaleAspectFill;
         rl.layer.magnificationFilter = kCAFilterNearest;
         
-        [rl setImage:[UIImage imageNamed:@"redlightoff"]];
+        [rl setImage:lifeLightOff];
         [self.view addSubview:rl];
         [lifeLights addObject:rl];
         NSLog(@"added light %i", i);
@@ -147,16 +204,13 @@
     //    tutorialLabel.layer.borderWidth = 2;
     [self.view addSubview:tutorialLabel];
     
-    CGRect btmTutFrame = [self propToRect:CGRectMake(0, 1, 1, 0.075)];
-    bottomTutorialLabel = [[UILabel alloc] initWithFrame: CGRectMake(0, btmTutFrame.origin.y-pairSocksConvayorBelt.size.height-btmTutFrame.size.height, btmTutFrame.size.width, btmTutFrame.size.height)];
-    bottomTutorialLabel.text = @"put packaged socks down here";
+    CGRect btmTutFrame = [self propToRect:CGRectMake(0, 0.525, 1, 0.075)];
+    bottomTutorialLabel = [[UILabel alloc] initWithFrame: btmTutFrame];
+    bottomTutorialLabel.text = @"use the area down here to match";
     bottomTutorialLabel.textAlignment = NSTextAlignmentCenter;
     //    bottomTutorialLabel.layer.borderColor = [UIColor blackColor].CGColor;
     //    bottomTutorialLabel.layer.borderWidth = 2;
     [self.view addSubview:bottomTutorialLabel];
-    
-    [self performSelector:@selector(removeFromView:) withObject:tutorialLabel afterDelay:15];
-    [self performSelector:@selector(removeFromView:) withObject:bottomTutorialLabel afterDelay:25];
 }
 
 -(void)createBeltAndWheels {
@@ -171,32 +225,13 @@
     CGRect bottomBeltWheelsRect = [self propToRect:CGRectMake(-0.05, 0.4375, 1, 0.025)];
     bottomConveyorBeltWheels = [[NSMutableArray alloc] init];
     bottomConveyorBeltWheelsFrames = [[NSMutableArray alloc] init];
-    [self createConveyorBeltWheels:bottomBeltWheelsRect imageArray:bottomConveyorBeltWheels forArray:bottomConveyorBeltWheelsFrames];
     
     CGRect topBeltWheelsRect = [self propToRect:CGRectMake(-0.05, 0.1375, 1, 0.025)];
     topConveyorBeltWheels = [[NSMutableArray alloc] init];
     topConveyorBeltWheelsFrames = [[NSMutableArray alloc] init];
     
+    [self createConveyorBeltWheels:bottomBeltWheelsRect imageArray:bottomConveyorBeltWheels forArray:bottomConveyorBeltWheelsFrames];
     [self createConveyorBeltWheels:topBeltWheelsRect imageArray:topConveyorBeltWheels forArray:topConveyorBeltWheelsFrames];
-    
-    
-    
-    
-    CGRect pkImageRect = [self propToRect:CGRectMake(1, 1, 0.2, 0)];
-    UIImageView* pairSockBelt = [[UIImageView alloc] initWithFrame: pairSocksConvayorBelt];
-    //    pairSockBelt.layer.borderWidth = 2;
-    //    pairSockBelt.layer.borderColor = [UIColor whiteColor].CGColor;
-    [pairSockBelt setImage:[UIImage imageNamed:@"beltTile"]];
-    pairSockBelt.clipsToBounds = true;
-    pairSockBelt.contentMode = UIViewContentModeScaleAspectFill;
-    pairSockBelt.layer.magnificationFilter = kCAFilterNearest;
-    [pairSockBelt startAnimating];
-    [self.view addSubview: pairSockBelt];
-    UIImageView* pairBeltPackageImage = [[UIImageView alloc] initWithFrame: CGRectMake(pkImageRect.origin.x-pkImageRect.size.width, pkImageRect.origin.y-pkImageRect.size.width, pkImageRect.size.width, pkImageRect.size.width)];
-    pairBeltPackageImage.contentMode = UIViewContentModeScaleAspectFill;
-    pairBeltPackageImage.layer.magnificationFilter = kCAFilterNearest;
-    [pairBeltPackageImage setImage:[UIImage imageNamed:@"sock1package"]];
-    [self.view addSubview:pairBeltPackageImage];
 }
 
 -(NSMutableArray*) createConveyorBelt:(CGRect)frame {
@@ -216,8 +251,6 @@
         
         
         beltTile.frame = CGRectMake(frame.origin.x+(i*imageWidth), frame.origin.y, imageWidth, frame.size.height);
-//        beltTile.layer.borderWidth = 1;
-//        beltTile.layer.borderColor = [UIColor greenColor].CGColor;
 //        beltTile = UIViewContentModeScaleAspectFit;//UIViewContentModeScaleAspectFill;
         beltTile.layer.magnificationFilter = kCAFilterNearest;
         beltTile.tag = i;
@@ -272,7 +305,9 @@
     animateWheelTimer += tmr.duration;
     
     if(generateSockTimer >= timeToGenerateSock){
-        [self generateSock];
+        if(gameActive == true){
+            [self generateSock];
+        }
         generateSockTimer = 0;
     }
     
@@ -286,8 +321,6 @@
 
 
 -(void)animateBelt:(CGFloat)delta {
-    //    for(int i = 0; i < )
-    
     for (UIImageView* img in conveyorBeltTiles) {
         CGFloat propMoveX = beltMoveSpeed/100.0;
         CGFloat moveX = [self propX:propMoveX];
@@ -297,7 +330,7 @@
             CGRect f = img.frame;
             CGFloat overflow = img.frame.origin.x - (-img.frame.size.width);
             
-            f.origin.x = _beltImagesSideExtra-img.frame.size.width+overflow;//+(img.frame.origin.x-img.frame.size.width);
+            f.origin.x = _beltImagesSideExtra-img.frame.size.width+overflow;
             img.frame = f;
         }
         
@@ -307,14 +340,10 @@
 
 -(void) animateWheels:(NSMutableArray<UIImageView*>*) wheels withFrames: (NSMutableArray<NSNumber*>*) frames{
     for (int i = 0; i < wheels.count; i++) {
-        
         NSNumber *x = [NSNumber numberWithInt: ([frames objectAtIndex:i].intValue+1) % 4];
-        
         [frames replaceObjectAtIndex:i withObject:x];
-        
         UIImage* wheelFrame = [wheelFrames objectAtIndex: x.intValue];
         UIImageView* wheel = [wheels objectAtIndex:i];
-        
         [wheel setImage:wheelFrame];
     }
 }
@@ -324,17 +353,10 @@
         Sock* sock = [socks objectAtIndex:i];
         
         if(sock != nil){
-//            bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(sock.frame), CGRectGetMidY(sock.frame)));
-//            sock.onConvayorBelt = onBelt;
-            
             if(sock.onConvayorBelt == true){
                 if(sock.inAPair == false){
                     CGFloat propMoveX = beltMoveSpeed/100.0;
                     CGFloat moveX = [self propX:propMoveX];
-//                    CGFloat moveDelta = -moveX*delta;
-                    
-//                    sock.frame = CGRectOffset(sock.frame, moveDelta, 0);
-//                    NSLog(@"d %f", delta);
                     
                     if(sock.frame.origin.x < -sock.frame.size.width){
                         [self lostLife];
@@ -353,48 +375,15 @@
                     sock.frame = CGRectOffset(sock.frame, -moveX*delta, 0);
                 }
             }
-                else if(sock.onPairConvayorBelt == true){
-                CGFloat propMoveX = pairSocksBeltMoveSpeed/100.0;
-                CGFloat moveX = [self propX:propMoveX];
-                    
-//                if(sock.inAPair){//} || sock.mainSockInPair){
-                    sock.frame = CGRectOffset(sock.frame, -moveX*delta, 0);
-                    
-                    if(sock.mainSockInPair && sock.otherSockInPair != nil){
-                        sock.otherSockInPair.frame = CGRectOffset(sock.otherSockInPair.frame, -moveX*delta, 0);
-                    }
-                    
-                    if(sock.frame.origin.x < -sock.frame.size.width){
-                        
-                        [sock removeFromSuperview];
-                        [socks removeObject:sock];
-                        
-                        if(sock.mainSockInPair && sock.otherSockInPair != nil){
-                            [sock.otherSockInPair removeFromSuperview];
-                            [socks removeObject:sock.otherSockInPair];
-                        }
-                        
-                        if(sock.inAPair == true){
-                            if(sock.mainSockInPair == true){
-                                NSLog(@"POINT!!!!");
-                                
-                                timeToGenerateSock = timeToGenerateSock >= 1 ? timeToGenerateSock -= 0.025 : 1;
-                                
-                                [self addScore];
-                            }
-                        }else{
-                            NSLog(@"Single sock in pair belt!");
-                        }
-                    }
-//                }
-            }
         }else{
             NSLog(@"NO SOCK WHILE UPDATING BELT");
         }
     }
 }
 
--(void) addScore {
+-(void) gotPoint {
+    timeToGenerateSock = timeToGenerateSock >= 1 ? timeToGenerateSock -= 0.025 : 1;
+    
     score += 1;
     [self setScoreImages:score];
 }
@@ -404,8 +393,8 @@
     
     if(scoreStr.length <= 4){
         for (int i = 0; i < scoreStr.length; i++) {
-            int ni = scoreStr.length-i-1;
-            int ii = scoreDigits.count-i-1; //imageview index
+            int ni = (int)scoreStr.length-i-1;
+            int ii = (int)scoreDigits.count-i-1; //imageview index
             unichar ch = [scoreStr characterAtIndex:ni];
             NSString* digit = [NSString stringWithFormat:@"%c", ch];
             UIImageView* digitView = [scoreDigits objectAtIndex:ii];
@@ -423,12 +412,13 @@
     NSLog(@"lost life");
     if(lives > 0 && lives <= 3){
         UIImageView* light = [lifeLights objectAtIndex:3-lives];
-        [light setImage:[UIImage imageNamed:@"redlighton"]];
+        [light setImage:lifeLightOn];
     }
     
     lives -= 1;
     if(lives <= 0){
         NSLog(@"Game Over!");
+        [self endGame];
     }
 }
 
@@ -468,12 +458,10 @@
     
     [newSock setTouchBeganBlock:^void (Sock* s, CGPoint p) {
         s.onConvayorBelt = false;
-        s.onPairConvayorBelt = false;
     }];
     
     [newSock setTouchMovedBlock:^void (Sock* s, CGPoint p) {
         s.onConvayorBelt = false;
-        s.onPairConvayorBelt = false;
         
         if((!s.inAPair || s.mainSockInPair) && s.otherSockInPair != nil){
             CGFloat matchedPairPositionOffset = [self propX:[Functions propSizeFromSockSize:s.sockSize]/10.0];
@@ -484,18 +472,8 @@
     }];
     
     [newSock setTouchEndedBlock:^void (Sock* s, CGPoint p) {
-        
         bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
         s.onConvayorBelt = onBelt;
-        
-        bool onPairBelt = CGRectContainsPoint(pairSocksConvayorBelt, p);
-        s.onPairConvayorBelt = onPairBelt;
-        
-        // does not have to be out of the best to check for pairs (in case of directly matched on the belt)
-//        if(onBelt == false){
-            // check for sock pairs
-//            [self checkPairsWithSock:s];
-//        }
     }];
     
     [self.view addSubview:newSock];
@@ -510,24 +488,23 @@
             bool pairFormed = [self socksFormPairWith:sock andOther:otherSock];
             
             if(pairFormed == true){
-//                [self.view insertSubview:sock aboveSubview:otherSock];
-                [otherSock removeFromSuperview];
-                [socks removeObject:otherSock];
-                [sock setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sock%ipackage", sock.sockId]]];
-                
-                sock.inAPair = otherSock.inAPair = true;
-                sock.mainSockInPair = true;
-                
-                sock.otherSockInPair = otherSock;
-                otherSock.otherSockInPair = sock;
-                otherSock.layer.borderColor = [UIColor orangeColor].CGColor;
-                
-                // TODO make these constants for the three sizes (here and above)
-//                CGFloat matchedPairPositionOffset = [self propX:[Functions propSizeFromSockSize:sock.sockSize]/10.0];
-//                otherSock.center = CGPointMake(sock.center.x-matchedPairPositionOffset, sock.center.y+matchedPairPositionOffset); // set center
+                [self madePairBetweenMainSock:sock andOtherSock:otherSock];
             }
         }
     }
+}
+
+-(void) madePairBetweenMainSock:(Sock*)sock andOtherSock:(Sock*)otherSock {
+    [otherSock removeFromSuperview];
+    [socks removeObject:otherSock];
+    
+    sock.inAPair = otherSock.inAPair = true;
+    sock.mainSockInPair = true;
+    
+    sock.otherSockInPair = otherSock;
+    otherSock.otherSockInPair = sock;
+    
+    [sock setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sock%ipackage", sock.sockId]]];
 }
 
 - (UIImage*) scaleImage:(UIImage*)image toSize:(CGSize)newSize {

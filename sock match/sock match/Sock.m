@@ -17,7 +17,6 @@
 @synthesize sockId;
 @synthesize sockSize;
 @synthesize onConvayorBelt;
-@synthesize onPairConvayorBelt;
 
 @synthesize touchBeganBlock;
 @synthesize touchMovedBlock;
@@ -32,7 +31,6 @@
     sockSize = size;
     imageName = imgName;
     onConvayorBelt = startOnBelt;
-    onPairConvayorBelt = false;
     inAPair = false;
     
     CGFloat heightAspectMutliplier = image.size.height/image.size.width;
