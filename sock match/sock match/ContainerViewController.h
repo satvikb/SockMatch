@@ -19,7 +19,7 @@
 @property (strong, nonatomic) GameViewController *gameController;
 @property (strong, nonatomic) GameOverViewController *gameOverController;
 
-- (void) displayContentController: (UIViewController*) content;
+- (void) displayContentController: (UIViewController*) content withFrame:(CGRect) frame;
 
 @end
 

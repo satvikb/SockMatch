@@ -22,6 +22,11 @@
     CGFloat sockMatchThreshold;
     
     NSMutableArray <Sock*>* socks;
+    NSMutableArray <Sock*>* socksBeingAnimatedIntoBox;
+    
+    CGFloat animateSockBoxesTimer;
+    CGFloat animateSockBoxesSpeed;
+    
     
     CGRect convayorBeltRect;
     CGFloat beltMoveSpeed;
@@ -37,6 +42,8 @@
     UILabel* scoreLabel;
     NSMutableArray <UIImageView*>* scoreDigits;
     NSMutableArray <UIImage*>* scoreDigitImages;
+    
+    NSMutableArray <UIImage*>* boxAnimationFrames;
     
     UILabel* tutorialLabel;
     UILabel* bottomTutorialLabel;
@@ -62,6 +69,8 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
+    boxAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"boxAnimation"] withRow:4 withColumn:5];
+    
     [self setupGameValues];
     [self createUI];
     [self createBeltAndWheels];
@@ -83,7 +92,9 @@
 //    [self finishEndingGame];
 }
 
--(void) finishEndingGame {    
+-(void) finishEndingGame {
+    [self disableSockMovement];
+    [self turnLightsOff];
     NSLog(@"transitioning to game over");
     id<GameTransition> strongDelegate = self.delegate;
     
@@ -119,12 +130,22 @@
         [sock removeFromSuperview];
     }
     
+    [self turnLightsOff];
+    
+    [self setupGameValues];
+    [self setScoreImages:0];
+}
+
+-(void)turnLightsOff {
     for(UIImageView* img in lifeLights){
         [img setImage:lifeLightOff];
     }
-    
-    [self setupGameValues];
-    [self setScoreImages:score];
+}
+
+-(void)disableSockMovement {
+    for (Sock* sock in socks) {
+        sock.allowMovement = false;
+    }
 }
 
 -(void)setupGameValues {
@@ -140,6 +161,11 @@
     
     timeToAnimateWheels = 0.05;
     animateWheelTimer = 0;
+    
+    animateSockBoxesSpeed = 0.2;
+    animateSockBoxesTimer = 0;
+    
+    socksBeingAnimatedIntoBox = [[NSMutableArray alloc] init];
 }
 
 -(void)createUI {
@@ -185,7 +211,7 @@
     lifeLightOn = [UIImage imageNamed:@"redlighton"];
     
     for(int i = 0; i < 3; i++){
-        CGRect lightRect = [self propToRect:CGRectMake(0.05+(i*0.16), 0.03, 0.15, 0)];
+        CGRect lightRect = [self propToRect:CGRectMake(0.025+(i*0.16)+(i*0.015), 0.035, 0.15, 0)];
         UIImageView* rl = [[UIImageView alloc] initWithFrame: CGRectMake(lightRect.origin.x, lightRect.origin.y, lightRect.size.width, lightRect.size.width)];
         rl.layer.zPosition = 50;
         rl.contentMode = UIViewContentModeScaleAspectFill;
@@ -303,6 +329,7 @@
     
     generateSockTimer += tmr.duration;
     animateWheelTimer += tmr.duration;
+    animateSockBoxesTimer += tmr.duration;
     
     if(generateSockTimer >= timeToGenerateSock){
         if(gameActive == true){
@@ -318,14 +345,19 @@
         animateWheelTimer = 0;
     }
     
+    if(animateSockBoxesTimer >= animateSockBoxesSpeed){
+        [self animateAllSockBoxes];
+        animateWheelTimer = 0;
+    }
+    
     if(endingGame == true){
         
         if([self anySocksOnConveyorBelt]){
             
         }else{
             //TODO keep belt moving until no more socks on belt, then slow down
-            beltMoveSpeed -= tmr.duration*6;
-            timeToAnimateWheels += tmr.duration/4;
+//            beltMoveSpeed -= tmr.duration*6;
+//            timeToAnimateWheels += tmr.duration/4;
             
             if(beltMoveSpeed <= 0){
                 [self finishEndingGame];
@@ -339,7 +371,7 @@
     bool anySockOnBelt = false;
     for (Sock* sock in socks) {
         bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(sock.frame), CGRectGetMidY(sock.frame)));
-        if(onBelt == true){
+        if(onBelt == true || sock.onConvayorBelt){
             anySockOnBelt = true;
         }
     }
@@ -530,9 +562,30 @@
     sock.otherSockInPair = otherSock;
     otherSock.otherSockInPair = sock;
     
-    [sock setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sock%ipackage", sock.sockId]]];
+//    [sock setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sock%ipackage", sock.sockId]]];
+    [sock setImage:[boxAnimationFrames objectAtIndex:0]];
+    [socksBeingAnimatedIntoBox addObject:sock];
     
     [self gotPoint];
+}
+
+-(void) animateAllSockBoxes {
+    NSLog(@"animate all socks %li", socksBeingAnimatedIntoBox.count);
+    for (Sock* s in socksBeingAnimatedIntoBox) {
+        [self animateSock:s];
+    }
+}
+
+-(void) animateSock:(Sock*)s{
+    NSInteger currentFrame = [boxAnimationFrames indexOfObject:s.image];
+    NSInteger nextFrame = currentFrame+1;
+    NSLog(@"ANIMATE SOCK %li", currentFrame);
+    if(nextFrame >= boxAnimationFrames.count){
+        [socksBeingAnimatedIntoBox removeObject:s];
+        NSLog(@"POINT: ANIMATION DONE");
+    }else{
+        [s setImage: [boxAnimationFrames objectAtIndex: nextFrame]];
+    }
 }
 
 - (UIImage*) scaleImage:(UIImage*)image toSize:(CGSize)newSize {
@@ -563,6 +616,44 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(NSMutableArray<UIImage*> *)getSplitImagesFromImage:(UIImage *)image withRow:(NSInteger)rows withColumn:(NSInteger)columns
+{
+    NSMutableArray<UIImage*> *aMutArrImages = [NSMutableArray array];
+    CGSize imageSize = image.size;
+    CGFloat scale = image.scale;
+    
+    CGFloat xPos = 0.0, yPos = 0.0;
+    CGFloat width = imageSize.width/rows;
+    CGFloat height = imageSize.height/columns;
+    
+//    int i = 0;
+    for (int aIntY = 0; aIntY < columns; aIntY++) {
+        xPos = 0.0;
+        for (int aIntX = 0; aIntX < rows; aIntX++) {
+            CGRect rect = CGRectMake(xPos*scale, yPos*scale, width*scale, height*scale);
+            
+            CGImageRef cImage = CGImageCreateWithImageInRect(image.CGImage,  rect);
+            
+            UIImage* aImgRef = [UIImage imageWithCGImage:cImage scale:scale orientation:UIImageOrientationUp];
+//            UIImageView *aImgView = [[UIImageView alloc] initWithFrame:CGRectMake(5+aIntX*(width*4), 100+aIntY*(height*4), width*4, height*4)];
+//            [aImgView.layer setBorderColor:[[UIColor blackColor] CGColor]];
+//            [aImgView.layer setBorderWidth:1.0];
+//            aImgView.contentMode = UIViewContentModeScaleAspectFill;
+//            aImgView.layer.magnificationFilter = kCAFilterNearest;
+//            aImgView.layer.zPosition = 100000000;
+//            aImgView.tag = i;
+//            [aImgView setImage:aImgRef];
+//            [self.view addSubview:aImgView];
+            
+            [aMutArrImages addObject:aImgRef];
+            xPos += width;
+//            i++;
+        }
+        yPos += height;
+    }
+    return aMutArrImages;
 }
 
 -(CGFloat) propX:(CGFloat) x {

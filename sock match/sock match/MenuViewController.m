@@ -22,10 +22,8 @@
     self.view.userInteractionEnabled = true;
     
     
-    UIImageView* testLabel = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.195, 0.5, 0.2)]];
-    //    NSLog(@"%@", CGRectMake(0.25, 0.25, 0.5, 0.2));
-//    testLabel.layer.borderWidth = 5;
-//    testLabel.textAlignment = NSTextAlignmentCenter;
+    UIImageView* testLabel = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.2, 0.5, 0.195)]];
+//    testLabel.layer.borderWidth = 1;
 //    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
     [testLabel setImage:[UIImage imageNamed:@"title"]];
     testLabel.layer.magnificationFilter = kCAFilterNearest;

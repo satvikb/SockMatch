@@ -18,6 +18,8 @@
 @synthesize sockSize;
 @synthesize onConvayorBelt;
 
+@synthesize allowMovement;
+
 @synthesize touchBeganBlock;
 @synthesize touchMovedBlock;
 @synthesize touchEndedBlock;
@@ -32,6 +34,7 @@
     imageName = imgName;
     onConvayorBelt = startOnBelt;
     inAPair = false;
+    allowMovement = true;
     
     CGFloat heightAspectMutliplier = image.size.height/image.size.width;
     CGRect boxFrame = CGRectMake(pos.x, pos.y, width, width*heightAspectMutliplier);
@@ -47,7 +50,7 @@
      make self.size slightly bigger
      */
     
-    if(!inAPair || mainSockInPair){
+    if((!inAPair || mainSockInPair) && allowMovement){
         UITouch *touch = [touches anyObject];
         CGPoint location = [touch locationInView:nil];
         touchPoint = location;
@@ -60,7 +63,7 @@
 
 -(void)touchesMoved:(NSSet<UITouch*> *)touches withEvent:(UIEvent *)event {
     
-    if(!inAPair || mainSockInPair){
+    if((!inAPair || mainSockInPair) && allowMovement){
         UITouch *touch = [touches anyObject];
         CGPoint location = [touch locationInView:nil];
         
@@ -101,7 +104,7 @@
 }
 
 -(void)touchEnd:(CGPoint)location {
-    if(!inAPair || mainSockInPair){
+    if((!inAPair || mainSockInPair) && allowMovement){
         touchPoint = location;
         
         if(touchEndedBlock != nil){
