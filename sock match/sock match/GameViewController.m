@@ -12,6 +12,7 @@
 
 @interface GameViewController () {
     BOOL gameActive;
+    BOOL endingGame;
     
     CADisplayLink* gameTimer;
     
@@ -78,20 +79,17 @@
 
 -(void)endGame {
     gameActive = false;
-    // slow down the belt
-    [UIView animateWithDuration:3 animations:^{
-        beltMoveSpeed = 0;
-        timeToAnimateWheels = 0;
-    } completion:^(BOOL completed){
-        [self stopGameLoop];
-        
-        NSLog(@"transitioning to game over");
-        id<GameTransition> strongDelegate = self.delegate;
-        
-        if([strongDelegate respondsToSelector:@selector(switchFromGameToGameOver:withScore:)]){
-            [strongDelegate switchFromGameToGameOver:self withScore:score];
-        }
-    }];
+    endingGame = true;
+    [self finishEndingGame];
+}
+
+-(void) finishEndingGame {    
+    NSLog(@"transitioning to game over");
+    id<GameTransition> strongDelegate = self.delegate;
+    
+    if([strongDelegate respondsToSelector:@selector(switchFromGameToGameOver:withScore:)]){
+        [strongDelegate switchFromGameToGameOver:self withScore:score];
+    }
 }
 
 -(void)startGameLoop {
@@ -117,8 +115,6 @@
 }
 
 -(void)resetGame {
-    [self setupGameValues];
-    
     for (Sock* sock in socks) {
         [sock removeFromSuperview];
     }
@@ -126,10 +122,14 @@
     for(UIImageView* img in lifeLights){
         [img setImage:lifeLightOff];
     }
+    
+    [self setupGameValues];
+    [self setScoreImages:score];
 }
 
 -(void)setupGameValues {
     gameActive = false;
+    endingGame = false;
     score = 0;
     lives = 3;
     timeToGenerateSock = 1.5;
@@ -316,6 +316,16 @@
         [self animateWheels:topConveyorBeltWheels withFrames:topConveyorBeltWheelsFrames];
         
         animateWheelTimer = 0;
+    }
+    
+    if(endingGame == true){
+        //TODO keep belt moving until no more socks on belt, then slow down
+        beltMoveSpeed -= tmr.duration*6;
+        timeToAnimateWheels += tmr.duration/4;
+        
+        if(beltMoveSpeed <= 0){
+            [self stopGameLoop];
+        }
     }
 }
 
@@ -505,6 +515,8 @@
     otherSock.otherSockInPair = sock;
     
     [sock setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sock%ipackage", sock.sockId]]];
+    
+    [self gotPoint];
 }
 
 - (UIImage*) scaleImage:(UIImage*)image toSize:(CGSize)newSize {

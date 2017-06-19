@@ -65,7 +65,6 @@
 //    }];
     [self animateFromViewController:game toPoint:CGPointZero toViewController:gameOverController toPoint:CGPointZero animationFinished:^{
         NSLog(@"Switced from game to game over %@ %@", NSStringFromCGRect(game.view.frame), gameOverController.view.backgroundColor);
-        game.view.layer.zPosition = 50000000;
     }];
 }
 
@@ -80,11 +79,19 @@
 }
 
 -(void)animateFromViewController:(UIViewController*)vc toPoint:(CGPoint)point toViewController:(UIViewController*)otherVc toPoint:(CGPoint)otherPoint animationFinished:(void (^)(void)) completion{
-    [self transitionFromViewController:vc toViewController:otherVc duration:2 options:0 animations:^{
+//    [self transitionFromViewController:vc toViewController:otherVc duration:2 options:0 animations:^{
+//        otherVc.view.frame = CGRectMake(otherPoint.x, otherPoint.y, otherVc.view.frame.size.width, otherVc.view.frame.size.height);
+//        vc.view.frame = CGRectMake(point.x, point.y, vc.view.frame.size.width, vc.view.frame.size.height);
+//    } completion:^(BOOL finished){
+//        [otherVc didMoveToParentViewController:self];
+//        completion();
+//    }];
+    
+    [UIView animateWithDuration:2 animations:^{
         otherVc.view.frame = CGRectMake(otherPoint.x, otherPoint.y, otherVc.view.frame.size.width, otherVc.view.frame.size.height);
         vc.view.frame = CGRectMake(point.x, point.y, vc.view.frame.size.width, vc.view.frame.size.height);
     } completion:^(BOOL finished){
-//        [otherVc didMoveToParentViewController:self];
+        [otherVc didMoveToParentViewController:self];
         completion();
     }];
 }

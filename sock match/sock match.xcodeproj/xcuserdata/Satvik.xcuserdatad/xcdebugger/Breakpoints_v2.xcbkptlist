@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sock match/GameViewController.m"
-            timestampString = "519559734.064298"
+            timestampString = "519562887.61697"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "399"
-            endingLineNumber = "399"
+            startingLineNumber = "409"
+            endingLineNumber = "409"
             landmarkName = "-setScoreImages:"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sock match/GameViewController.m"
-            timestampString = "519559734.064392"
+            timestampString = "519562887.617478"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "398"
-            endingLineNumber = "398"
+            startingLineNumber = "408"
+            endingLineNumber = "408"
             landmarkName = "-setScoreImages:"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sock match/GameViewController.m"
-            timestampString = "519559734.064463"
+            timestampString = "519562887.617824"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "396"
-            endingLineNumber = "396"
+            startingLineNumber = "406"
+            endingLineNumber = "406"
             landmarkName = "-setScoreImages:"
             landmarkType = "7">
          </BreakpointContent>

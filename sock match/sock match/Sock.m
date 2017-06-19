@@ -83,9 +83,25 @@
      put self.size back to normal
      */
     
+//    if(!inAPair || mainSockInPair){
+//        UITouch *touch = [touches anyObject];
+//        CGPoint location = [touch locationInView:nil];
+//        touchPoint = location;
+//
+//        if(touchEndedBlock != nil){
+//            touchEndedBlock(self, location);
+//        }
+//    }
+    [self touchEnd:[[touches anyObject] locationInView: nil]];
+}
+
+-(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [self touchEnd:[[touches anyObject] locationInView: nil]];
+    NSLog(@"TOUCH CANCELLED");
+}
+
+-(void)touchEnd:(CGPoint)location {
     if(!inAPair || mainSockInPair){
-        UITouch *touch = [touches anyObject];
-        CGPoint location = [touch locationInView:nil];
         touchPoint = location;
         
         if(touchEndedBlock != nil){
