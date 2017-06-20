@@ -107,15 +107,16 @@
 //TODO completion handler
 -(void) animate {
     // TODO do for each side
-    [UIView animateWithDuration:4 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         self.frame = CGRectMake(sock.frame.origin.x-totalWidth+craneSize.width-middleSize.width, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
     } completion:^(BOOL finished){
         NSLog(@"animate");
         
-        [UIView animateWithDuration:4 animations:^{
+        [UIView animateWithDuration:0.5 animations:^{
             CGRect newRect = CGRectMake(-totalWidth, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
 //            CGRect sockOffset = CGRectMake(sock.frame.origin.x-newRect.origin.x, sock.frame.origin.y-newRect.origin.y, sock.frame.size.width-newRect.size.width, sock.frame.size.height-newRect.size.height);
             self.frame = newRect;
+            sock.frame = CGRectMake(<#CGFloat x#>, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)
             sock.frame = CGRectMake(newRect.origin.x, newRect.origin.y, sock.frame.size.width, sock.frame.size.height);//CGRectMake(newRect.origin.x+sockOffset.origin.x, newRect.origin.y+sockOffset.origin.y, newRect.size.width+sockOffset.size.width, newRect.size.height+sockOffset.size.height);
         } completion:^(BOOL finished){
             NSLog(@"removed sock, point");
