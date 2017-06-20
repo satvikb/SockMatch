@@ -1,9 +1,8 @@
 sock match todo
 
-round system / breaks
 improve gameplay (better sock generation)
 maybe remove different sizes
-create sock package animation / fall in trapdoor animation
+create boxes: underlay sock texture, overlay sock package texture.
 
 Textures
 better socks

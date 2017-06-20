@@ -43,8 +43,6 @@
     NSMutableArray <UIImageView*>* scoreDigits;
     NSMutableArray <UIImage*>* scoreDigitImages;
     
-    NSMutableArray <UIImage*>* boxAnimationFrames;
-    
     UILabel* tutorialLabel;
     UILabel* bottomTutorialLabel;
     
@@ -58,6 +56,9 @@
     
     CGFloat timeToAnimateWheels;
     CGFloat animateWheelTimer;
+    
+    NSMutableArray <UIImage*>* boxAnimationFrames;
+    NSMutableArray <UIImage*>* sockPackages;
 }
 
 @end
@@ -69,11 +70,20 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
-    boxAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"boxAnimation"] withRow:4 withColumn:5];
+    [self loadBufferImages];
     
     [self setupGameValues];
     [self createUI];
     [self createBeltAndWheels];
+}
+
+-(void)loadBufferImages {
+    boxAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"boxAnimation"] withRow:4 withColumn:5];
+    
+    sockPackages = [[NSMutableArray alloc] init];
+    for(int i = 0; i < 5; i++){
+        [sockPackages addObject:[UIImage imageNamed:[NSString stringWithFormat:@"sock%ipackage", i]]];
+    }
 }
 
 -(void)beginGame {
@@ -162,7 +172,7 @@
     timeToAnimateWheels = 0.05;
     animateWheelTimer = 0;
     
-    animateSockBoxesSpeed = 0.2;
+    animateSockBoxesSpeed = 0.005;
     animateSockBoxesTimer = 0;
     
     socksBeingAnimatedIntoBox = [[NSMutableArray alloc] init];
@@ -345,10 +355,10 @@
         animateWheelTimer = 0;
     }
     
-    if(animateSockBoxesTimer >= animateSockBoxesSpeed){
+//    if(animateSockBoxesTimer >= animateSockBoxesSpeed){
         [self animateAllSockBoxes];
-        animateWheelTimer = 0;
-    }
+//        animateSockBoxesTimer = 0;
+//    }
     
     if(endingGame == true){
         
@@ -563,28 +573,31 @@
     otherSock.otherSockInPair = sock;
     
 //    [sock setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sock%ipackage", sock.sockId]]];
-    [sock setImage:[boxAnimationFrames objectAtIndex:0]];
+    [sock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
     [socksBeingAnimatedIntoBox addObject:sock];
     
     [self gotPoint];
 }
 
 -(void) animateAllSockBoxes {
-    NSLog(@"animate all socks %li", socksBeingAnimatedIntoBox.count);
+//    NSLog(@"animate all socks %li", socksBeingAnimatedIntoBox.count);
     for (Sock* s in socksBeingAnimatedIntoBox) {
         [self animateSock:s];
     }
 }
 
 -(void) animateSock:(Sock*)s{
-    NSInteger currentFrame = [boxAnimationFrames indexOfObject:s.image];
+    NSInteger currentFrame = [boxAnimationFrames indexOfObject:s.overlayImageView.image];
     NSInteger nextFrame = currentFrame+1;
-    NSLog(@"ANIMATE SOCK %li", currentFrame);
     if(nextFrame >= boxAnimationFrames.count){
         [socksBeingAnimatedIntoBox removeObject:s];
-        NSLog(@"POINT: ANIMATION DONE");
     }else{
-        [s setImage: [boxAnimationFrames objectAtIndex: nextFrame]];
+        [s.overlayImageView setImage: [boxAnimationFrames objectAtIndex: nextFrame]];
+    }
+    
+    if(nextFrame > boxAnimationFrames.count*0.75){
+        [s.veryTopImageView setImage:[sockPackages objectAtIndex:s.sockId]];
+        [s setImage:nil];
     }
 }
 

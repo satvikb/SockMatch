@@ -29,6 +29,9 @@ typedef void (^SockTouchEnded)(Sock* s, CGPoint p);
 @property (nonatomic, assign) SockSize sockSize;
 @property (nonatomic, assign) bool onConvayorBelt;
 
+@property (nonatomic, strong) UIImageView* overlayImageView;
+@property (nonatomic, strong) UIImageView* veryTopImageView;
+
 @property (nonatomic, assign) bool allowMovement;
 
 @property (nonatomic, copy) SockTouchBegan touchBeganBlock;

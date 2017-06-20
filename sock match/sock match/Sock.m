@@ -18,6 +18,9 @@
 @synthesize sockSize;
 @synthesize onConvayorBelt;
 
+@synthesize overlayImageView;
+@synthesize veryTopImageView;
+
 @synthesize allowMovement;
 
 @synthesize touchBeganBlock;
@@ -42,6 +45,22 @@
     self.contentMode = UIViewContentModeScaleAspectFit;
     self.layer.magnificationFilter = kCAFilterNearest;
     self.userInteractionEnabled = true;
+    
+    overlayImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, boxFrame.size.width, boxFrame.size.height)];
+    overlayImageView.contentMode = UIViewContentModeScaleAspectFit;
+    overlayImageView.layer.magnificationFilter = kCAFilterNearest;
+    overlayImageView.userInteractionEnabled = true;
+    overlayImageView.layer.zPosition = 200000000;
+    [self addSubview:overlayImageView];
+    
+    veryTopImageView = [[UIImageView alloc] initWithFrame:CGRectMake(boxFrame.size.width/4, boxFrame.size.height/4, boxFrame.size.width/2, boxFrame.size.height/2)];
+    veryTopImageView.contentMode = UIViewContentModeScaleAspectFit;
+    veryTopImageView.layer.magnificationFilter = kCAFilterNearest;
+//    veryTopImageView.layer.borderColor = [UIColor yellowColor].CGColor;
+//    veryTopImageView.layer.borderWidth = 2;
+    veryTopImageView.userInteractionEnabled = true;
+    veryTopImageView.layer.zPosition = 300000000;
+    [self addSubview:veryTopImageView];
     return self;
 }
 
