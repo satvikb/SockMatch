@@ -16,5 +16,5 @@
 
 
 -(id) initClawWithSock:(Sock*)sockPackage;
--(void) animate;
+-(void) animateWithSpeed:(NSTimeInterval)animateSpeed withCompletion: (void (^)(void)) completion;
 @end

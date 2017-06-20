@@ -75,13 +75,6 @@
     [self setupGameValues];
     [self createUI];
     [self createBeltAndWheels];
-    
-//    [self generateSock];
-    [self createSockAtPos:[self propToRect:CGRectMake(0.3, 0.6, 0, 0)].origin width:[self propX: 0.1235] sockSize:MediumSockPropSize sockId:3 imageName:@"sock2" onBelt:false];
-    Claw* testClaw = [[Claw alloc] initClawWithSock:[socks objectAtIndex:0]];
-    [self.view addSubview:testClaw];
-    NSLog(@"Created claw %@", NSStringFromCGRect(testClaw.frame));
-    [testClaw animate];
 }
 
 -(void)loadBufferImages {
@@ -373,10 +366,12 @@
             
         }else{
             //TODO keep belt moving until no more socks on belt, then slow down
-//            beltMoveSpeed -= tmr.duration*6;
-//            timeToAnimateWheels += tmr.duration/4;
+            beltMoveSpeed -= tmr.duration*6;
+            timeToAnimateWheels += tmr.duration/4;
             
             if(beltMoveSpeed <= 0){
+                NSLog(@"Move speed less than 0");
+                [self cleanUpSocksWithClaws];
                 [self finishEndingGame];
                 [self stopGameLoop];
             }
@@ -582,8 +577,6 @@
 //    [sock setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sock%ipackage", sock.sockId]]];
     [sock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
     [socksBeingAnimatedIntoBox addObject:sock];
-    
-    [self gotPoint];
 }
 
 -(void) animateAllSockBoxes {
@@ -596,8 +589,12 @@
 -(void) animateSock:(Sock*)s{
     NSInteger currentFrame = [boxAnimationFrames indexOfObject:s.overlayImageView.image];
     NSInteger nextFrame = currentFrame+1;
+    
+    s.allowMovement = false;
+    
     if(nextFrame >= boxAnimationFrames.count){
         [socksBeingAnimatedIntoBox removeObject:s];
+        
     }else{
         [s.overlayImageView setImage: [boxAnimationFrames objectAtIndex: nextFrame]];
     }
@@ -605,7 +602,36 @@
     if(nextFrame > boxAnimationFrames.count*0.75){
         [s.veryTopImageView setImage:[sockPackages objectAtIndex:s.sockId]];
         [s setImage:nil];
+        
+        
     }
+    
+    if(nextFrame == boxAnimationFrames.count*0.5){
+        [self createClaw:s givePoint:true];
+    }
+}
+
+-(void)cleanUpSocksWithClaws {
+    for (Sock* s in socks) {
+        [self createClaw:s givePoint:false];
+    }
+}
+
+-(void)createClaw:(Sock*)s givePoint:(BOOL)point{
+    Claw* claw = [[Claw alloc] initClawWithSock:s];
+    [self.view addSubview:claw];
+    [claw animateWithSpeed:0.25 withCompletion:^void {
+        s.allowMovement = false;
+        
+        if(point == true){
+            NSLog(@"POINT!!!!!");
+            [self gotPoint];
+        }
+        
+        [s removeFromSuperview];
+        [socks removeObject:s];
+        [claw removeFromSuperview];
+    }];
 }
 
 - (UIImage*) scaleImage:(UIImage*)image toSize:(CGSize)newSize {
