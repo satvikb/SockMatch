@@ -75,6 +75,13 @@
     [self setupGameValues];
     [self createUI];
     [self createBeltAndWheels];
+    
+//    [self generateSock];
+    [self createSockAtPos:[self propToRect:CGRectMake(0.3, 0.6, 0, 0)].origin width:[self propX: 0.1235] sockSize:MediumSockPropSize sockId:3 imageName:@"sock2" onBelt:false];
+    Claw* testClaw = [[Claw alloc] initClawWithSock:[socks objectAtIndex:0]];
+    [self.view addSubview:testClaw];
+    NSLog(@"Created claw %@", NSStringFromCGRect(testClaw.frame));
+    [testClaw animate];
 }
 
 -(void)loadBufferImages {
@@ -650,15 +657,6 @@
             CGImageRef cImage = CGImageCreateWithImageInRect(image.CGImage,  rect);
             
             UIImage* aImgRef = [UIImage imageWithCGImage:cImage scale:scale orientation:UIImageOrientationUp];
-//            UIImageView *aImgView = [[UIImageView alloc] initWithFrame:CGRectMake(5+aIntX*(width*4), 100+aIntY*(height*4), width*4, height*4)];
-//            [aImgView.layer setBorderColor:[[UIColor blackColor] CGColor]];
-//            [aImgView.layer setBorderWidth:1.0];
-//            aImgView.contentMode = UIViewContentModeScaleAspectFill;
-//            aImgView.layer.magnificationFilter = kCAFilterNearest;
-//            aImgView.layer.zPosition = 100000000;
-//            aImgView.tag = i;
-//            [aImgView setImage:aImgRef];
-//            [self.view addSubview:aImgView];
             
             [aMutArrImages addObject:aImgRef];
             xPos += width;

@@ -10,9 +10,11 @@
 #import "Sock.h"
 
 @interface Claw : UIView {
-    
+    UIView* body;
+    UIView* crane;
 }
 
--(id) initClawWithFrame:(CGRect)frame;
 
+-(id) initClawWithSock:(Sock*)sockPackage;
+-(void) animate;
 @end

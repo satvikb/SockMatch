@@ -2,7 +2,6 @@ sock match todo
 
 improve gameplay (better sock generation)
 maybe remove different sizes
-create boxes: underlay sock texture, overlay sock package texture.
 
 Textures
 better socks
