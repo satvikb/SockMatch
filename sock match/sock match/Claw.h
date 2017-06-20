@@ -14,7 +14,9 @@
     UIView* crane;
 }
 
+@property (nonatomic, assign) bool currentlyAnimating;
 
--(id) initClawWithSock:(Sock*)sockPackage;
+-(id) initClawWithSock:(Sock*)sockPackage animationFrames:(NSMutableArray<UIImage*>*)animFrames;
+-(void) animateAnimation;
 -(void) animateWithSpeed:(NSTimeInterval)animateSpeed withCompletion: (void (^)(void)) completion;
 @end

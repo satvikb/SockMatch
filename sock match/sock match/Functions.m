@@ -10,7 +10,7 @@
 
 @implementation Functions
 
-const CGFloat SmallSockPropSize = 0.075;
+const CGFloat SmallSockPropSize = 0.01;
 const CGFloat MediumSockPropSize = 0.1235;
 const CGFloat LargeSockPropSize = 0.15;
 

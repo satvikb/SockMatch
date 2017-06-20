@@ -10,6 +10,10 @@
 
 @implementation Claw {
     bool craneFacesRight;
+    
+    NSMutableArray<UIImage*>* animationFrames;
+    NSInteger currentFrame;
+    
     CGSize screenSize;
     CGFloat totalWidth;
     CGFloat totalHeight;
@@ -21,17 +25,11 @@
     Sock* sock;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+@synthesize currentlyAnimating;
 
--(id) initClawWithSock:(Sock*)sockPackage {
+-(id) initClawWithSock:(Sock*)sockPackage animationFrames:(NSMutableArray<UIImage*>*)animFrames {
     sock = sockPackage;
-    
+    animationFrames = animFrames;
     screenSize = UIScreen.mainScreen.bounds.size;
     
     CGFloat distToLeft = sockPackage.frame.origin.x+sockPackage.frame.size.width/2;
@@ -101,6 +99,10 @@
     self.layer.borderWidth = 1;
     self.layer.borderColor = UIColor.redColor.CGColor;
     
+    currentFrame = 0;
+    UIImage* claw = [animationFrames objectAtIndex:currentFrame];
+    [self setBodyImage:claw];
+    
     [self addSubview:crane];
     [self addSubview:body];
     
@@ -111,9 +113,47 @@
     return self;
 }
 
-//TODO completion handler
+- (UIImage *)resizeImage:(UIImage*)image newSize:(CGSize)newSize {
+    CGRect newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width, newSize.height));
+    CGImageRef imageRef = image.CGImage;
+    
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    // Set the quality level to use when rescaling
+    CGContextSetInterpolationQuality(context, kCGInterpolationNone);
+    CGAffineTransform flipVertical = CGAffineTransformMake(1, 0, 0, -1, 0, newSize.height);
+    
+    CGContextConcatCTM(context, flipVertical);
+    // Draw into the context; this scales the image
+    CGContextDrawImage(context, newRect, imageRef);
+    
+    // Get the resized image from the context and a UIImage
+    CGImageRef newImageRef = CGBitmapContextCreateImage(context);
+    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+    
+    CGImageRelease(newImageRef);
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
+
+-(void) animateAnimation {
+    NSInteger nextFrame = (currentFrame+1)%animationFrames.count;
+    currentFrame = nextFrame;
+    
+    [self setBodyImage: [animationFrames objectAtIndex: nextFrame]];
+}
+
+-(void) setBodyImage:(UIImage*)rawImg {
+    UIImage* aImgRef = [self resizeImage:rawImg newSize:CGSizeMake(rawImg.size.width*rawImg.scale*2, rawImg.size.height*rawImg.scale*2)];
+    
+    UIColor* bg = [UIColor colorWithPatternImage: aImgRef];
+    body.backgroundColor = bg;
+}
+
 -(void) animateWithSpeed:(NSTimeInterval)animateSpeed withCompletion: (void (^)(void)) completion {
-    // TODO do for each side
+    currentlyAnimating = true;
     [UIView animateWithDuration:animateSpeed animations:^{
         self.frame = CGRectMake(craneFacesRight == true ? sock.frame.origin.x-totalWidth+craneSize.width-middleSize.width : sock.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
     } completion:^(BOOL finished){
@@ -125,6 +165,7 @@
             CGRect newRect = CGRectMake(craneFacesRight == true ? -totalWidth : screenSize.width, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
             self.frame = newRect;
         } completion:^(BOOL finished){
+            currentlyAnimating = false;
             completion();
         }];
     }];
