@@ -21,16 +21,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     menuController = [[MenuViewController alloc] init];
-    menuController.view.layer.zPosition = 10000;
+    menuController.view.layer.zPosition = 100;
     menuController.delegate = self;
     
     gameController = [[GameViewController alloc] init];
-//    menuController.view.layer.zPosition = 10000;
+    gameController.view.layer.zPosition = -100;
     gameController.delegate = self;
     
     gameOverController = [[GameOverViewController alloc] init];
-    menuController.view.layer.zPosition = 10000;
-    
+    gameOverController.view.layer.zPosition = 150;
     gameOverController.delegate = self;
     
     [self displayContentController:gameController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];

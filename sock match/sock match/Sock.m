@@ -22,22 +22,22 @@
 @synthesize veryTopImageView;
 
 @synthesize allowMovement;
+@synthesize validSock;
 
 @synthesize touchBeganBlock;
 @synthesize touchMovedBlock;
 @synthesize touchEndedBlock;
 
--(id) initWithFrame:(CGPoint)pos width:(CGFloat)width sockSize:(SockSize)size sockId:(int)sId imageName:(NSString*) imgName onBelt:(bool)startOnBelt{
-    UIImage* image = [UIImage imageNamed:imgName];
+-(id) initWithFrame:(CGPoint)pos width:(CGFloat)width sockSize:(SockSize)size sockId:(int)sId image:(UIImage*) image onBelt:(bool)startOnBelt{
 //    NSLog(@"Image %@", image);
     self = [super initWithImage:image];
     
     sockId = sId;
     sockSize = size;
-    imageName = imgName;
     onConvayorBelt = startOnBelt;
     inAPair = false;
     allowMovement = true;
+    validSock = true;
     
     CGFloat heightAspectMutliplier = image.size.height/image.size.width;
     CGRect boxFrame = CGRectMake(pos.x, pos.y, width, width*heightAspectMutliplier);
@@ -50,7 +50,7 @@
     overlayImageView.contentMode = UIViewContentModeScaleAspectFit;
     overlayImageView.layer.magnificationFilter = kCAFilterNearest;
     overlayImageView.userInteractionEnabled = true;
-    overlayImageView.layer.zPosition = 200000000;
+    overlayImageView.layer.zPosition = 1;
     [self addSubview:overlayImageView];
     
     veryTopImageView = [[UIImageView alloc] initWithFrame:CGRectMake(boxFrame.size.width/4, boxFrame.size.height/4, boxFrame.size.width/2, boxFrame.size.height/2)];
@@ -59,7 +59,7 @@
 //    veryTopImageView.layer.borderColor = [UIColor yellowColor].CGColor;
 //    veryTopImageView.layer.borderWidth = 2;
     veryTopImageView.userInteractionEnabled = true;
-    veryTopImageView.layer.zPosition = 300000000;
+    veryTopImageView.layer.zPosition = 2;
     [self addSubview:veryTopImageView];
     return self;
 }

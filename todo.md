@@ -11,7 +11,5 @@ main menu
 -game title moves with belt when start playing.
 -buttons on factory floor.
 game over
--claw for every sock
 
-reduce image sizes by using a spritesheet. (https://stackoverflow.com/questions/25607688/ios-how-to-split-an-uiimage-into-parts)
 Sound

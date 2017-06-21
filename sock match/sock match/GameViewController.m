@@ -10,6 +10,8 @@
 #import "Sock.h"
 #import "Functions.h"
 
+#define SOCK_HIGHEST_LAYER (50)
+
 @interface GameViewController () {
     BOOL gameActive;
     BOOL endingGame;
@@ -21,6 +23,7 @@
     
     CGFloat sockMatchThreshold;
     
+    NSMutableArray <UIImage*>* sockMainImages;
     NSMutableArray <Sock*>* socks;
     NSMutableArray <Sock*>* socksBeingAnimatedIntoBox;
     
@@ -42,6 +45,10 @@
     UILabel* bottomTutorialLabel;
     
     int score;
+    int currentAnimatingScore;
+    CGFloat timeToAnimateScoreValue;
+    CGFloat animateScoreValueTimer;
+    
     int lives;
     NSMutableArray <UIImageView*>* lifeLights;
     UIImage* lifeLightOff;
@@ -79,13 +86,13 @@
 }
 
 -(void)loadBufferImages {
-    boxAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"boxAnimation"] withYRow:5 withXColumn:4];
-    clawAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"clawAnimation"] withYRow:1 withXColumn:3];
+    boxAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_box"] withYRow:5 withXColumn:4 maxFrames:0];
+    clawAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_claw"] withYRow:1 withXColumn:4 maxFrames:0];
+    wheelFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_wheels"] withYRow:1 withXColumn:4 maxFrames:0];
+    sockPackages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockPackage"] withYRow:1 withXColumn:5 maxFrames:5];
+    sockMainImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockMain"] withYRow:1 withXColumn:5 maxFrames:5];
     
-    sockPackages = [[NSMutableArray alloc] init];
-    for(int i = 0; i < 5; i++){
-        [sockPackages addObject:[UIImage imageNamed:[NSString stringWithFormat:@"sock%ipackage", i]]];
-    }
+    scoreDigitImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"numbers"] withYRow:1 withXColumn:10 maxFrames:0];
 }
 
 -(void)beginGame {
@@ -145,7 +152,7 @@
     [self turnLightsOff];
     
     [self setupGameValues];
-    [self setScoreImages:0];
+    
 }
 
 -(void)turnLightsOff {
@@ -157,6 +164,7 @@
 -(void)disableSockMovement {
     for (Sock* sock in socks) {
         sock.allowMovement = false;
+        sock.validSock = false;
     }
 }
 
@@ -178,6 +186,9 @@
     timeForClawAnimation = 0.05;
     clawAnimationTimer = 0;
     
+    timeToAnimateScoreValue = 0.04;
+    animateScoreValueTimer = 0;
+    
     socksBeingAnimatedIntoBox = [[NSMutableArray alloc] init];
 }
 
@@ -186,15 +197,9 @@
     convayorBeltRect = [self propToRect:CGRectMake(0, 0.15, 1, 0.3)];
 
     UIView* topBackground = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 1, 0.15)]];
-    topBackground.backgroundColor = [UIColor colorWithRed:0.9960784314 green:0.8549019608 blue:0.1176470588 alpha:1];
-    topBackground.layer.zPosition = -50;
+    topBackground.backgroundColor = [UIColor colorWithRed:1 green:0.8 blue:0.2 alpha:1];
+    topBackground.layer.zPosition = -5;
     [self.view addSubview:topBackground];
-    
-    scoreDigitImages = [[NSMutableArray alloc] init];
-    for(int i = 0; i < 10; i++){
-        UIImage* digitImg = [UIImage imageNamed:[NSString stringWithFormat:@"digit_%i", i]];
-        [scoreDigitImages addObject:digitImg];
-    }
     
     scoreDigits = [[NSMutableArray alloc] init];
     CGPoint scoreDigitStartPos = CGPointMake(0.545, 0.035);
@@ -209,21 +214,22 @@
         [scoreDigits addObject:scoreDig];
         [self.view addSubview:scoreDig];
     }
-    [self setScoreImages:score];
+    //TODO, setup with all time high score?
+    [self setScoreImages:0];
     
     lifeLightOff = [UIImage imageNamed:@"redlightoff"];
     lifeLightOn = [UIImage imageNamed:@"redlighton"];
     
     for(int i = 0; i < 3; i++){
         CGRect lightRect = [self propToRect:CGRectMake(0.025+(i*0.16)+(i*0.015), 0.035, 0.15, 0)];
-        UIImageView* rl = [[UIImageView alloc] initWithFrame: CGRectMake(lightRect.origin.x, lightRect.origin.y, lightRect.size.width, lightRect.size.width)];
-        rl.layer.zPosition = 50;
-        rl.contentMode = UIViewContentModeScaleAspectFill;
-        rl.layer.magnificationFilter = kCAFilterNearest;
+        UIImageView* redLight = [[UIImageView alloc] initWithFrame: CGRectMake(lightRect.origin.x, lightRect.origin.y, lightRect.size.width, lightRect.size.width)];
+        redLight.layer.zPosition = 5;
+        redLight.contentMode = UIViewContentModeScaleAspectFill;
+        redLight.layer.magnificationFilter = kCAFilterNearest;
         
-        [rl setImage:lifeLightOff];
-        [self.view addSubview:rl];
-        [lifeLights addObject:rl];
+        [redLight setImage:lifeLightOff];
+        [self.view addSubview:redLight];
+        [lifeLights addObject:redLight];
         NSLog(@"added light %i", i);
     }
     
@@ -244,12 +250,6 @@
 }
 
 -(void)createBeltAndWheels {
-    wheelFrames = [[NSMutableArray alloc] init];
-    for(int i = 0; i < 4; i++){
-        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"wheel_%i", i]];
-        [wheelFrames addObject:img];
-    }
-    
     conveyorBeltTiles = [self createConveyorBelt:convayorBeltRect];
     
     CGRect bottomBeltWheelsRect = [self propToRect:CGRectMake(-0.05, 0.4375, 1, 0.025)];
@@ -267,7 +267,7 @@
 -(NSMutableArray*) createConveyorBelt:(CGRect)frame {
     NSMutableArray <UIImageView*>* beltTiles = [[NSMutableArray alloc] init];
     
-    UIImage* beltTileImage = [UIImage imageNamed:@"beltTileNoWheel"];
+    UIImage* beltTileImage = [UIImage imageNamed:@"belt"];
     
     CGFloat aspectRatio = frame.size.height / beltTileImage.size.height;
     CGFloat imageWidth = beltTileImage.size.width*aspectRatio;
@@ -291,7 +291,7 @@
 
 -(void) createConveyorBeltWheels:(CGRect)frame imageArray:(NSMutableArray <UIImageView*>*)beltWheels forArray:(NSMutableArray <NSNumber*>*) framesArray{
     
-    UIImage* beltWheelImage = [UIImage imageNamed:@"wheel_0"];
+    UIImage* beltWheelImage = [wheelFrames objectAtIndex:0];
     
     CGFloat aspectRatio = frame.size.height / beltWheelImage.size.height;
     CGFloat imageWidth = beltWheelImage.size.width*aspectRatio;
@@ -313,7 +313,7 @@
         
         NSNumber *x = [NSNumber numberWithInt: i%4];
         [framesArray replaceObjectAtIndex:i withObject:x];
-        UIImage* newWheelImage = [UIImage imageNamed:[NSString stringWithFormat:@"wheel_%i", x.intValue]];
+        UIImage* newWheelImage = [wheelFrames objectAtIndex:x.integerValue];
         [beltWheel setImage:newWheelImage];
     
         [framesArray replaceObjectAtIndex:i withObject:x];
@@ -330,6 +330,7 @@
     generateSockTimer += tmr.duration;
     animateWheelTimer += tmr.duration;
     clawAnimationTimer += tmr.duration;
+    animateScoreValueTimer += tmr.duration;
     
     if(generateSockTimer >= timeToGenerateSock){
         if(gameActive == true){
@@ -352,9 +353,14 @@
         clawAnimationTimer = 0;
     }
     
+    if(animateScoreValueTimer >= timeToAnimateScoreValue){
+        [self animateScore];
+        animateScoreValueTimer = 0;
+    }
+    
     if(endingGame == true){
         
-        if(![self anySocksOnConveyorBelt] && ![self anyClawsAnimating]){
+//        if(![self anySocksOnConveyorBelt] && ![self anyClawsAnimating]){
             beltMoveSpeed -= tmr.duration*6;
             timeToAnimateWheels += tmr.duration/4;
             
@@ -364,7 +370,7 @@
                 [self finishEndingGame];
                 [self stopGameLoop];
             }
-        }
+//        }
     }
 }
 
@@ -454,20 +460,30 @@
     timeToGenerateSock = timeToGenerateSock >= 1 ? timeToGenerateSock -= 0.025 : 1;
     
     score += 1;
-    [self setScoreImages:score];
+}
+
+-(void) animateScore {
+    if(currentAnimatingScore != score){
+        currentAnimatingScore = currentAnimatingScore < score ? currentAnimatingScore+1 : currentAnimatingScore-1;
+        [self setScoreImages:currentAnimatingScore];
+    }
 }
 
 -(void) setScoreImages:(int) s {
     NSString* scoreStr = [NSString stringWithFormat:@"%i", s];
     
     if(scoreStr.length <= 4){
+        for(int i = 0; i < scoreDigits.count; i++){
+            UIImageView* digitView = [scoreDigits objectAtIndex:i];
+            [digitView setImage: nil];
+        }
+        
         for (int i = 0; i < scoreStr.length; i++) {
             int ni = (int)scoreStr.length-i-1;
             int ii = (int)scoreDigits.count-i-1; //imageview index
             unichar ch = [scoreStr characterAtIndex:ni];
             NSString* digit = [NSString stringWithFormat:@"%c", ch];
             UIImageView* digitView = [scoreDigits objectAtIndex:ii];
-            NSLog(@"SCORE %i %i %i %i", s, score, ni, digit.intValue);
             UIImage* digitImage = [scoreDigitImages objectAtIndex:digit.intValue];
             
             [digitView setImage: digitImage];
@@ -507,26 +523,35 @@
     SockSize size = [self getRandomSockSize];
     
     CGRect newSockFrame = [self propToRect:CGRectMake(1.0, y, [Functions propSizeFromSockSize:size], 0)];
-    [self createSockAtPos:newSockFrame.origin width:newSockFrame.size.width sockSize:size sockId:sockId imageName:[NSString stringWithFormat:@"sock%i", sockId] onBelt:true];
+    //imageName:[NSString stringWithFormat:@"sock%i", sockId]
+    [self createSockAtPos:newSockFrame.origin width:newSockFrame.size.width sockSize:size sockId:sockId onBelt:true];
     
 }
 
 -(int) getRandomSockId {
-    return [Functions randomNumberBetween:0 maxNumber:0];
+    return [Functions randomNumberBetween:0 maxNumber:4];
 }
 
 -(SockSize) getRandomSockSize {
     return [Functions randomNumberBetween:1 maxNumber:1];
 }
 
--(void) createSockAtPos:(CGPoint)pos width:(CGFloat)width sockSize:(SockSize)size sockId:(int) sockId imageName:(NSString*) imageName onBelt:(bool) onBelt {
-    
-    Sock* newSock = [[Sock alloc] initWithFrame:pos width: width sockSize: size sockId: sockId imageName: imageName onBelt:onBelt];
+-(void) decreaseSockLayerPositions {
+    for (Sock* s in socks) {
+        s.layer.zPosition = s.layer.zPosition > 0 ? s.layer.zPosition-1 : 0;
+    }
+}
+
+-(void) createSockAtPos:(CGPoint)pos width:(CGFloat)width sockSize:(SockSize)size sockId:(int) sockId onBelt:(bool) onBelt {
+    UIImage* sockImage = [sockMainImages objectAtIndex:sockId];
+    Sock* newSock = [[Sock alloc] initWithFrame:pos width: width sockSize: size sockId: sockId image: sockImage onBelt:onBelt];
 //    newSock.layer.borderWidth = 2;
 //    newSock.layer.borderColor = [UIColor whiteColor].CGColor;
     
     [newSock setTouchBeganBlock:^void (Sock* s, CGPoint p) {
         s.onConvayorBelt = false;
+        [self decreaseSockLayerPositions];
+        s.layer.zPosition = SOCK_HIGHEST_LAYER;
     }];
     
     [newSock setTouchMovedBlock:^void (Sock* s, CGPoint p) {
@@ -573,7 +598,6 @@
     sock.otherSockInPair = otherSock;
     otherSock.otherSockInPair = sock;
     
-//    [sock setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sock%ipackage", sock.sockId]]];
     [sock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
     [socksBeingAnimatedIntoBox addObject:sock];
 }
@@ -607,8 +631,6 @@
     if(nextFrame > boxAnimationFrames.count*0.75){
         [s.veryTopImageView setImage:[sockPackages objectAtIndex:s.sockId]];
         [s setImage:nil];
-        
-        
     }
     
     if(nextFrame == boxAnimationFrames.count*0.5){
@@ -626,12 +648,14 @@
     Claw* claw = [[Claw alloc] initClawWithSock:s animationFrames: clawAnimationFrames];
     [claws addObject:claw];
     [self.view addSubview:claw];
-    [claw animateWithSpeed:5 withCompletion:^void {
+    [claw animateWithSpeed:0.5 withCompletion:^void {
         s.allowMovement = false;
         
         if(point == true){
-            NSLog(@"POINT!!!!!");
-            [self gotPoint];
+            if(s.validSock == true){
+                NSLog(@"POINT!!!!!");
+                [self gotPoint];
+            }
         }
         
         [s removeFromSuperview];
@@ -671,7 +695,7 @@
     // Dispose of any resources that can be recreated.
 }
 
--(NSMutableArray<UIImage*> *)getSplitImagesFromImage:(UIImage *)image withYRow:(NSInteger)rows withXColumn:(NSInteger)columns{
+-(NSMutableArray<UIImage*> *)getSplitImagesFromImage:(UIImage *)image withYRow:(NSInteger)rows withXColumn:(NSInteger)columns maxFrames:(int)maxFrames{
     NSMutableArray<UIImage*> *aMutArrImages = [NSMutableArray array];
     CGSize imageSize = image.size;
     CGFloat scale = image.scale;
@@ -680,17 +704,25 @@
     CGFloat width = imageSize.width/columns;
     CGFloat height = imageSize.height/rows;
     
+    maxFrames = maxFrames == 0 ? width*height : maxFrames;
+    
+    int frameCounter = 1;
     for (int aIntY = 0; aIntY < rows; aIntY++) {
         xPos = 0.0;
         for (int aIntX = 0; aIntX < columns; aIntX++) {
-            CGRect rect = CGRectMake(xPos*scale, yPos*scale, width*scale, height*scale);
-            
-            CGImageRef cImage = CGImageCreateWithImageInRect(image.CGImage,  rect);
-            
-            UIImage* aImgRef = [UIImage imageWithCGImage:cImage scale:scale orientation:UIImageOrientationUp];
-            
-            [aMutArrImages addObject:aImgRef];
-            xPos += width;
+            if(frameCounter <= maxFrames){
+                CGRect rect = CGRectMake(xPos*scale, yPos*scale, width*scale, height*scale);
+                
+                CGImageRef cImage = CGImageCreateWithImageInRect(image.CGImage,  rect);
+                
+                UIImage* aImgRef = [UIImage imageWithCGImage:cImage scale:scale orientation:UIImageOrientationUp];
+                
+                [aMutArrImages addObject:aImgRef];
+                xPos += width;
+                frameCounter += 1;
+            }else{
+                return aMutArrImages;
+            }
         }
         yPos += height;
     }

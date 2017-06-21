@@ -35,7 +35,7 @@
     [playButton setTitle:@"Play" forState:UIControlStateNormal];
     [playButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     playButton.layer.borderWidth = 2;
-    playButton.layer.zPosition = 3000000;
+    playButton.layer.zPosition = 1;
     playButton.layer.borderColor = [UIColor blackColor].CGColor;
     playButton.frame = [self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)];
     [self.view addSubview:playButton];

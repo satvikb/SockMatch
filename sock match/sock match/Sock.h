@@ -10,7 +10,6 @@
 #import "Functions.h"
 
 @interface Sock : UIImageView {
-    NSString* imageName;
     CGPoint touchPoint;
 }
 
@@ -19,7 +18,7 @@ typedef void (^SockTouchMoved)(Sock* s, CGPoint p);
 typedef void (^SockTouchEnded)(Sock* s, CGPoint p);
 
 
--(id) initWithFrame:(CGPoint)pos width:(CGFloat)width sockSize:(SockSize)size sockId:(int)sId imageName:(NSString*) imgName onBelt:(bool)startOnBelt;
+-(id) initWithFrame:(CGPoint)pos width:(CGFloat)width sockSize:(SockSize)size sockId:(int)sId image:(UIImage*) image onBelt:(bool)startOnBelt;
 
 @property (nonatomic, assign) bool inAPair;
 @property (nonatomic, assign) bool mainSockInPair;
@@ -33,6 +32,8 @@ typedef void (^SockTouchEnded)(Sock* s, CGPoint p);
 @property (nonatomic, strong) UIImageView* veryTopImageView;
 
 @property (nonatomic, assign) bool allowMovement;
+
+@property (nonatomic, assign) bool validSock; // to make sure that sock is from the current game (if the claw animates slow and a new game is started, a point is awarded)
 
 @property (nonatomic, copy) SockTouchBegan touchBeganBlock;
 @property (nonatomic, copy) SockTouchMoved touchMovedBlock;
