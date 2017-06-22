@@ -8,7 +8,9 @@
 
 #import "ContainerViewController.h"
 
-@interface ContainerViewController ()
+@interface ContainerViewController () {
+    bool transitioningFromMenuToGame;
+}
 
 @end
 
@@ -19,6 +21,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    transitioningFromMenuToGame = false;
+    
     // Do any additional setup after loading the view.
     menuController = [[MenuViewController alloc] init];
     menuController.view.layer.zPosition = 100;
@@ -26,7 +30,7 @@
     
     gameController = [[GameViewController alloc] init];
     gameController.view.layer.zPosition = -100;
-    gameController.delegate = self;
+    gameController.gameHandler = self;
     
     gameOverController = [[GameOverViewController alloc] init];
     gameOverController.view.layer.zPosition = 150;
@@ -46,14 +50,15 @@
 }
 
 -(void)switchFromMenuToGame:(MenuViewController*) menu{
-    NSLog(@"sfasdfasdfsadfasdfasdfsd");
-//    [self animateViewController:menu toNewPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin goingTo:gameController animationFinished:^void{
-//        NSLog(@"STARTING GAME");
-//        [gameController beginGame];
-//    }];
+    transitioningFromMenuToGame = true;
+    
+    [menuController.gameTitle removeFromSuperview];
+    [self.view addSubview:menuController.gameTitle];
+    
+    
     [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointZero animationFinished:^{
         NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
-        [gameController beginGame];
+        [gameController warmupGame];
     }];
 }
 
@@ -89,22 +94,22 @@
     }];
 }
 
-//- (void)animateViewController: (UIViewController*) vc
-//                toNewPoint: (CGPoint) newPoint goingTo:(UIViewController*)newVC animationFinished:(void (^)(void)) completion{
-//    // Queue up the transition animation.
-//    [self transitionFromViewController: vc toViewController: newVC
-//                              duration: 5 options:0
-//                            animations:^{
-//                                // Animate the views to their final positions.
-//                                newVC.view.frame = vc.view.frame;
-//                                vc.view.frame = CGRectMake(newPoint.x, newPoint.y, vc.view.frame.size.width, vc.view.frame.size.height);
-//                            }
-//                            completion:^(BOOL finished) {
-//                                // notification to the new view controller.
-//                                [newVC didMoveToParentViewController:self];
-//                                completion();
-//                            }];
-//}
+-(void)gameLoop:(CGFloat)delta {
+    if(transitioningFromMenuToGame == true){
+        
+        CGFloat propMoveX = gameController.beltMoveSpeed/100.0;
+        CGFloat moveX = [self propX:propMoveX];
+        
+        menuController.gameTitle.frame = CGRectOffset(menuController.gameTitle.frame, -moveX*delta, 0);
+        
+        if(menuController.gameTitle.frame.origin.x < -menuController.gameTitle.frame.size.width){
+            [menuController.gameTitle removeFromSuperview];
+            menuController.gameTitle.frame = menuController.titleFrame;
+            [menuController.view addSubview:menuController.gameTitle];
+            transitioningFromMenuToGame = false;
+        }
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

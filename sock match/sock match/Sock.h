@@ -14,7 +14,7 @@
 }
 
 typedef void (^SockTouchBegan)(Sock* s, CGPoint p);
-typedef void (^SockTouchMoved)(Sock* s, CGPoint p);
+typedef void (^SockTouchMoved)(Sock* s, CGPoint p, CGPoint oldPos);
 typedef void (^SockTouchEnded)(Sock* s, CGPoint p);
 
 

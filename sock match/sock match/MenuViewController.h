@@ -12,6 +12,9 @@
 
 @interface MenuViewController : UIViewController
 @property (nonatomic, weak) id<MenuTransition> delegate;
+@property (nonatomic, strong) UIImageView* gameTitle;
+@property (nonatomic, assign) CGRect titleFrame;
+
 @end
 
 @protocol MenuTransition <NSObject>

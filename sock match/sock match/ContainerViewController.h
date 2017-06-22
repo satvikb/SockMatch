@@ -11,7 +11,7 @@
 #import "GameViewController.h"
 #import "GameOverViewController.h"
 
-@interface ContainerViewController : UIViewController <MenuTransition, GameTransition, GameOverTransition>{
+@interface ContainerViewController : UIViewController <MenuTransition, GameHandler, GameOverTransition>{
     
 }
 

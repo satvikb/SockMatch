@@ -13,7 +13,10 @@
 
 @end
 
+
 @implementation MenuViewController
+@synthesize gameTitle;
+@synthesize titleFrame;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -22,13 +25,15 @@
     self.view.userInteractionEnabled = true;
     
     
-    UIImageView* testLabel = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.2, 0.5, 0.195)]];
+    gameTitle = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.2, 0.5, 0.195)]];
 //    testLabel.layer.borderWidth = 1;
 //    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
-    [testLabel setImage:[UIImage imageNamed:@"title"]];
-    testLabel.layer.magnificationFilter = kCAFilterNearest;
-    testLabel.contentMode = UIViewContentModeScaleAspectFit;
-    [self.view addSubview:testLabel];
+    [gameTitle setImage:[UIImage imageNamed:@"title"]];
+    gameTitle.layer.magnificationFilter = kCAFilterNearest;
+    gameTitle.contentMode = UIViewContentModeScaleAspectFit;
+    [self.view addSubview:gameTitle];
+    
+    titleFrame = gameTitle.frame;
     
     UIButton *playButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [playButton addTarget:self action:@selector(pressPlayButton:) forControlEvents:UIControlEventTouchUpInside];

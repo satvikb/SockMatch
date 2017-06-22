@@ -6,15 +6,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sock match/GameViewController.m"
-            timestampString = "519765613.576743"
+            timestampString = "519782566.087906"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "355"
-            endingLineNumber = "355"
+            startingLineNumber = "394"
+            endingLineNumber = "394"
             landmarkName = "-gameFrame:"
             landmarkType = "7">
          </BreakpointContent>

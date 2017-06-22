@@ -86,17 +86,11 @@
         UITouch *touch = [touches anyObject];
         CGPoint location = [touch locationInView:nil];
         
-        CGPoint delta = CGPointMake(location.x-touchPoint.x, location.y-touchPoint.y);
-        self.frame = CGRectOffset( self.frame, delta.x, delta.y );
-        touchPoint = location;
-        
-//        if(otherSockInPair != nil){
-//            otherSockInPair.frame = CGRectOffset( self.frame, delta.x, delta.y );
-//        }
-        
         if(touchMovedBlock != nil){
-            touchMovedBlock(self, location);
+            touchMovedBlock(self, location, touchPoint);
         }
+        
+        touchPoint = location;
     }
 }
 

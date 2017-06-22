@@ -53,51 +53,35 @@
     UIView* bottom;
     
     if(craneFacesRight){
-        
         crane = [[UIView alloc] initWithFrame:CGRectMake(bodySize.width, 0, craneSize.width, craneSize.height)];
-        
         top = [[UIView alloc] initWithFrame:CGRectMake(0, bottomSize.height+middleSize.height, topSize.width, topSize.height)];
-        top.layer.borderColor = UIColor.cyanColor.CGColor;
-        top.layer.borderWidth = 2;
-        
         middle = [[UIView alloc] initWithFrame:CGRectMake(0, bottomSize.height, middleSize.width, middleSize.height)];
-        middle.layer.borderColor = UIColor.purpleColor.CGColor;
-        middle.layer.borderWidth = 2;
-        
         bottom = [[UIView alloc] initWithFrame:CGRectMake(0, 0, bottomSize.width, bottomSize.height)];
-        bottom.layer.borderColor = UIColor.orangeColor.CGColor;
-        bottom.layer.borderWidth = 2;
-        
         body = [[UIView alloc] initWithFrame:CGRectMake(0, totalHeight*0.25, bodySize.width, bodySize.height)];
-        body.layer.borderColor = UIColor.magentaColor.CGColor;
-        body.layer.borderWidth = 2;
-        
         superOrigin = CGPointMake(-totalWidth, sockPackage.frame.origin.y-bottomSize.height);
     }else{
         crane = [[UIView alloc] initWithFrame:CGRectMake(0, 0, craneSize.width, craneSize.height)];
-        
         top = [[UIView alloc] initWithFrame:CGRectMake(0, bottomSize.height+middleSize.height, topSize.width, topSize.height)];
-        top.layer.borderColor = UIColor.cyanColor.CGColor;
-        top.layer.borderWidth = 2;
-        
         middle = [[UIView alloc] initWithFrame:CGRectMake(craneSize.width-middleSize.width, bottomSize.height, middleSize.width, middleSize.height)];
-        middle.layer.borderColor = UIColor.purpleColor.CGColor;
-        middle.layer.borderWidth = 2;
-        
         bottom = [[UIView alloc] initWithFrame:CGRectMake(0, 0, bottomSize.width, bottomSize.height)];
-        bottom.layer.borderColor = UIColor.orangeColor.CGColor;
-        bottom.layer.borderWidth = 2;
-        
         body = [[UIView alloc] initWithFrame:CGRectMake(craneSize.width, totalHeight*0.25, bodySize.width, bodySize.height)];
-        body.layer.borderColor = UIColor.magentaColor.CGColor;
-        body.layer.borderWidth = 2;
-        
         superOrigin = CGPointMake(screenSize.width, sockPackage.frame.origin.y-bottomSize.height);
     }
     
     self = [super initWithFrame:CGRectMake(superOrigin.x, superOrigin.y, totalWidth, totalHeight)];
-    self.layer.borderWidth = 1;
-    self.layer.borderColor = UIColor.redColor.CGColor;
+//    self.layer.borderWidth = 1;
+//    self.layer.borderColor = UIColor.redColor.CGColor;
+    top.layer.backgroundColor = UIColor.cyanColor.CGColor;
+//    top.layer.borderWidth = 2;
+    
+    middle.layer.backgroundColor = UIColor.purpleColor.CGColor;
+//    middle.layer.borderWidth = 2;
+    
+    bottom.layer.backgroundColor = UIColor.orangeColor.CGColor;
+//    bottom.layer.borderWidth = 2;
+    
+//    body.layer.borderColor = UIColor.magentaColor.CGColor;
+//    body.layer.borderWidth = 2;
     
     currentFrame = 0;
     UIImage* claw = [animationFrames objectAtIndex:currentFrame];

@@ -9,19 +9,22 @@
 #import <UIKit/UIKit.h>
 #import "Claw.h"
 
-@protocol GameTransition;
+@protocol GameHandler;
 
 @interface GameViewController : UIViewController{
     
 }
 
-@property (nonatomic, weak) id<GameTransition> delegate;
+@property (nonatomic, weak) id<GameHandler> gameHandler;
+@property (nonatomic, assign) CGFloat beltMoveSpeed;
 
+-(void)warmupGame;
 -(void)beginGame;
 -(void)endGame;
 -(void)stopGameLoop;
 @end
 
-@protocol GameTransition <NSObject>
+@protocol GameHandler <NSObject>
+- (void) gameLoop:(CGFloat)delta;
 - (void) switchFromGameToGameOver:(GameViewController *)game withScore:(int)score;
 @end
