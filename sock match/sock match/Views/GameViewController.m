@@ -108,7 +108,7 @@
 -(void)beginGame {
     gameActive = true;
     warmingUpGame = false;
-    NSLog(@"Begin game");
+    
     [self performSelector:@selector(removeFromView:) withObject:tutorialLabel afterDelay:15];
     [self performSelector:@selector(removeFromView:) withObject:bottomTutorialLabel afterDelay:25];
 }
@@ -123,7 +123,7 @@
 -(void) finishEndingGame {
     [self disableSockMovement];
     [self turnLightsOff];
-    NSLog(@"transitioning to game over");
+    
     id<GameHandler> strongDelegate = self.gameHandler;
     
     if([strongDelegate respondsToSelector:@selector(switchFromGameToGameOver:withScore:)]){
@@ -195,7 +195,7 @@
     finalBeltSpeedWarmUp = beltMoveSpeed;
     beltMoveSpeed = 0;
     
-    timeToAnimateWheels = 0.02;
+    timeToAnimateWheels = 0.01;
     finalWheelSpeedWarmUp = timeToAnimateWheels;
     timeToAnimateWheels = 1;
     animateWheelTimer = 0;
@@ -248,7 +248,6 @@
         [redLight setImage:lifeLightOff];
         [self.view addSubview:redLight];
         [lifeLights addObject:redLight];
-        NSLog(@"added light %i", i);
     }
     
     tutorialLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.45, 1, 0.075)]];
@@ -286,6 +285,8 @@
     NSMutableArray <UIImageView*>* beltTiles = [[NSMutableArray alloc] init];
     
     UIImage* beltTileImage = [UIImage imageNamed:@"belt"];
+//    beltTileImage = [beltTileImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//    beltTileImage = [self image:beltTileImage WithTint:[UIColor blackColor]];
     
     CGFloat aspectRatio = frame.size.height / beltTileImage.size.height;
     CGFloat imageWidth = beltTileImage.size.width*aspectRatio;
@@ -299,12 +300,52 @@
         beltTile.frame = CGRectMake(frame.origin.x+(i*imageWidth), frame.origin.y, imageWidth, frame.size.height);
         beltTile.layer.magnificationFilter = kCAFilterNearest;
         beltTile.tag = i;
-        
+//        beltTile.tintColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
         [self.view addSubview:beltTile];
         [beltTiles addObject:beltTile];
     }
     
     return beltTiles;
+}
+
+- (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor
+{
+    UIGraphicsBeginImageContextWithOptions (image.size, NO, image.scale); // for correct resolution on retina, thanks @MobileVet
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextTranslateCTM(context, 0, image.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    
+    CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
+    
+    // image drawing code here
+//    CGContextSetBlendMode(context, kCGBlendModeNormal);
+//    CGContextDrawImage(context, rect, image.CGImage);
+//
+//    // tint image (loosing alpha) - the luminosity of the original image is preserved
+//    CGContextSetBlendMode(context, kCGBlendModeMultiply);
+//    [tintColor setFill];
+//    CGContextFillRect(context, rect);
+//
+//    // mask by alpha values of original image
+//    CGContextSetBlendMode(context, kCGBlendModeDestinationIn);
+//    CGContextDrawImage(context, rect, image.CGImage);
+    
+    
+    CGContextSetBlendMode (context, kCGBlendModeMultiply);
+    
+    CGContextDrawImage(context, rect, image.CGImage);
+    
+    CGContextClipToMask(context, rect, image.CGImage);
+    
+    CGContextSetFillColorWithColor(context, tintColor.CGColor);
+    
+    CGContextFillRect(context, rect);
+    
+    UIImage *coloredImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return coloredImage;
 }
 
 -(void) createConveyorBeltWheels:(CGRect)frame imageArray:(NSMutableArray <UIImageView*>*)beltWheels forArray:(NSMutableArray <NSNumber*>*) framesArray{
@@ -352,9 +393,7 @@
     animateScoreValueTimer += tmr.duration;
     
     if(warmingUpGame){
-        beltMoveSpeed += tmr.duration*6;
-        NSLog(@"FFF %f %f", timeToAnimateWheels, finalWheelSpeedWarmUp);
-        
+        beltMoveSpeed += tmr.duration*8;
         timeToAnimateWheels -= tmr.duration/4;
         
         if(timeToAnimateWheels <= finalWheelSpeedWarmUp){
@@ -404,7 +443,6 @@
             timeToAnimateWheels += tmr.duration/4;
             
             if(beltMoveSpeed <= 0){
-                NSLog(@"Move speed less than 0");
                 [self cleanUpSocksWithClaws];
                 [self finishEndingGame];
                 [self stopGameLoop];
@@ -499,9 +537,10 @@
                 }
                 
                 sock.frame = CGRectOffset(sock.frame, -moveX*delta, 0);
+                sock.theoreticalFrame = sock.frame;
             }
         }else{
-            NSLog(@"NO SOCK WHILE UPDATING BELT");
+//            NSLog(@"NO SOCK WHILE UPDATING BELT");
         }
     }
 }
@@ -539,12 +578,12 @@
             [digitView setImage: digitImage];
         }
     }else{
-        NSLog(@"MORE THAN FOUR DIGITS %@", scoreStr);
+//        NSLog(@"MORE THAN FOUR DIGITS %@", scoreStr);
     }
 }
 
 -(void) lostLife {
-    NSLog(@"lost life");
+//    NSLog(@"lost life");
     if(lives > 0 && lives <= 3){
         UIImageView* light = [lifeLights objectAtIndex:3-lives];
         [light setImage:lifeLightOn];
@@ -552,7 +591,7 @@
     
     lives -= 1;
     if(lives <= 0){
-        NSLog(@"Game Over!");
+//        NSLog(@"Game Over!");
         [self endGame];
     }
 }
@@ -599,32 +638,76 @@
 //    newSock.layer.borderColor = [UIColor whiteColor].CGColor;
     
     [newSock setTouchBeganBlock:^void (Sock* s, CGPoint p) {
-        s.onConvayorBelt = false;
-        [self decreaseSockLayerPositions];
-        s.layer.zPosition = SOCK_HIGHEST_LAYER;
+        if(s.allowMovement){
+            s.onConvayorBelt = false;
+            [self decreaseSockLayerPositions];
+            s.layer.zPosition = SOCK_HIGHEST_LAYER;
+        }
     }];
     
     [newSock setTouchMovedBlock:^void (Sock* s, CGPoint p, CGPoint oldPos) {
-        s.onConvayorBelt = false;
-        
-        CGPoint delta = CGPointMake(p.x-oldPos.x, p.y-oldPos.y);
-        s.frame = CGRectOffset( s.frame, delta.x, delta.y );
-        
-//        if((!s.inAPair || s.mainSockInPair) && s.otherSockInPair != nil){
-//            CGFloat matchedPairPositionOffset = [self propX:[Functions propSizeFromSockSize:s.sockSize]/10.0];
-//            s.otherSockInPair.center = CGPointMake(s.center.x-matchedPairPositionOffset, s.center.y+matchedPairPositionOffset); // set center
-//        }
-        
-        [self checkPairsWithSock:s];
+        if(s.allowMovement){
+            s.onConvayorBelt = false;
+            
+            //TODO collisions
+            CGPoint delta = CGPointMake(p.x-oldPos.x, p.y-oldPos.y);
+            
+            CGRect newFrame = CGRectOffset( s.theoreticalFrame, delta.x, delta.y );
+            
+            s.frame = newFrame;
+            s.theoreticalFrame = newFrame;
+            
+    //        if((!s.inAPair || s.mainSockInPair) && s.otherSockInPair != nil){
+    //            CGFloat matchedPairPositionOffset = [self propX:[Functions propSizeFromSockSize:s.sockSize]/10.0];
+    //            s.otherSockInPair.center = CGPointMake(s.center.x-matchedPairPositionOffset, s.center.y+matchedPairPositionOffset); // set center
+    //        }
+            
+            [self checkPairsWithSock:s];
+        }
     }];
     
     [newSock setTouchEndedBlock:^void (Sock* s, CGPoint p) {
-        bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
-        s.onConvayorBelt = onBelt;
+        if(s.allowMovement){
+            bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
+            s.onConvayorBelt = onBelt;
+        }
+        
+        if([self handleIntersection:s previousOverlap:false]){
+            [UIView animateWithDuration:0.5 animations:^void{
+                s.frame = s.theoreticalFrame;
+                s.theoreticalFrame = s.frame;
+            } completion:^(BOOL completion){
+                [self checkPairsWithSock:s];
+//                [self handleIntersection:s];
+            }];
+        }else{
+            
+        }
     }];
     
     [self.view addSubview:newSock];
     [socks addObject:newSock];
+}
+
+// bool there was overlap
+-(bool) handleIntersection:(Sock*)s previousOverlap:(bool)prevOverlap {
+    bool overlap = false;
+    for(Sock* ss in socks){
+        if(ss != s){
+            if(CGRectIntersectsRect(ss.frame, s.theoreticalFrame) && !(ss.sockId == s.sockId)){
+                overlap = true;
+                
+                CGRect f = s.theoreticalFrame;
+                CGRect resolveRect = CGRectIntersection(f, ss.frame);
+                CGRect newDirectionRect = resolveRect;//CGRectMake(0, 0, resolveRect.size.width < f.size.width/2 ? -resolveRect.size.width : resolveRect.size.width, resolveRect.size.height < f.size.height/2 ? -resolveRect.size.height : resolveRect.size.height);
+                CGRect newFrame = CGRectMake(f.origin.x+newDirectionRect.size.width, f.origin.y+newDirectionRect.size.height, f.size.width, f.size.height);
+//                s.frame = newFrame;
+                s.theoreticalFrame = newFrame;
+                return [self handleIntersection:s previousOverlap:true];
+            }
+        }
+    }
+    return prevOverlap;
 }
 
 -(void) checkPairsWithSock:(Sock*)sock{
@@ -642,17 +725,20 @@
 }
 
 -(void) madePairBetweenMainSock:(Sock*)sock andOtherSock:(Sock*)otherSock {
-    [otherSock removeFromSuperview];
-    [socks removeObject:otherSock];
+    [sock removeFromSuperview];
+    [socks removeObject:sock];
     
-    sock.inAPair = otherSock.inAPair = true;
-    sock.mainSockInPair = true;
+    otherSock.inAPair = sock.inAPair = true;
+    otherSock.mainSockInPair = true;
     
-    sock.otherSockInPair = otherSock;
     otherSock.otherSockInPair = sock;
+    sock.otherSockInPair = otherSock;
     
-    [sock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
-    [socksBeingAnimatedIntoBox addObject:sock];
+    [otherSock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
+    
+    otherSock.allowMovement = false;
+    
+    [socksBeingAnimatedIntoBox addObject:otherSock];
 }
 
 -(void) animateAllSockBoxes {
@@ -673,7 +759,16 @@
     NSInteger currentFrame = [boxAnimationFrames indexOfObject:s.overlayImageView.image];
     NSInteger nextFrame = currentFrame+1;
     
-    s.allowMovement = false;
+    
+    bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
+    s.onConvayorBelt = onBelt;
+    
+    if(!s.onConvayorBelt){
+        if(nextFrame == boxAnimationFrames.count*0.5){
+//            NSLog(@"create claw");
+            [self createClaw:s givePoint:true];
+        }
+    }
     
     if(nextFrame >= boxAnimationFrames.count){
         [socksBeingAnimatedIntoBox removeObject:s];        
@@ -690,15 +785,6 @@
             [s setImage:nil];
             
         }];
-    }
-    
-    bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
-    s.onConvayorBelt = onBelt;
-    
-    if(!s.onConvayorBelt){
-        if(nextFrame == boxAnimationFrames.count*0.5){
-            [self createClaw:s givePoint:true];
-        }
     }
 }
 

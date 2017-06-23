@@ -10,7 +10,7 @@
 
 @protocol GameOverTransition;
 
-@interface GameOverViewController : UIViewController
+@interface GameOverViewController : UIViewController<UIGestureRecognizerDelegate>
 @property (nonatomic, weak) id<GameOverTransition> delegate;
 -(void)setScore:(int)score;
 @end

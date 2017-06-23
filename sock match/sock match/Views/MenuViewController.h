@@ -10,11 +10,11 @@
 
 @protocol MenuTransition;
 
-@interface MenuViewController : UIViewController
+@interface MenuViewController : UIViewController<UIGestureRecognizerDelegate>
 @property (nonatomic, weak) id<MenuTransition> delegate;
 @property (nonatomic, strong) UIImageView* gameTitle;
 @property (nonatomic, assign) CGRect titleFrame;
-
+@property (nonatomic, strong) UIImageView* playButton;
 @end
 
 @protocol MenuTransition <NSObject>

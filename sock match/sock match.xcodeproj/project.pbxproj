@@ -76,14 +76,7 @@
 			children = (
 				408E6B4A1EEF88180011C450 /* AppDelegate.h */,
 				408E6B4B1EEF88180011C450 /* AppDelegate.m */,
-				403A89261EF7B2D700C81DB4 /* ContainerViewController.h */,
-				403A89271EF7B2D700C81DB4 /* ContainerViewController.m */,
-				403A89291EF7C49000C81DB4 /* MenuViewController.h */,
-				403A892A1EF7C49000C81DB4 /* MenuViewController.m */,
-				408E6B661EEFCA1B0011C450 /* GameViewController.h */,
-				408E6B671EEFCA1B0011C450 /* GameViewController.m */,
-				403A892D1EF7CEA500C81DB4 /* GameOverViewController.h */,
-				403A892E1EF7CEA500C81DB4 /* GameOverViewController.m */,
+				40C9F19B1EFC635A0057971F /* Views */,
 				408E6B631EEFA5EA0011C450 /* Sock.h */,
 				408E6B641EEFA5EA0011C450 /* Sock.m */,
 				401DA0991EF882CF00B7CF6E /* Claw.h */,
@@ -96,6 +89,21 @@
 				4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */,
 			);
 			path = "sock match";
+			sourceTree = "<group>";
+		};
+		40C9F19B1EFC635A0057971F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				403A89261EF7B2D700C81DB4 /* ContainerViewController.h */,
+				403A89271EF7B2D700C81DB4 /* ContainerViewController.m */,
+				403A89291EF7C49000C81DB4 /* MenuViewController.h */,
+				403A892A1EF7C49000C81DB4 /* MenuViewController.m */,
+				408E6B661EEFCA1B0011C450 /* GameViewController.h */,
+				408E6B671EEFCA1B0011C450 /* GameViewController.m */,
+				403A892D1EF7CEA500C81DB4 /* GameOverViewController.h */,
+				403A892E1EF7CEA500C81DB4 /* GameOverViewController.m */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -10,12 +10,11 @@ better socks
 
 Screens (overlay on game)
 main menu
--game title moves with belt when start playing.
 -buttons on factory floor.
 game over
 
 Sound
 
 game center
-prevent inevitable cheating
+-prevent inevitable cheating
 

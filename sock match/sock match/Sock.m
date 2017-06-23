@@ -18,6 +18,8 @@
 @synthesize sockSize;
 @synthesize onConvayorBelt;
 
+@synthesize theoreticalFrame;
+
 @synthesize overlayImageView;
 @synthesize veryTopImageView;
 
@@ -42,6 +44,7 @@
     CGFloat heightAspectMutliplier = image.size.height/image.size.width;
     CGRect boxFrame = CGRectMake(pos.x, pos.y, width, width*heightAspectMutliplier);
     self.frame = boxFrame;
+    theoreticalFrame = boxFrame;
     self.contentMode = UIViewContentModeScaleAspectFit;
     self.layer.magnificationFilter = kCAFilterNearest;
     self.userInteractionEnabled = true;
@@ -113,7 +116,7 @@
 
 -(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self touchEnd:[[touches anyObject] locationInView: nil]];
-    NSLog(@"TOUCH CANCELLED");
+//    NSLog(@"TOUCH CANCELLED");
 }
 
 -(void)touchEnd:(CGPoint)location {
