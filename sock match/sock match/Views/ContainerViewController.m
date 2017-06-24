@@ -9,6 +9,7 @@
 #import "ContainerViewController.h"
 
 @interface ContainerViewController () {
+    CADisplayLink* gameTimer;
     bool transitioningFromMenuToGame;
 }
 
@@ -39,6 +40,8 @@
     [self displayContentController:gameController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
     [self displayContentController:gameOverController withFrame:[self propToRect:CGRectMake(1, 0, 1, 1)]];
     [self displayContentController:menuController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
+    
+    [self startGameLoop];
 }
 
 - (void) displayContentController: (UIViewController*) content withFrame:(CGRect) frame{
@@ -55,31 +58,23 @@
     [menuController.gameTitle removeFromSuperview];
     [self.view addSubview:menuController.gameTitle];
     
-    
     [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointZero animationFinished:^{
         NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
-        [gameController warmupGame];
+        
+        [gameController startGame];
     }];
 }
 
 - (void) switchFromGameToGameOver:(GameViewController *)game withScore:(int)score {
     [gameOverController setScore:score];
-//    [self animateViewController:gameOverController toNewPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin goingTo: gameOverController animationFinished:^{
-//        NSLog(@"Switced from game to game over");
-//    }];
     [self animateFromViewController:game toPoint:CGPointZero toViewController:gameOverController toPoint:CGPointZero animationFinished:^{
         NSLog(@"Switced from game to game over %@ %@", NSStringFromCGRect(game.view.frame), gameOverController.view.backgroundColor);
     }];
 }
 
 - (void) switchFromGameOverToMenu:(GameOverViewController *)gameOver {
-//    [self animateViewController:gameOver toNewPoint:[self propToRect:CGRectMake(1, 0, 0, 0)].origin goingTo:menuController animationFinished:^{
-//        NSLog(@"transitioned from game over to menu");
-//    }];
-    
     [self animateFromViewController:gameOver toPoint:[self propToRect:CGRectMake(1, 0, 0, 0)].origin toViewController:menuController toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin animationFinished:^{
         NSLog(@"transitioned from game over to menu %@", NSStringFromCGRect(gameController.view.frame));
-        [gameController stopGameLoop];
     }];
 }
 
@@ -94,10 +89,23 @@
     }];
 }
 
--(void)gameLoop:(CGFloat)delta {
+-(void)startGameLoop {
+    gameTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(gameLoop:)];
+    gameTimer.preferredFramesPerSecond = 60;
+    [gameTimer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+}
+
+-(void)stopGameLoop {
+    [gameTimer setPaused:true];
+    [gameTimer removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    gameTimer = nil;
+}
+
+-(void)gameLoop:(CADisplayLink*)tmr {
+    CGFloat delta = tmr.duration;
+    
     if(transitioningFromMenuToGame == true){
-        
-        CGFloat propMoveX = gameController.beltMoveSpeed/100.0;
+        CGFloat propMoveX = gameController.animateBeltMoveSpeed/100.0;
         CGFloat moveX = [self propX:propMoveX];
         
         menuController.gameTitle.frame = CGRectOffset(menuController.gameTitle.frame, -moveX*delta, 0);
@@ -109,6 +117,7 @@
             transitioningFromMenuToGame = false;
         }
     }
+    [gameController gameFrame:tmr];
 }
 
 - (void)didReceiveMemoryWarning {

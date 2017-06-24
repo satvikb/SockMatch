@@ -15,16 +15,24 @@
     
 }
 
+typedef enum GameState {
+    NotPlaying = 0,
+    WarmingUp = 1,
+    Playing = 2,
+    Stopping = 3
+} GameState;
+
 @property (nonatomic, weak) id<GameHandler> gameHandler;
 @property (nonatomic, assign) CGFloat beltMoveSpeed;
+@property (nonatomic, assign) CGFloat animateBeltMoveSpeed;
+@property (nonatomic, assign) GameState currentGameState;
 
--(void)warmupGame;
--(void)beginGame;
--(void)endGame;
--(void)stopGameLoop;
+-(void)startGame;
+-(void) gameFrame:(CADisplayLink*)tmr;
+-(void)switchGameStateTo:(GameState)newGameState;
+
 @end
 
 @protocol GameHandler <NSObject>
-- (void) gameLoop:(CGFloat)delta;
 - (void) switchFromGameToGameOver:(GameViewController *)game withScore:(int)score;
 @end

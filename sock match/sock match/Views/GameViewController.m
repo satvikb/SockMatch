@@ -13,14 +13,6 @@
 #define SOCK_HIGHEST_LAYER (50)
 
 @interface GameViewController () {
-    BOOL warmingUpGame;
-    CGFloat finalBeltSpeedWarmUp;
-    CGFloat finalWheelSpeedWarmUp;
-    BOOL gameActive;
-    BOOL endingGame;
-    
-    CADisplayLink* gameTimer;
-    
     CGFloat timeToGenerateSock;
     CGFloat generateSockTimer;
     
@@ -42,9 +34,6 @@
     
     NSMutableArray <UIImageView*>* scoreDigits;
     NSMutableArray <UIImage*>* scoreDigitImages;
-    
-    UILabel* tutorialLabel;
-    UILabel* bottomTutorialLabel;
     
     int score;
     int currentAnimatingScore;
@@ -69,6 +58,8 @@
     
     NSMutableArray <Claw*>* claws;
     NSMutableArray <UIImage*>* clawAnimationFrames;
+    
+    CGFloat animateWheelSpeed;
 }
 
 @end
@@ -76,6 +67,8 @@
 @implementation GameViewController
 
 @synthesize beltMoveSpeed;
+@synthesize animateBeltMoveSpeed;
+@synthesize currentGameState;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -99,72 +92,10 @@
     scoreDigitImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"numbers"] withYRow:1 withXColumn:10 maxFrames:0];
 }
 
--(void) warmupGame {
-    [self resetGame];
-    warmingUpGame = true;
-    [self startGameLoop];
-}
-
--(void)beginGame {
-    gameActive = true;
-    warmingUpGame = false;
-    
-    [self performSelector:@selector(removeFromView:) withObject:tutorialLabel afterDelay:15];
-    [self performSelector:@selector(removeFromView:) withObject:bottomTutorialLabel afterDelay:25];
-}
-
--(void)endGame {
-    warmingUpGame = false;
-    gameActive = false;
-    endingGame = true;
-//    [self finishEndingGame];
-}
-
--(void) finishEndingGame {
-    [self disableSockMovement];
-    [self turnLightsOff];
-    
-    id<GameHandler> strongDelegate = self.gameHandler;
-    
-    if([strongDelegate respondsToSelector:@selector(switchFromGameToGameOver:withScore:)]){
-        [strongDelegate switchFromGameToGameOver:self withScore:score];
-    }
-}
-
--(void)startGameLoop {
-    gameTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(gameFrame:)];
-    gameTimer.preferredFramesPerSecond = 60;
-    [gameTimer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-}
-
-//-(void)pauseGameLoop {
-//    gameActive = false;
-//    warmingUpGame = false;
-//    [gameTimer setPaused:true];
-//}
-//
-//-(void)resumeGameLoop {
-//    gameActive = true;
-//    warmingUpGame = false;
-//    [gameTimer setPaused:false];
-//}
-
-//TODO use this
--(void)stopGameLoop {
-    [gameTimer setPaused:true];
-    [gameTimer removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    gameTimer = nil;
-}
-
--(void)resetGame {
+-(void)removeAllSocks{
     for (Sock* sock in socks) {
         [sock removeFromSuperview];
     }
-    
-    [self turnLightsOff];
-    
-    [self setupGameValues];
-    
 }
 
 -(void)turnLightsOff {
@@ -181,8 +112,7 @@
 }
 
 -(void)setupGameValues {
-    gameActive = false;
-    endingGame = false;
+    currentGameState = NotPlaying;
     score = 0;
     lives = 3;
     timeToGenerateSock = 1.5;
@@ -190,14 +120,13 @@
     sockMatchThreshold = [self propX:0.06];
     socks = [[NSMutableArray alloc] init];
     claws = [[NSMutableArray alloc] init];
-    
+    socksBeingAnimatedIntoBox = [[NSMutableArray alloc] init];
+
     beltMoveSpeed = 25.0;
-    finalBeltSpeedWarmUp = beltMoveSpeed;
-    beltMoveSpeed = 0;
+    animateBeltMoveSpeed = 0;
     
+    animateWheelSpeed = 1;
     timeToAnimateWheels = 0.036;
-    finalWheelSpeedWarmUp = timeToAnimateWheels;
-    timeToAnimateWheels = 1;
     animateWheelTimer = 0;
     
     timeForClawAnimation = 0.05;
@@ -205,8 +134,6 @@
     
     timeToAnimateScoreValue = 0.04;
     animateScoreValueTimer = 0;
-    
-    socksBeingAnimatedIntoBox = [[NSMutableArray alloc] init];
 }
 
 -(void)createUI {
@@ -250,20 +177,6 @@
         [lifeLights addObject:redLight];
     }
     
-    tutorialLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.45, 1, 0.075)]];
-    tutorialLabel.text = @"match socks together based on style and size";
-    tutorialLabel.textAlignment = NSTextAlignmentCenter;
-    //    tutorialLabel.layer.borderColor = [UIColor blackColor].CGColor;
-    //    tutorialLabel.layer.borderWidth = 2;
-    [self.view addSubview:tutorialLabel];
-    
-    CGRect btmTutFrame = [self propToRect:CGRectMake(0, 0.525, 1, 0.075)];
-    bottomTutorialLabel = [[UILabel alloc] initWithFrame: btmTutFrame];
-    bottomTutorialLabel.text = @"use the area down here to match";
-    bottomTutorialLabel.textAlignment = NSTextAlignmentCenter;
-    //    bottomTutorialLabel.layer.borderColor = [UIColor blackColor].CGColor;
-    //    bottomTutorialLabel.layer.borderWidth = 2;
-    [self.view addSubview:bottomTutorialLabel];
 }
 
 -(void)createBeltAndWheels {
@@ -285,22 +198,18 @@
     NSMutableArray <UIImageView*>* beltTiles = [[NSMutableArray alloc] init];
     
     UIImage* beltTileImage = [UIImage imageNamed:@"belt"];
-//    beltTileImage = [beltTileImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-//    beltTileImage = [self image:beltTileImage WithTint:[UIColor blackColor]];
-    
     CGFloat aspectRatio = frame.size.height / beltTileImage.size.height;
     CGFloat imageWidth = beltTileImage.size.width*aspectRatio;
     
     int numOfBeltTiles = (frame.size.width / imageWidth)*2;
     
-    _beltImagesSideExtra = (numOfBeltTiles*imageWidth);//-frame.size.width;
+    _beltImagesSideExtra = (numOfBeltTiles*imageWidth);;
     
     for(int i = 0; i < numOfBeltTiles; i++){
         UIImageView* beltTile = [[UIImageView alloc] initWithImage:beltTileImage];
         beltTile.frame = CGRectMake(frame.origin.x+(i*imageWidth), frame.origin.y, imageWidth, frame.size.height);
         beltTile.layer.magnificationFilter = kCAFilterNearest;
         beltTile.tag = i;
-//        beltTile.tintColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
         [self.view addSubview:beltTile];
         [beltTiles addObject:beltTile];
     }
@@ -308,45 +217,6 @@
     return beltTiles;
 }
 
-- (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor
-{
-    UIGraphicsBeginImageContextWithOptions (image.size, NO, image.scale); // for correct resolution on retina, thanks @MobileVet
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextTranslateCTM(context, 0, image.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    
-    CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
-    
-    // image drawing code here
-//    CGContextSetBlendMode(context, kCGBlendModeNormal);
-//    CGContextDrawImage(context, rect, image.CGImage);
-//
-//    // tint image (loosing alpha) - the luminosity of the original image is preserved
-//    CGContextSetBlendMode(context, kCGBlendModeMultiply);
-//    [tintColor setFill];
-//    CGContextFillRect(context, rect);
-//
-//    // mask by alpha values of original image
-//    CGContextSetBlendMode(context, kCGBlendModeDestinationIn);
-//    CGContextDrawImage(context, rect, image.CGImage);
-    
-    
-    CGContextSetBlendMode (context, kCGBlendModeMultiply);
-    
-    CGContextDrawImage(context, rect, image.CGImage);
-    
-    CGContextClipToMask(context, rect, image.CGImage);
-    
-    CGContextSetFillColorWithColor(context, tintColor.CGColor);
-    
-    CGContextFillRect(context, rect);
-    
-    UIImage *coloredImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return coloredImage;
-}
 
 -(void) createConveyorBeltWheels:(CGRect)frame imageArray:(NSMutableArray <UIImageView*>*)beltWheels forArray:(NSMutableArray <NSNumber*>*) framesArray{
     
@@ -383,63 +253,99 @@
 }
 
 -(void) gameFrame:(CADisplayLink*)tmr {
-    [self callSuperUpdateLoop:tmr.duration];
-    [self animateBelt:tmr.duration];
-    [self updateSocksOnBeltWithDelta:tmr.duration];
+    CGFloat delta = tmr.duration;
     
-    
-    if(warmingUpGame){
-        beltMoveSpeed += tmr.duration*8;
-        timeToAnimateWheels -= tmr.duration/4;
+    if (currentGameState != NotPlaying) {
         
-        if(timeToAnimateWheels <= finalWheelSpeedWarmUp){
-            timeToAnimateWheels = finalWheelSpeedWarmUp;
+        [self animateBeltWithSpeed:animateBeltMoveSpeed delta:delta];
+        [self updateSocksOnBeltWithSpeed:animateBeltMoveSpeed delta:delta];
+        [self handleAnimateWheel:delta];
+        [self handleGenerateSock:delta];
+        [self handleClawAnimation: delta];
+        [self animateAllSockBoxes];
+        
+        //TODO remove this system or make it more effiecent
+        animateScoreValueTimer += tmr.duration;
+        
+        if(animateScoreValueTimer >= timeToAnimateScoreValue){
+            [self animateScore];
+            animateScoreValueTimer = 0;
         }
         
-        if(beltMoveSpeed >= finalBeltSpeedWarmUp){
-            beltMoveSpeed = finalBeltSpeedWarmUp;
-            timeToAnimateWheels = finalWheelSpeedWarmUp;
-            
-            [self beginGame];
-            warmingUpGame = false;
-        }
-    }
-    
-    
-    [self handleGenerateSock:tmr.duration];
-    [self handleAnimateWheel:tmr.duration];
-    [self handleClawAnimation: tmr.duration];
-    
-    [self animateAllSockBoxes];
-    
-    
-    animateScoreValueTimer += tmr.duration;
-    
-    if(animateScoreValueTimer >= timeToAnimateScoreValue){
-        [self animateScore];
-        animateScoreValueTimer = 0;
-    }
-    
-    
-    if(endingGame == true){
         
-//        if(![self anySocksOnConveyorBelt] && ![self anyClawsAnimating]){
-            beltMoveSpeed -= tmr.duration*6;
-            timeToAnimateWheels += tmr.duration/4;
-            
-            if(beltMoveSpeed <= 0){
-                [self gameOver];
+        switch (currentGameState) {
+            case NotPlaying: break;
+            case WarmingUp:
+                animateBeltMoveSpeed += delta*8;
+                animateWheelSpeed -= delta/4;
+                NSLog(@"sdfasdfasdfasdf %f", animateBeltMoveSpeed);
                 
-                if([self canEndGame]){
-                    [self cleanUpSocksWithClaws];
-                    [self finishEndingGame];
-                    [self stopGameLoop];
+                if(animateWheelSpeed <= timeToAnimateWheels){
+                    animateWheelSpeed = timeToAnimateWheels;
                 }
-            }
-//        }
+                
+                if(animateBeltMoveSpeed >= beltMoveSpeed && animateWheelSpeed <= timeToAnimateWheels){
+                    animateBeltMoveSpeed = beltMoveSpeed;
+                    [self switchGameStateTo:Playing];
+                }
+                break;
+            case Playing:
+                break;
+            case Stopping:
+                animateBeltMoveSpeed -= delta*8;
+                animateWheelSpeed += delta/4;
+                
+                if(animateBeltMoveSpeed <= 0){
+                    animateBeltMoveSpeed = 0;
+                    [self endGameIfPossible];
+                }
+                break;
+        }
+    }
+    
+    
+}
+
+-(void)startGame{
+    [self setupGameValues];
+    [self switchGameStateTo:WarmingUp];
+}
+
+-(void)switchGameStateTo:(GameState)newGameState{
+    switch (newGameState) {
+        case Playing:
+            //self begin game
+            
+            break;
+            
+        default:
+            break;
+    }
+    
+    currentGameState = newGameState;
+}
+
+-(void)endGameIfPossible{
+    [self disableSockMovement];
+    
+    if([self canEndGame]){
+        [self cleanUpSocksWithClaws];
+        [self turnLightsOff];
+        [self transitionToGameOver];
+        [self switchGameStateTo:NotPlaying];
     }
 }
-                   
+
+
+-(void) transitionToGameOver {
+    id<GameHandler> strongDelegate = self.gameHandler;
+    
+    if([strongDelegate respondsToSelector:@selector(switchFromGameToGameOver:withScore:)]){
+        [strongDelegate switchFromGameToGameOver:self withScore:score];
+    }
+}
+
+
 -(bool)canEndGame{
     bool gameDone = true;
     
@@ -459,7 +365,7 @@
     generateSockTimer += delta;
     
     if(generateSockTimer >= timeToGenerateSock){
-        if(gameActive == true){
+        if(currentGameState == Playing){
             [self generateSock];
         }
         generateSockTimer = 0;
@@ -469,7 +375,7 @@
 -(void)handleAnimateWheel:(CGFloat)delta {
     animateWheelTimer += delta;
     
-    if(animateWheelTimer >= timeToAnimateWheels){
+    if(animateWheelTimer >= animateWheelSpeed){
         [self animateWheels:bottomConveyorBeltWheels withFrames:bottomConveyorBeltWheelsFrames];
         [self animateWheels:topConveyorBeltWheels withFrames:topConveyorBeltWheelsFrames];
         
@@ -483,18 +389,6 @@
     if(clawAnimationTimer >= timeForClawAnimation){
         [self animateAllClaws];
         clawAnimationTimer = 0;
-    }
-}
-
--(void)gameOver {
-    [self disableSockMovement];
-}
-
--(void) callSuperUpdateLoop:(CGFloat)delta{
-    id<GameHandler> strongDelegate = self.gameHandler;
-    
-    if([strongDelegate respondsToSelector:@selector(gameLoop:)]){
-        [strongDelegate gameLoop:delta];
     }
 }
 
@@ -519,9 +413,9 @@
     return anyClawsAnimating;
 }
 
--(void)animateBelt:(CGFloat)delta {
+-(void)animateBeltWithSpeed:(CGFloat)speed delta:(CGFloat)delta {
     for (UIImageView* img in conveyorBeltTiles) {
-        CGFloat propMoveX = beltMoveSpeed/100.0;
+        CGFloat propMoveX = speed/100.0;
         CGFloat moveX = [self propX:propMoveX];
         CGFloat moveDelta = -moveX*delta;
         
@@ -547,13 +441,13 @@
     }
 }
 
--(void) updateSocksOnBeltWithDelta:(CGFloat)delta {
+-(void) updateSocksOnBeltWithSpeed:(CGFloat)speed delta:(CGFloat)delta {
     for(int i = 0; i < socks.count; i++){
         Sock* sock = [socks objectAtIndex:i];
         
         if(sock != nil){
             if(sock.onConvayorBelt == true){
-                CGFloat propMoveX = beltMoveSpeed/100.0;
+                CGFloat propMoveX = speed/100.0;
                 CGFloat moveX = [self propX:propMoveX];
                 
                 if(sock.frame.origin.x < -sock.frame.size.width){
@@ -567,15 +461,7 @@
                     //TODO this causes jittering of socks on belt
                     [socks removeObject:sock];
                     
-                    
                     [sock removeFromSuperview];
-                    
-//                    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-//                        //Background Thread
-//                        dispatch_async(dispatch_get_main_queue(), ^(void){
-//                            //Run UI Updates
-//                        });
-//                    });
                 }
                 
                 sock.frame = CGRectOffset(sock.frame, -moveX*delta, 0);
@@ -634,8 +520,7 @@
     lives -= 1;
     if(lives <= 0){
 //        NSLog(@"Game Over!");
-        
-        [self endGame];
+        [self switchGameStateTo:Stopping];
     }
 }
 
@@ -825,7 +710,7 @@
     if(nextFrame == boxAnimationFrames.count*0.5){
         [UIView animateWithDuration:0.5 animations:^void{
             s.frame = CGRectMake(s.frame.origin.x, s.frame.origin.y, s.frame.size.width, 0);
-        } completion:^(BOOL finihed){
+        } completion:^(BOOL finished){
             [s setImage:nil];
         }];
     }
@@ -863,9 +748,10 @@
         
         if(point == true){
             [self pointForSock:s];
-            [s removeFromSuperview];
-            [socks removeObject:s];
         }
+        
+        [s removeFromSuperview];
+        [socks removeObject:s];
         
         [claw removeFromSuperview];
         [claws removeObject:claw];
