@@ -195,7 +195,7 @@
     finalBeltSpeedWarmUp = beltMoveSpeed;
     beltMoveSpeed = 0;
     
-    timeToAnimateWheels = 0.01;
+    timeToAnimateWheels = 0.036;
     finalWheelSpeedWarmUp = timeToAnimateWheels;
     timeToAnimateWheels = 1;
     animateWheelTimer = 0;
@@ -592,7 +592,8 @@
     lives -= 1;
     if(lives <= 0){
 //        NSLog(@"Game Over!");
-        [self endGame];
+        
+//        [self endGame];
     }
 }
 
@@ -635,7 +636,7 @@
     UIImage* sockImage = [sockMainImages objectAtIndex:sockId];
     Sock* newSock = [[Sock alloc] initWithFrame:pos width: width sockSize: size sockId: sockId image: sockImage onBelt:onBelt];
 //    newSock.layer.borderWidth = 2;
-//    newSock.layer.borderColor = [UIColor whiteColor].CGColor;
+//    newSock.layer.borderColor = [UIColor grayColor].CGColor;
     
     [newSock setTouchBeganBlock:^void (Sock* s, CGPoint p) {
         if(s.allowMovement){
@@ -699,8 +700,15 @@
                 
                 CGRect f = s.theoreticalFrame;
                 CGRect resolveRect = CGRectIntersection(f, ss.frame);
-                CGRect newDirectionRect = resolveRect;//CGRectMake(0, 0, resolveRect.size.width < f.size.width/2 ? -resolveRect.size.width : resolveRect.size.width, resolveRect.size.height < f.size.height/2 ? -resolveRect.size.height : resolveRect.size.height);
-                CGRect newFrame = CGRectMake(f.origin.x+newDirectionRect.size.width, f.origin.y+newDirectionRect.size.height, f.size.width, f.size.height);
+                NSLog(@"Resolve %@ %@ %@", NSStringFromCGRect(f), NSStringFromCGRect(ss.frame), NSStringFromCGRect(resolveRect));
+                CGFloat newResolveWidth = resolveRect.size.width < f.size.width/2 ? -resolveRect.size.width : resolveRect.size.width;
+                CGFloat newResolveHeight = resolveRect.size.height < f.size.height/2 ? -resolveRect.size.height : resolveRect.size.height;
+                CGFloat finalWidth = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveWidth) ? newResolveWidth : 0;
+                CGFloat finalHeight = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveHeight) ? newResolveHeight : 0;
+                
+//                CGRect newDirectionRect = CGRectMake(0, 0, resolveRect.size.width < f.size.width/2 ? -resolveRect.size.width : resolveRect.size.width, resolveRect.size.height < f.size.height/2 ? -resolveRect.size.height : resolveRect.size.height);
+                NSLog(@"Res %@", NSStringFromCGSize(CGSizeMake(finalWidth, finalHeight)));
+                CGRect newFrame = CGRectMake(f.origin.x+finalWidth, f.origin.y+finalHeight, f.size.width, f.size.height);
 //                s.frame = newFrame;
                 s.theoreticalFrame = newFrame;
                 return [self handleIntersection:s previousOverlap:true];
