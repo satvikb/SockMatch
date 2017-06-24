@@ -387,10 +387,6 @@
     [self animateBelt:tmr.duration];
     [self updateSocksOnBeltWithDelta:tmr.duration];
     
-    generateSockTimer += tmr.duration;
-    animateWheelTimer += tmr.duration;
-    clawAnimationTimer += tmr.duration;
-    animateScoreValueTimer += tmr.duration;
     
     if(warmingUpGame){
         beltMoveSpeed += tmr.duration*8;
@@ -410,31 +406,20 @@
     }
     
     
-    if(generateSockTimer >= timeToGenerateSock){
-        if(gameActive == true){
-            [self generateSock];
-        }
-        generateSockTimer = 0;
-    }
-    
-    if(animateWheelTimer >= timeToAnimateWheels){
-        [self animateWheels:bottomConveyorBeltWheels withFrames:bottomConveyorBeltWheelsFrames];
-        [self animateWheels:topConveyorBeltWheels withFrames:topConveyorBeltWheelsFrames];
-        
-        animateWheelTimer = 0;
-    }
+    [self handleGenerateSock:tmr.duration];
+    [self handleAnimateWheel:tmr.duration];
+    [self handleClawAnimation: tmr.duration];
     
     [self animateAllSockBoxes];
     
-    if(clawAnimationTimer >= timeForClawAnimation){
-        [self animateAllClaws];
-        clawAnimationTimer = 0;
-    }
+    
+    animateScoreValueTimer += tmr.duration;
     
     if(animateScoreValueTimer >= timeToAnimateScoreValue){
         [self animateScore];
         animateScoreValueTimer = 0;
     }
+    
     
     if(endingGame == true){
         
@@ -443,13 +428,66 @@
             timeToAnimateWheels += tmr.duration/4;
             
             if(beltMoveSpeed <= 0){
-                [self disableSockMovement];
-                [self cleanUpSocksWithClaws];
-                [self finishEndingGame];
-                [self stopGameLoop];
+                [self gameOver];
+                
+                if([self canEndGame]){
+                    [self cleanUpSocksWithClaws];
+                    [self finishEndingGame];
+                    [self stopGameLoop];
+                }
             }
 //        }
     }
+}
+                   
+-(bool)canEndGame{
+    bool gameDone = true;
+    
+    for(Sock* s in socks){
+        if(s.animatingIntoBox == true){
+            gameDone = false;
+        }
+    }
+    
+    if([self anyClawsAnimating] == true){
+        gameDone = false;
+    }
+    return gameDone;
+}
+                   
+-(void)handleGenerateSock:(CGFloat)delta {
+    generateSockTimer += delta;
+    
+    if(generateSockTimer >= timeToGenerateSock){
+        if(gameActive == true){
+            [self generateSock];
+        }
+        generateSockTimer = 0;
+    }
+}
+
+-(void)handleAnimateWheel:(CGFloat)delta {
+    animateWheelTimer += delta;
+    
+    if(animateWheelTimer >= timeToAnimateWheels){
+        [self animateWheels:bottomConveyorBeltWheels withFrames:bottomConveyorBeltWheelsFrames];
+        [self animateWheels:topConveyorBeltWheels withFrames:topConveyorBeltWheelsFrames];
+        
+        animateWheelTimer = 0;
+    }
+}
+
+-(void)handleClawAnimation:(CGFloat)delta {
+    clawAnimationTimer += delta;
+    
+    if(clawAnimationTimer >= timeForClawAnimation){
+        [self animateAllClaws];
+        clawAnimationTimer = 0;
+    }
+}
+
+-(void)gameOver {
+    [self disableSockMovement];
 }
 
 -(void) callSuperUpdateLoop:(CGFloat)delta{
@@ -460,7 +498,7 @@
     }
 }
 
--(BOOL) anySocksOnConveyorBelt {
+-(bool) anySocksOnConveyorBelt {
     bool anySockOnBelt = false;
     for (Sock* sock in socks) {
         bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(sock.frame), CGRectGetMidY(sock.frame)));
@@ -471,7 +509,7 @@
     return anySockOnBelt;
 }
 
--(BOOL) anyClawsAnimating {
+-(bool) anyClawsAnimating {
     bool anyClawsAnimating = false;
     for (Claw* claw in claws) {
         if(claw.currentlyAnimating == true){
@@ -526,15 +564,18 @@
                     }
                     
                     sock.onConvayorBelt = false;
+                    //TODO this causes jittering of socks on belt
+                    [socks removeObject:sock];
                     
-                    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-                        //Background Thread
-                        [socks removeObject:sock];
-                        dispatch_async(dispatch_get_main_queue(), ^(void){
-                            //Run UI Updates
-                            [sock removeFromSuperview];
-                        });
-                    });
+                    
+                    [sock removeFromSuperview];
+                    
+//                    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+//                        //Background Thread
+//                        dispatch_async(dispatch_get_main_queue(), ^(void){
+//                            //Run UI Updates
+//                        });
+//                    });
                 }
                 
                 sock.frame = CGRectOffset(sock.frame, -moveX*delta, 0);
@@ -594,7 +635,7 @@
     if(lives <= 0){
 //        NSLog(@"Game Over!");
         
-//        [self endGame];
+        [self endGame];
     }
 }
 
@@ -679,6 +720,9 @@
                 s.frame = s.theoreticalFrame;
                 s.theoreticalFrame = s.frame;
             } completion:^(BOOL completion){
+                bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
+                s.onConvayorBelt = onBelt;
+                
                 [self checkPairsWithSock:s];
 //                [self handleIntersection:s];
             }];
@@ -694,12 +738,13 @@
 // bool there was overlap
 -(bool) handleIntersection:(Sock*)s previousOverlap:(bool)prevOverlap {
     bool overlap = false;
+    NSLog(@"handle intersection");
     for(Sock* ss in socks){
         if(ss != s){
-            if(CGRectIntersectsRect(ss.frame, s.theoreticalFrame) && !(ss.sockId == s.sockId)){
+            CGRect f = s.theoreticalFrame;
+            if(CGRectIntersectsRect(ss.frame, f) && !(ss.sockId == s.sockId)){
                 overlap = true;
                 
-                CGRect f = s.theoreticalFrame;
                 CGRect resolveRect = CGRectIntersection(f, ss.frame);
                 NSLog(@"Resolve %@ %@ %@", NSStringFromCGRect(f), NSStringFromCGRect(ss.frame), NSStringFromCGRect(resolveRect));
                 CGFloat newResolveWidth = resolveRect.size.width < f.size.width/2 ? -resolveRect.size.width : resolveRect.size.width;
@@ -712,11 +757,12 @@
                 CGRect newFrame = CGRectMake(f.origin.x+finalWidth, f.origin.y+finalHeight, f.size.width, f.size.height);
 //                s.frame = newFrame;
                 s.theoreticalFrame = newFrame;
-                return [self handleIntersection:s previousOverlap:true];
             }
         }
     }
-    return prevOverlap;
+    return overlap == true ? [self handleIntersection:s previousOverlap:true]: prevOverlap;
+    
+//    return prevOverlap;
 }
 
 -(void) checkPairsWithSock:(Sock*)sock{
@@ -768,32 +814,36 @@
     NSInteger currentFrame = [boxAnimationFrames indexOfObject:s.overlayImageView.image];
     NSInteger nextFrame = currentFrame+1;
     
-    
     bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
     s.onConvayorBelt = onBelt;
+//
+//    if(!s.onConvayorBelt){
+//        if(nextFrame == boxAnimationFrames.count*0.5){
+//        }
+//    }
     
-    if(!s.onConvayorBelt){
-        if(nextFrame == boxAnimationFrames.count*0.5){
-//            NSLog(@"create claw");
-            [self createClaw:s givePoint:true];
-        }
+    if(nextFrame == boxAnimationFrames.count*0.5){
+        [UIView animateWithDuration:0.5 animations:^void{
+            s.frame = CGRectMake(s.frame.origin.x, s.frame.origin.y, s.frame.size.width, 0);
+        } completion:^(BOOL finihed){
+            [s setImage:nil];
+        }];
     }
     
     if(nextFrame >= boxAnimationFrames.count){
-        [socksBeingAnimatedIntoBox removeObject:s];        
+        s.animatingIntoBox = false;
+        [socksBeingAnimatedIntoBox removeObject:s];
+        
+        if(!s.onConvayorBelt){
+            [self createClaw:s givePoint:true];
+        }
     }else{
+        s.animatingIntoBox = true;
         [s.overlayImageView setImage: [boxAnimationFrames objectAtIndex: nextFrame]];
     }
     
     if(nextFrame > boxAnimationFrames.count*0.75){
         [s.veryTopImageView setImage:[sockPackages objectAtIndex:s.sockId]];
-        
-        [UIView animateWithDuration:0.5 animations:^void{
-            s.frame = CGRectMake(s.frame.origin.x, s.frame.origin.y, s.frame.size.width, 0);
-        } completion:^(BOOL finihed){
-            [s setImage:nil];
-            
-        }];
     }
 }
 

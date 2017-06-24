@@ -37,6 +37,8 @@ typedef void (^SockTouchEnded)(Sock* s, CGPoint p);
 
 @property (nonatomic, assign) bool validSock; // to make sure that sock is from the current game (if the claw animates slow and a new game is started, a point is awarded)
 
+@property (nonatomic, assign) bool animatingIntoBox;
+
 @property (nonatomic, copy) SockTouchBegan touchBeganBlock;
 @property (nonatomic, copy) SockTouchMoved touchMovedBlock;
 @property (nonatomic, copy) SockTouchEnded touchEndedBlock;
