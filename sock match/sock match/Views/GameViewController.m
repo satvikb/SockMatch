@@ -443,6 +443,7 @@
             timeToAnimateWheels += tmr.duration/4;
             
             if(beltMoveSpeed <= 0){
+                [self disableSockMovement];
                 [self cleanUpSocksWithClaws];
                 [self finishEndingGame];
                 [self stopGameLoop];
@@ -674,7 +675,7 @@
         }
         
         if([self handleIntersection:s previousOverlap:false]){
-            [UIView animateWithDuration:0.5 animations:^void{
+            [UIView animateWithDuration:0.25 animations:^void{
                 s.frame = s.theoreticalFrame;
                 s.theoreticalFrame = s.frame;
             } completion:^(BOOL completion){
