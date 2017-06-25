@@ -58,6 +58,9 @@
     
     NSMutableArray <Claw*>* claws;
     NSMutableArray <UIImage*>* clawAnimationFrames;
+    UIImage* clawMiddleImage;
+    UIImage* clawTopImage;
+    UIImage* clawBottomImage;
     
     CGFloat animateWheelSpeed;
 }
@@ -84,12 +87,17 @@
 
 -(void)loadBufferImages {
     boxAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_box"] withYRow:5 withXColumn:4 maxFrames:0];
-    clawAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_claw"] withYRow:1 withXColumn:4 maxFrames:0];
+    clawAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_claw"] withYRow:1 withXColumn:1 maxFrames:0];
     wheelFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_wheels"] withYRow:1 withXColumn:4 maxFrames:0];
     sockPackages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockPackage"] withYRow:5 withXColumn:5 maxFrames:5];
     sockMainImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockMain"] withYRow:5 withXColumn:5 maxFrames:5];
     
     scoreDigitImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"numbers"] withYRow:1 withXColumn:10 maxFrames:0];
+    
+    clawMiddleImage = [UIImage imageNamed:@"clawMiddle"];
+    clawTopImage = [UIImage imageNamed:@"clawTop"];
+    clawBottomImage = [UIImage imageNamed:@"clawBottom"];
+    
 }
 
 -(void)removeAllSocks{
@@ -278,15 +286,16 @@
             case WarmingUp:
                 animateBeltMoveSpeed += delta*8;
                 animateWheelSpeed -= delta/4;
-                NSLog(@"sdfasdfasdfasdf %f", animateBeltMoveSpeed);
                 
                 if(animateWheelSpeed <= timeToAnimateWheels){
                     animateWheelSpeed = timeToAnimateWheels;
                 }
                 
-                if(animateBeltMoveSpeed >= beltMoveSpeed && animateWheelSpeed <= timeToAnimateWheels){
+                if(animateBeltMoveSpeed >= beltMoveSpeed){
                     animateBeltMoveSpeed = beltMoveSpeed;
-                    [self switchGameStateTo:Playing];
+                    if(animateWheelSpeed <= timeToAnimateWheels){
+                        [self switchGameStateTo:Playing];
+                    }
                 }
                 break;
             case Playing:
@@ -699,13 +708,8 @@
     NSInteger currentFrame = [boxAnimationFrames indexOfObject:s.overlayImageView.image];
     NSInteger nextFrame = currentFrame+1;
     
-    bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
+    bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.theoreticalFrame), CGRectGetMidY(s.theoreticalFrame)));
     s.onConvayorBelt = onBelt;
-//
-//    if(!s.onConvayorBelt){
-//        if(nextFrame == boxAnimationFrames.count*0.5){
-//        }
-//    }
     
     if(nextFrame == boxAnimationFrames.count*0.5){
         [UIView animateWithDuration:0.5 animations:^void{
@@ -739,13 +743,15 @@
 }
 
 -(void)createClaw:(Sock*)s givePoint:(BOOL)point{
-    Claw* claw = [[Claw alloc] initClawWithSock:s animationFrames: clawAnimationFrames];
-    claw.layer.zPosition = SOCK_HIGHEST_LAYER+1;
+//    Claw* claw = [[Claw alloc] initClawWithSock:s animationFrames: clawAnimationFrames];
+    Claw* claw = [[Claw alloc] initClawWithSock:s animationFrames:clawAnimationFrames middleImage:clawMiddleImage topImage:clawTopImage bottomImage:clawBottomImage];
+    claw.layer.zPosition = 100;//SOCK_HIGHEST_LAYER+1;
     [claws addObject:claw];
     [self.view addSubview:claw];
+    
+    s.allowMovement = false;
+    
     [claw animateWithSpeed:0.5 withCompletion:^void {
-        s.allowMovement = false;
-        
         if(point == true){
             [self pointForSock:s];
         }

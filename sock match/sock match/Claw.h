@@ -16,7 +16,7 @@
 
 @property (nonatomic, assign) bool currentlyAnimating;
 
--(id) initClawWithSock:(Sock*)sockPackage animationFrames:(NSMutableArray<UIImage*>*)animFrames;
+-(id) initClawWithSock:(Sock*)sockPackage animationFrames:(NSMutableArray<UIImage*>*)animFrames middleImage:(UIImage*)middleImage topImage:(UIImage*)topImage bottomImage:(UIImage*)bottomImage;
 -(void) animateAnimation;
 -(void) animateWithSpeed:(NSTimeInterval)animateSpeed withCompletion: (void (^)(void)) completion;
 @end

@@ -27,61 +27,69 @@
 
 @synthesize currentlyAnimating;
 
--(id) initClawWithSock:(Sock*)sockPackage animationFrames:(NSMutableArray<UIImage*>*)animFrames {
+-(id) initClawWithSock:(Sock*)sockPackage animationFrames:(NSMutableArray<UIImage*>*)animFrames middleImage:(UIImage*)middleImage topImage:(UIImage*)topImage bottomImage:(UIImage*)bottomImage{
     sock = sockPackage;
     animationFrames = animFrames;
     screenSize = UIScreen.mainScreen.bounds.size;
     
-    CGFloat distToLeft = sockPackage.frame.origin.x+sockPackage.frame.size.width/2;
+    CGFloat distToLeft = sockPackage.frame.origin.x+sockPackage.theoreticalFrame.size.width/2;
     CGFloat distToRight = screenSize.width - distToLeft;
     
     craneFacesRight = distToLeft < distToRight;
     
     
-    craneSize = CGSizeMake(sockPackage.frame.size.width*1.2, sockPackage.frame.size.height*1.4);
-    topSize = CGSizeMake(craneSize.width, sockPackage.frame.size.height*0.2);
-    CGSize bottomSize = CGSizeMake(craneSize.width, sockPackage.frame.size.height*0.2);
-    middleSize = CGSizeMake(sockPackage.frame.size.width*0.2, craneSize.height-topSize.height-bottomSize.height);
+    craneSize = CGSizeMake(sockPackage.theoreticalFrame.size.width*1.2, sockPackage.theoreticalFrame.size.height*1.4);
+    topSize = CGSizeMake(craneSize.width, sockPackage.theoreticalFrame.size.height*0.2);
+    CGSize bottomSize = CGSizeMake(craneSize.width, sockPackage.theoreticalFrame.size.height*0.2);
+    middleSize = CGSizeMake(sockPackage.theoreticalFrame.size.width*0.2, craneSize.height-topSize.height-bottomSize.height);
     
-    bodySize = CGSizeMake(MIN(distToLeft, distToRight)-sockPackage.frame.size.width/2-middleSize.width, craneSize.height/2);
+    bodySize = CGSizeMake(MIN(distToLeft, distToRight)-sockPackage.theoreticalFrame.size.width/2-middleSize.width, craneSize.height/2);
     
     totalWidth = craneSize.width+bodySize.width;
     totalHeight = MAX(craneSize.height, bodySize.height);
     
-    UIView* top;
-    UIView* middle;
-    UIView* bottom;
+    UIImageView* top;
+    UIImageView* middle;
+    UIImageView* bottom;
     
     if(craneFacesRight){
         crane = [[UIView alloc] initWithFrame:CGRectMake(bodySize.width, 0, craneSize.width, craneSize.height)];
-        top = [[UIView alloc] initWithFrame:CGRectMake(0, bottomSize.height+middleSize.height, topSize.width, topSize.height)];
-        middle = [[UIView alloc] initWithFrame:CGRectMake(0, bottomSize.height, middleSize.width, middleSize.height)];
-        bottom = [[UIView alloc] initWithFrame:CGRectMake(0, 0, bottomSize.width, bottomSize.height)];
+        top = [[UIImageView alloc] initWithFrame:CGRectMake(0, bottomSize.height+middleSize.height, topSize.width, topSize.height)];
+        middle = [[UIImageView alloc] initWithFrame:CGRectMake(0, bottomSize.height, middleSize.width, middleSize.height)];
+        bottom = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, bottomSize.width, bottomSize.height)];
         body = [[UIView alloc] initWithFrame:CGRectMake(0, totalHeight*0.25, bodySize.width, bodySize.height)];
         superOrigin = CGPointMake(-totalWidth, sockPackage.frame.origin.y-bottomSize.height);
     }else{
         crane = [[UIView alloc] initWithFrame:CGRectMake(0, 0, craneSize.width, craneSize.height)];
-        top = [[UIView alloc] initWithFrame:CGRectMake(0, bottomSize.height+middleSize.height, topSize.width, topSize.height)];
-        middle = [[UIView alloc] initWithFrame:CGRectMake(craneSize.width-middleSize.width, bottomSize.height, middleSize.width, middleSize.height)];
-        bottom = [[UIView alloc] initWithFrame:CGRectMake(0, 0, bottomSize.width, bottomSize.height)];
+        top = [[UIImageView alloc] initWithFrame:CGRectMake(0, bottomSize.height+middleSize.height, topSize.width, topSize.height)];
+        middle = [[UIImageView alloc] initWithFrame:CGRectMake(craneSize.width-middleSize.width, bottomSize.height, middleSize.width, middleSize.height)];
+        bottom = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, bottomSize.width, bottomSize.height)];
         body = [[UIView alloc] initWithFrame:CGRectMake(craneSize.width, totalHeight*0.25, bodySize.width, bodySize.height)];
         superOrigin = CGPointMake(screenSize.width, sockPackage.frame.origin.y-bottomSize.height);
     }
-    
+    NSLog(@"height %f", totalHeight);
     self = [super initWithFrame:CGRectMake(superOrigin.x, superOrigin.y, totalWidth, totalHeight)];
 //    self.layer.borderWidth = 1;
 //    self.layer.borderColor = UIColor.redColor.CGColor;
-    top.layer.backgroundColor = UIColor.cyanColor.CGColor;
-//    top.layer.borderWidth = 2;
     
-    middle.layer.backgroundColor = UIColor.purpleColor.CGColor;
+//    UIColor* middleBg = [UIColor colorWithPatternImage: [self resizeImage:middleImage newSize:middle.frame.size]];
+//    middle.backgroundColor = middleBg;
 //    middle.layer.borderWidth = 2;
     
-    bottom.layer.backgroundColor = UIColor.orangeColor.CGColor;
-//    bottom.layer.borderWidth = 2;
+//    UIColor* topBottom = [UIColor colorWithPatternImage: [self resizeImage:topBottomImage newSize:top.frame.size]];
+//    top.backgroundColor = topBottom;
+//    bottom.backgroundColor = topBottom;
     
-//    body.layer.borderColor = UIColor.magentaColor.CGColor;
-//    body.layer.borderWidth = 2;
+    top.contentMode = UIViewContentModeScaleAspectFit;
+    top.layer.magnificationFilter = kCAFilterNearest;
+    bottom.contentMode = UIViewContentModeScaleAspectFit;
+    bottom.layer.magnificationFilter = kCAFilterNearest;
+    middle.contentMode = UIViewContentModeScaleAspectFit;
+    middle.layer.magnificationFilter = kCAFilterNearest;
+    
+    [top setImage:[self resizeImage:bottomImage newSize:bottom.frame.size]];
+    [bottom setImage:[self resizeImage:topImage newSize:top.frame.size]];
+    [middle setImage:[self resizeImage:middleImage newSize:middle.frame.size]];
     
     currentFrame = 0;
     UIImage* claw = [animationFrames objectAtIndex:currentFrame];

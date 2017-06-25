@@ -10,19 +10,19 @@
 
 @interface ContainerViewController () {
     CADisplayLink* gameTimer;
-    bool transitioningFromMenuToGame;
 }
 
 @end
 
 @implementation ContainerViewController
+@synthesize currentAppState;
 @synthesize menuController;
 @synthesize gameController;
 @synthesize gameOverController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    transitioningFromMenuToGame = false;
+    currentAppState = MainMenu;
     
     // Do any additional setup after loading the view.
     menuController = [[MenuViewController alloc] init];
@@ -53,7 +53,7 @@
 }
 
 -(void)switchFromMenuToGame:(MenuViewController*) menu{
-    transitioningFromMenuToGame = true;
+    currentAppState = TransitioningFromMainMenuToGame;
     
     [menuController.gameTitle removeFromSuperview];
     [self.view addSubview:menuController.gameTitle];
@@ -104,7 +104,7 @@
 -(void)gameLoop:(CADisplayLink*)tmr {
     CGFloat delta = tmr.duration;
     
-    if(transitioningFromMenuToGame == true){
+    if(currentAppState == TransitioningFromMainMenuToGame){
         CGFloat propMoveX = gameController.animateBeltMoveSpeed/100.0;
         CGFloat moveX = [self propX:propMoveX];
         
@@ -114,7 +114,7 @@
             [menuController.gameTitle removeFromSuperview];
             menuController.gameTitle.frame = menuController.titleFrame;
             [menuController.view addSubview:menuController.gameTitle];
-            transitioningFromMenuToGame = false;
+            currentAppState = Game;
         }
     }
     [gameController gameFrame:tmr];

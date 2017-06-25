@@ -15,6 +15,17 @@
     
 }
 
+typedef enum AppState {
+    MainMenu = 0,
+    TransitioningFromMainMenuToGame = 1,
+    Game = 2,
+    TransitioningFromGameToGameOver = 4,
+    GameOver = 4,
+    TransitioningFromGameOverToMainMenu = 3,
+    TransitioningFromGameOverToGame = 3
+} AppState;
+
+@property (nonatomic, assign) AppState currentAppState;
 @property (strong, nonatomic) MenuViewController *menuController;
 @property (strong, nonatomic) GameViewController *gameController;
 @property (strong, nonatomic) GameOverViewController *gameOverController;
