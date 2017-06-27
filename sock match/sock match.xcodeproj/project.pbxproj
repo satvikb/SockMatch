@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		401DA09B1EF882CF00B7CF6E /* Claw.m in Sources */ = {isa = PBXBuildFile; fileRef = 401DA09A1EF882CF00B7CF6E /* Claw.m */; };
+		4028FEA31F023BF200E06D31 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4028FEA21F023BF200E06D31 /* GameKit.framework */; };
 		403A89281EF7B2D700C81DB4 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403A89271EF7B2D700C81DB4 /* ContainerViewController.m */; };
 		403A892C1EF7C56800C81DB4 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403A892A1EF7C49000C81DB4 /* MenuViewController.m */; };
 		403A892F1EF7CEA500C81DB4 /* GameOverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403A892E1EF7CEA500C81DB4 /* GameOverViewController.m */; };
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		401DA0991EF882CF00B7CF6E /* Claw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Claw.h; sourceTree = "<group>"; };
 		401DA09A1EF882CF00B7CF6E /* Claw.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Claw.m; sourceTree = "<group>"; };
+		4028FEA21F023BF200E06D31 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		403A89261EF7B2D700C81DB4 /* ContainerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContainerViewController.h; sourceTree = "<group>"; };
 		403A89271EF7B2D700C81DB4 /* ContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContainerViewController.m; sourceTree = "<group>"; };
 		403A89291EF7C49000C81DB4 /* MenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
@@ -49,17 +51,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4028FEA31F023BF200E06D31 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4028FEA11F023BF200E06D31 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4028FEA21F023BF200E06D31 /* GameKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		408E6B3E1EEF88180011C450 = {
 			isa = PBXGroup;
 			children = (
 				408E6B491EEF88180011C450 /* sock match */,
 				408E6B481EEF88180011C450 /* Products */,
+				4028FEA11F023BF200E06D31 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -137,6 +149,11 @@
 				TargetAttributes = {
 					408E6B461EEF88180011C450 = {
 						CreatedOnToolsVersion = 9.0;
+						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};

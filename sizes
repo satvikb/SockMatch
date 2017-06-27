@@ -1,0 +1,14 @@
+size
+ex. 50/4 kb (App size = 50 kb, docs is 4 kb, total 54 kb)
+
+blank - 131/4 kb
+
+no main storyboard - 115/4
+-with icon - 385/4
+-with other images - 401/4
+-with code - 557/4
+-with marketing image - 557/4
+-without icons - 524/4
+-without textures - 524/4 (?)
+-without code - 369/4
+-cleaning Xcode - 115/4
