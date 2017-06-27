@@ -67,7 +67,7 @@
         body = [[UIView alloc] initWithFrame:CGRectMake(craneSize.width, totalHeight*0.25, bodySize.width, bodySize.height)];
         superOrigin = CGPointMake(screenSize.width, sockPackage.frame.origin.y-bottomSize.height);
     }
-    NSLog(@"height %f", totalHeight);
+//    NSLog(@"height %f", totalHeight);
     self = [super initWithFrame:CGRectMake(superOrigin.x, superOrigin.y, totalWidth, totalHeight)];
 //    self.layer.borderWidth = 1;
 //    self.layer.borderColor = UIColor.redColor.CGColor;

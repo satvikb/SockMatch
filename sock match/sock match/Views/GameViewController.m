@@ -97,7 +97,6 @@
     clawMiddleImage = [UIImage imageNamed:@"clawMiddle"];
     clawTopImage = [UIImage imageNamed:@"clawTop"];
     clawBottomImage = [UIImage imageNamed:@"clawBottom"];
-    
 }
 
 -(void)removeAllSocks{
@@ -184,7 +183,6 @@
         [self.view addSubview:redLight];
         [lifeLights addObject:redLight];
     }
-    
 }
 
 -(void)createBeltAndWheels {
@@ -245,7 +243,6 @@
         
         beltWheel.layer.magnificationFilter = kCAFilterNearest;
         beltWheel.tag = i;
-        
         beltWheel.layer.zPosition = -2;
         
         NSNumber *x = [NSNumber numberWithInt: i%4];
@@ -279,7 +276,6 @@
             [self animateScore];
             animateScoreValueTimer = 0;
         }
-        
         
         switch (currentGameState) {
             case NotPlaying: break;
@@ -521,6 +517,10 @@
 
 -(void) lostLife {
 //    NSLog(@"lost life");
+    if(lives >= 3){
+        lives = 3;
+    }
+    
     if(lives > 0 && lives <= 3){
         UIImageView* light = [lifeLights objectAtIndex:3-lives];
         [light setImage:lifeLightOn];
@@ -609,7 +609,7 @@
             s.onConvayorBelt = onBelt;
         }
         
-        if([self handleIntersection:s previousOverlap:false]){
+        if([self handleIntersection:s previousOverlap:false direction:0 recursionCount:0]){
             [UIView animateWithDuration:0.25 animations:^void{
                 s.frame = s.theoreticalFrame;
                 s.theoreticalFrame = s.frame;
@@ -620,43 +620,196 @@
                 [self checkPairsWithSock:s];
 //                [self handleIntersection:s];
             }];
-        }else{
-            
         }
+        
+//        if([self collision:s direction:0]){
+//            [UIView animateWithDuration:0.25 animations:^void{
+//                s.frame = s.theoreticalFrame;
+//                s.theoreticalFrame = s.frame;
+//            } completion:^(BOOL completion){
+//                bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
+//                s.onConvayorBelt = onBelt;
+//
+//                [self checkPairsWithSock:s];
+//                //                [self handleIntersection:s];
+//            }];
+//        }
     }];
     
     [self.view addSubview:newSock];
     [socks addObject:newSock];
 }
 
+#define NSLog(FORMAT, ...) printf("%s\n", [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
+
+/*
+ Dir:
+ 0 none
+ 1 top
+ 2 right
+ 3 bottom
+ 4 left
+ */
 // bool there was overlap
--(bool) handleIntersection:(Sock*)s previousOverlap:(bool)prevOverlap {
+-(bool) handleIntersection:(Sock*)s previousOverlap:(bool)prevOverlap direction:(int)d recursionCount:(int)rc{
     bool overlap = false;
-    NSLog(@"handle intersection");
+    int dir = d;
+//    NSLog(@"handle intersection");
     for(Sock* ss in socks){
         if(ss != s){
             CGRect f = s.theoreticalFrame;
+            CGRect r = ss.frame;
             if(CGRectIntersectsRect(ss.frame, f) && !(ss.sockId == s.sockId)){
                 overlap = true;
                 
                 CGRect resolveRect = CGRectIntersection(f, ss.frame);
-                NSLog(@"Resolve %@ %@ %@", NSStringFromCGRect(f), NSStringFromCGRect(ss.frame), NSStringFromCGRect(resolveRect));
-                CGFloat newResolveWidth = resolveRect.size.width < f.size.width/2 ? -resolveRect.size.width : resolveRect.size.width;
-                CGFloat newResolveHeight = resolveRect.size.height < f.size.height/2 ? -resolveRect.size.height : resolveRect.size.height;
-                CGFloat finalWidth = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveWidth) ? newResolveWidth : 0;
-                CGFloat finalHeight = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveHeight) ? newResolveHeight : 0;
+                [self createIntersectionRectTest:resolveRect];
                 
-//                CGRect newDirectionRect = CGRectMake(0, 0, resolveRect.size.width < f.size.width/2 ? -resolveRect.size.width : resolveRect.size.width, resolveRect.size.height < f.size.height/2 ? -resolveRect.size.height : resolveRect.size.height);
-                NSLog(@"Res %@", NSStringFromCGSize(CGSizeMake(finalWidth, finalHeight)));
+                CGFloat finalWidth = 0;
+                CGFloat finalHeight = 0;
+                
+                if(dir == 0 || rc < 10){
+                    //DO NOT TOUCH
+                    CGFloat newResolveWidth = resolveRect.origin.x+r.size.width/2 > r.origin.x+r.size.width/2 ? -resolveRect.size.width : resolveRect.size.width;
+                    CGFloat newResolveHeight = resolveRect.origin.y+r.size.height/2 > r.origin.y+r.size.height/2 ? -resolveRect.size.height : resolveRect.size.height;
+                    finalWidth = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveWidth) ? -newResolveWidth : 0;
+                    finalHeight = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveHeight) ? -newResolveHeight : 0;
+                    
+                    if(finalWidth > 0){
+                        NSLog(@"Right");
+                        dir = 2;
+                    }
+                    
+                    if(finalHeight > 0){
+                        NSLog(@"Down");
+                        dir = 3;
+                    }
+                    
+                    if(finalWidth < 0){
+                        NSLog(@"Left");
+                        dir = 4;
+                    }
+                    
+                    if(finalHeight < 0){
+                        NSLog(@"Up");
+                        dir = 1;
+                    }
+                    
+                    NSLog(@"R %@ %@", NSStringFromCGRect(resolveRect), NSStringFromCGRect(f));
+                }else{
+                    switch (dir) {
+                        case 0:
+                            NSLog(@"DIR ZERO, SHOULD NOT BE");
+                            break;
+                        case 1:
+                            finalHeight = -resolveRect.size.height;
+                            break;
+                        case 2:
+                            finalWidth = resolveRect.size.height;
+                            break;
+                        case 3:
+                            finalHeight = resolveRect.size.height;
+                            break;
+                        case 4:
+                            finalWidth = -resolveRect.size.height;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
                 CGRect newFrame = CGRectMake(f.origin.x+finalWidth, f.origin.y+finalHeight, f.size.width, f.size.height);
-//                s.frame = newFrame;
                 s.theoreticalFrame = newFrame;
             }
         }
     }
-    return overlap == true ? [self handleIntersection:s previousOverlap:true]: prevOverlap;
     
-//    return prevOverlap;
+    return overlap == true ? [self handleIntersection:s previousOverlap:true direction: dir recursionCount:rc+1] : prevOverlap;
+}
+
+-(void) createIntersectionRectTest:(CGRect)frame {
+    UIView* test = [[UIView alloc] initWithFrame: frame];
+    test.backgroundColor = [UIColor colorWithHue:drand48() saturation:1.0 brightness:1.0 alpha:0.6];
+    test.layer.zPosition = 1000;
+    [self.view addSubview:test];
+    [self performSelector:@selector(removeFromView:) withObject:test afterDelay:2];
+}
+
+/*
+ 0 none
+ 1 top
+ 2 right
+ 3 bottom
+ 4 left
+ */
+
+-(bool) collision:(Sock*)s direction:(int)d{
+    bool col = false;
+    int dir = d;
+    
+    for(Sock* ss in socks){
+        if(ss != s){
+            CGRect f = s.theoreticalFrame;
+            if(CGRectIntersectsRect(ss.frame, f) && !(ss.sockId == s.sockId)){
+                col = true;
+                
+                CGRect resolveRect = CGRectIntersection(f, ss.frame);
+                NSLog(@"Resolve %@ %@ %@", NSStringFromCGRect(f), NSStringFromCGRect(ss.frame), NSStringFromCGRect(resolveRect));
+                
+                CGFloat finalWidth = 0;
+                CGFloat finalHeight = 0;
+                
+                if(dir == 0){
+                    // set direction
+                    CGFloat newResolveWidth = resolveRect.size.width < f.size.width/2 ? -resolveRect.size.width : resolveRect.size.width;
+                    CGFloat newResolveHeight = resolveRect.size.height < f.size.height/2 ? -resolveRect.size.height : resolveRect.size.height;
+                    finalWidth = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveWidth) ? newResolveWidth : 0;
+                    finalHeight = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveHeight) ? newResolveHeight : 0;
+                    
+                    if(finalHeight > 0){
+                        dir = 3;
+                    }else if(finalWidth > 0){
+                        dir = 2;
+                    }else if(finalHeight < 0){
+                        dir = 1;
+                    }else if(finalWidth < 0){
+                        dir = 4;
+                    }
+                    NSLog(@"w %f___h %f___d %i", finalWidth, finalHeight, dir);
+                }else{
+                    NSLog(@"New dir %i", dir);
+                    // use current direction
+                    switch (dir) {
+                        case 0:
+                            NSLog(@"DIRECTION NOT SET, SHOULD NOT BE HERE");
+                            break;
+                        case 1:
+                            finalHeight = resolveRect.size.height;
+                            break;
+                        case 2:
+                            finalWidth = resolveRect.size.width;
+                            break;
+                        case 3:
+                            finalHeight = -resolveRect.size.height;
+                            break;
+                        case 4:
+                            finalWidth = -resolveRect.size.width;
+                            break;
+                        default:
+                            NSLog(@"unknown direction");
+                            dir = 0;
+                            break;
+                    }
+                }
+                
+                CGRect newFrame = CGRectMake(f.origin.x+finalWidth, f.origin.y+finalHeight, f.size.width, f.size.height);
+                s.theoreticalFrame = newFrame;
+                return col;
+            }
+        }
+    }
+    
+    return col;
 }
 
 -(void) checkPairsWithSock:(Sock*)sock{
