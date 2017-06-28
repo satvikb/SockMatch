@@ -10,8 +10,10 @@ no ads
 tutorial
 
 sounds
-claw texture
+claw texture/forklift
+
+score number countdown
 
 bugs
--moving multiple socks
+-moving multiple socks at one time
 -sock jitter on belt with removeObject

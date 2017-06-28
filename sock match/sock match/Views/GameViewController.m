@@ -7,8 +7,6 @@
 //
 
 #import "GameViewController.h"
-#import "Sock.h"
-#import "Functions.h"
 
 #define SOCK_HIGHEST_LAYER (50)
 
@@ -22,7 +20,7 @@
     NSMutableArray <Sock*>* socks;
     NSMutableArray <Sock*>* socksBeingAnimatedIntoBox;
     
-    CGRect convayorBeltRect;
+    CGRect conveyorBeltRect;
     NSMutableArray <UIImageView*>* conveyorBeltTiles;
     
     NSMutableArray <UIImageView*>* bottomConveyorBeltWheels;
@@ -62,6 +60,12 @@
     UIImage* clawTopImage;
     UIImage* clawBottomImage;
     
+    CGFloat timeForForkliftAnimation;
+    CGFloat forkliftAnimationTimer;
+    NSMutableArray <Forklift*>* forklifts;
+    NSMutableArray <UIImage*>* forkLiftAnimationFrames;
+    NSMutableArray <UIImage*>* emissionAnimationFrames;
+    
     CGFloat animateWheelSpeed;
 }
 
@@ -91,7 +95,8 @@
     wheelFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_wheels"] withYRow:1 withXColumn:4 maxFrames:0];
     sockPackages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockPackage"] withYRow:5 withXColumn:5 maxFrames:5];
     sockMainImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockMain"] withYRow:5 withXColumn:5 maxFrames:5];
-    
+    forkLiftAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"forklift"] withYRow:2 withXColumn:1 maxFrames:0];
+    emissionAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"emissions"] withYRow:5 withXColumn:1 maxFrames:0];
     scoreDigitImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"numbers"] withYRow:1 withXColumn:10 maxFrames:0];
     
     clawMiddleImage = [UIImage imageNamed:@"clawMiddle"];
@@ -127,6 +132,7 @@
     sockMatchThreshold = [self propX:0.06];
     socks = [[NSMutableArray alloc] init];
     claws = [[NSMutableArray alloc] init];
+    forklifts = [[NSMutableArray alloc] init];
     socksBeingAnimatedIntoBox = [[NSMutableArray alloc] init];
 
     beltMoveSpeed = 25.0;
@@ -139,6 +145,9 @@
     timeForClawAnimation = 0.05;
     clawAnimationTimer = 0;
     
+    timeForForkliftAnimation = 0.25;
+    forkliftAnimationTimer = 0;
+    
     timeToAnimateScoreValue = 0.04;
     animateScoreValueTimer = 0;
 }
@@ -146,7 +155,7 @@
 -(void)createUI {
     
     lifeLights = [[NSMutableArray alloc] init];
-    convayorBeltRect = [self propToRect:CGRectMake(0, 0.15, 1, 0.3)];
+    conveyorBeltRect = [self propToRect:CGRectMake(-0.1, 0.15, 1.1, 0.3)];
 
     UIView* topBackground = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 1, 0.15)]];
     topBackground.backgroundColor = [UIColor colorWithRed:1 green:0.8 blue:0.2 alpha:1];
@@ -186,7 +195,7 @@
 }
 
 -(void)createBeltAndWheels {
-    conveyorBeltTiles = [self createConveyorBelt:convayorBeltRect];
+    conveyorBeltTiles = [self createConveyorBelt:conveyorBeltRect];
     
     CGRect bottomBeltWheelsRect = [self propToRect:CGRectMake(-0.05, 0.4375, 1, 0.025)];
     bottomConveyorBeltWheels = [[NSMutableArray alloc] init];
@@ -267,6 +276,7 @@
         [self handleAnimateWheel:delta];
         [self handleGenerateSock:delta];
         [self handleClawAnimation: delta];
+        [self handleForkliftAnimation:delta];
         [self animateAllSockBoxes];
         
         //TODO remove this system or make it more effiecent
@@ -393,10 +403,19 @@
     }
 }
 
+-(void)handleForkliftAnimation:(CGFloat)delta {
+    forkliftAnimationTimer += delta;
+    
+    if(forkliftAnimationTimer >= timeForForkliftAnimation){
+        [self animateAllForklifts];
+        forkliftAnimationTimer = 0;
+    }
+}
+
 -(bool) anySocksOnConveyorBelt {
     bool anySockOnBelt = false;
     for (Sock* sock in socks) {
-        bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(sock.frame), CGRectGetMidY(sock.frame)));
+        bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX(sock.frame), CGRectGetMidY(sock.frame)));
         if(onBelt == true || sock.onConvayorBelt){
             anySockOnBelt = true;
         }
@@ -467,9 +486,9 @@
                 
                 sock.frame = CGRectOffset(sock.frame, -moveX*delta, 0);
                 sock.theoreticalFrame = sock.frame;
-                
-                [self checkPairsWithSock:sock];
             }
+            
+            [self checkPairsWithSock:sock];
         }else{
 //            NSLog(@"NO SOCK WHILE UPDATING BELT");
         }
@@ -489,6 +508,7 @@
     }
 }
 
+//TODO allow more digits than 4
 -(void) setScoreImages:(int) s {
     NSString* scoreStr = [NSString stringWithFormat:@"%i", s];
     
@@ -529,11 +549,6 @@
 //        NSLog(@"Game Over!");
         [self switchGameStateTo:Stopping];
     }
-}
-
-//TODO the perform selector causes the closest(why?) sock to jerk back...?
--(void)setBackgroundColorClear:(UIView*)view {
-    view.backgroundColor = [UIColor clearColor];
 }
 
 -(void)removeFromView:(UIView*)view {
@@ -592,18 +607,13 @@
             s.frame = newFrame;
             s.theoreticalFrame = newFrame;
             
-    //        if((!s.inAPair || s.mainSockInPair) && s.otherSockInPair != nil){
-    //            CGFloat matchedPairPositionOffset = [self propX:[Functions propSizeFromSockSize:s.sockSize]/10.0];
-    //            s.otherSockInPair.center = CGPointMake(s.center.x-matchedPairPositionOffset, s.center.y+matchedPairPositionOffset); // set center
-    //        }
-            
-            [self checkPairsWithSock:s];
+//            [self checkPairsWithSock:s];
         }
     }];
     
     [newSock setTouchEndedBlock:^void (Sock* s, CGPoint p) {
         if(s.allowMovement){
-            bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
+            bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
             s.onConvayorBelt = onBelt;
         }
         
@@ -612,26 +622,11 @@
                 s.frame = s.theoreticalFrame;
                 s.theoreticalFrame = s.frame;
             } completion:^(BOOL completion){
-                bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
+                bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
                 s.onConvayorBelt = onBelt;
-                
-                [self checkPairsWithSock:s];
-//                [self handleIntersection:s];
+//                [self checkPairsWithSock:s];
             }];
         }
-        
-//        if([self collision:s direction:0]){
-//            [UIView animateWithDuration:0.25 animations:^void{
-//                s.frame = s.theoreticalFrame;
-//                s.theoreticalFrame = s.frame;
-//            } completion:^(BOOL completion){
-//                bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
-//                s.onConvayorBelt = onBelt;
-//
-//                [self checkPairsWithSock:s];
-//                //                [self handleIntersection:s];
-//            }];
-//        }
     }];
     
     [self.view addSubview:newSock];
@@ -655,77 +650,79 @@
 //    NSLog(@"handle intersection");
     for(Sock* ss in socks){
         if(ss != s){
-            CGRect f = s.theoreticalFrame;
-            CGRect r = ss.frame;
-            if(CGRectIntersectsRect(ss.frame, f) && !(ss.sockId == s.sockId)){
-                overlap = true;
-                
-                CGRect resolveRect = CGRectIntersection(f, ss.frame);
-                [self createIntersectionRectTest:resolveRect];
-                
-                CGFloat finalWidth = 0;
-                CGFloat finalHeight = 0;
-                
-                if(dir == 0 || rc < 4){
-                    //DO NOT TOUCH
-                    CGFloat newResolveWidth = resolveRect.origin.x+r.size.width/2 > r.origin.x+r.size.width/2 ? -resolveRect.size.width : resolveRect.size.width;
-                    CGFloat newResolveHeight = resolveRect.origin.y+r.size.height/2 > r.origin.y+r.size.height/2 ? -resolveRect.size.height : resolveRect.size.height;
-                    finalWidth = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveWidth) ? -newResolveWidth : 0;
-                    finalHeight = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveHeight) ? -newResolveHeight : 0;
+            if(!ss.inAPair){
+                CGRect f = s.theoreticalFrame;
+                CGRect r = ss.frame;
+                if(CGRectIntersectsRect(ss.frame, f) && !(ss.sockId == s.sockId)){
+                    overlap = true;
                     
-                    if(finalWidth > 0){
-                        NSLog(@"Right");
-                        dir = 2;
+                    CGRect resolveRect = CGRectIntersection(f, ss.frame);
+                    [self createIntersectionRectTest:resolveRect];
+                    
+                    CGFloat finalWidth = 0;
+                    CGFloat finalHeight = 0;
+                    
+                    if(dir == 0 || rc < 4){
+                        //DO NOT TOUCH
+                        CGFloat newResolveWidth = resolveRect.origin.x+r.size.width/2 > r.origin.x+r.size.width/2 ? -resolveRect.size.width : resolveRect.size.width;
+                        CGFloat newResolveHeight = resolveRect.origin.y+r.size.height/2 > r.origin.y+r.size.height/2 ? -resolveRect.size.height : resolveRect.size.height;
+                        finalWidth = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveWidth) ? -newResolveWidth : 0;
+                        finalHeight = MIN(fabs(newResolveWidth), fabs(newResolveHeight)) == fabs(newResolveHeight) ? -newResolveHeight : 0;
+                        
+                        if(finalWidth > 0){
+                            NSLog(@"Right");
+                            dir = 2;
+                        }
+                        
+                        if(finalHeight > 0){
+                            NSLog(@"Down");
+                            dir = 3;
+                        }
+                        
+                        if(finalWidth < 0){
+                            NSLog(@"Left");
+                            dir = 4;
+                        }
+                        
+                        if(finalHeight < 0){
+                            NSLog(@"Up");
+                            dir = 1;
+                        }
+                        
+                        NSLog(@"R %@ %@", NSStringFromCGRect(resolveRect), NSStringFromCGRect(f));
+                    }else if(rc < 8){
+                        switch (dir) {
+                            case 0:
+                                NSLog(@"DIR ZERO, SHOULD NOT BE");
+                                break;
+                            case 1:
+                                finalHeight = -resolveRect.size.height;
+                                break;
+                            case 2:
+                                finalWidth = resolveRect.size.height;
+                                break;
+                            case 3:
+                                finalHeight = resolveRect.size.height;
+                                break;
+                            case 4:
+                                finalWidth = -resolveRect.size.height;
+                                break;
+                            default:
+                                break;
+                        }
+                    }else if(rc < 12){
+                        finalWidth = resolveRect.size.height;
+                    }else if(rc < 16){
+                        finalHeight = resolveRect.size.height;
+                    }else if(rc < 20){
+                        finalWidth = -resolveRect.size.height;
+                    }else{
+                        finalHeight = -resolveRect.size.height;
                     }
                     
-                    if(finalHeight > 0){
-                        NSLog(@"Down");
-                        dir = 3;
-                    }
-                    
-                    if(finalWidth < 0){
-                        NSLog(@"Left");
-                        dir = 4;
-                    }
-                    
-                    if(finalHeight < 0){
-                        NSLog(@"Up");
-                        dir = 1;
-                    }
-                    
-                    NSLog(@"R %@ %@", NSStringFromCGRect(resolveRect), NSStringFromCGRect(f));
-                }else if(rc < 8){
-                    finalHeight = -resolveRect.size.height;
-                }else if(rc < 12){
-                    finalWidth = resolveRect.size.height;
-                }else if(rc < 16){
-                    finalHeight = resolveRect.size.height;
-                }else if(rc < 20){
-                    finalWidth = -resolveRect.size.height;
-                }else{
-                    switch (dir) {
-                        case 0:
-                            NSLog(@"DIR ZERO, SHOULD NOT BE");
-                            break;
-                        case 1:
-                            finalHeight = -resolveRect.size.height;
-                            break;
-                        case 2:
-                            finalWidth = resolveRect.size.height;
-                            break;
-                        case 3:
-                            finalHeight = resolveRect.size.height;
-                            break;
-                        case 4:
-                            finalWidth = -resolveRect.size.height;
-                            break;
-                        default:
-                            break;
-                    }
+                    CGRect newFrame = CGRectMake(f.origin.x+finalWidth, f.origin.y+finalHeight, f.size.width, f.size.height);
+                    s.theoreticalFrame = newFrame;
                 }
-                
-                CGRect newFrame = CGRectMake(f.origin.x+finalWidth, f.origin.y+finalHeight, f.size.width, f.size.height);
-                s.theoreticalFrame = newFrame;
             }
         }
     }
@@ -768,7 +765,7 @@
     [otherSock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
     
     otherSock.allowMovement = false;
-    
+    otherSock.layer.zPosition= 150;
     [socksBeingAnimatedIntoBox addObject:otherSock];
 }
 
@@ -785,12 +782,18 @@
     }
 }
 
+-(void) animateAllForklifts {
+    for (Forklift* f in forklifts) {
+        [f animateAnimation];
+        [f animateWheels];
+    }
+}
 
 -(void) animateSock:(Sock*)s{
     NSInteger currentFrame = [boxAnimationFrames indexOfObject:s.overlayImageView.image];
     NSInteger nextFrame = currentFrame+1;
     
-    bool onBelt = CGRectContainsPoint(convayorBeltRect, CGPointMake(CGRectGetMidX(s.theoreticalFrame), CGRectGetMidY(s.theoreticalFrame)));
+    bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX(s.theoreticalFrame), CGRectGetMidY(s.theoreticalFrame)));
     s.onConvayorBelt = onBelt;
     
     if(nextFrame == boxAnimationFrames.count*0.5){
@@ -806,7 +809,8 @@
         [socksBeingAnimatedIntoBox removeObject:s];
         
         if(!s.onConvayorBelt){
-            [self createClaw:s givePoint:true];
+//            [self createClaw:s givePoint:true];
+            [self createForklift:s givePoint:true];
         }
     }else{
         s.animatingIntoBox = true;
@@ -844,6 +848,26 @@
         [claw removeFromSuperview];
         [claws removeObject:claw];
     }];
+}
+
+-(void)createForklift:(Sock*)s givePoint:(BOOL)point{
+    Forklift* lift = [[Forklift alloc] initWithSock:s forkliftAnimationFrames:forkLiftAnimationFrames emissionAnimationFrames:emissionAnimationFrames wheelAnimationFrames:wheelFrames];
+    lift.layer.zPosition = 102;
+    [forklifts addObject:lift];
+    [self.view addSubview:lift];
+    
+    [lift animateWithSpeed:2 withCompletion:^void{
+        if(point == true){
+            [self pointForSock:s];
+        }
+        
+        [s removeFromSuperview];
+        [socks removeObject:s];
+        
+        [lift removeFromSuperview];
+        [forklifts removeObject:lift];
+    }];
+    
 }
 
 -(void) pointForSock:(Sock*)s{
