@@ -1,11 +1,17 @@
 all thats left
-gamecenter
--signing in
--submit score
+(high) score saving (https://github.com/granoff/Lockbox)
 
+gamecenter
+-custom leaderboard
 sharing on game over screen
 
 no ads
 
+tutorial
+
 sounds
 claw texture
+
+bugs
+-moving multiple socks
+-sock jitter on belt with removeObject
