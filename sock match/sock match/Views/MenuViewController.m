@@ -9,16 +9,40 @@
 #import "MenuViewController.h"
 #import "Sock.h"
 
-@interface MenuViewController ()
+@interface MenuViewController () {
+    NSMutableArray<UIImage*>* sockPackages;
+    NSMutableArray<UIImage*>* forkliftAnimation;
+    NSMutableArray<UIImage*>* wheelAnimation;
+    
+    // random forklifts
+    CGFloat randomForkliftTimer;
+    CGFloat timeToCreateRandomForklift;
+    
+    CGFloat forkliftWheelTimer;
+    CGFloat timeToAnimateWheels;
+}
 
 @end
 
 
 @implementation MenuViewController
+
+@synthesize forklifts;
 @synthesize gameTitle;
 @synthesize titleFrame;
 @synthesize playButton;
 @synthesize gameCenterButton;
+
+-(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages{
+    self = [super init];
+    
+    forklifts = [[NSMutableArray alloc] init];
+    sockPackages = packages;
+    forkliftAnimation = forklift;
+    wheelAnimation = wheels;
+    
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -26,6 +50,11 @@
     self.view.backgroundColor = [UIColor clearColor];//[UIColor colorWithRed:0.168627451 green:0.168627451 blue:0.168627451 alpha:1];
     self.view.userInteractionEnabled = true;
     
+    randomForkliftTimer = 0;
+    timeToCreateRandomForklift = 3;
+    
+    forkliftWheelTimer = 0;
+    timeToAnimateWheels = 0.2;
     
     gameTitle = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.2, 0.5, 0.195)]];
 //    testLabel.layer.borderWidth = 1;
@@ -83,8 +112,7 @@
     [self.view addSubview:gameCenterButton];
 }
 
-- (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor
-{
+- (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor{
     UIGraphicsBeginImageContextWithOptions (image.size, NO, image.scale); // for correct resolution on retina, thanks @MobileVet
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -125,6 +153,90 @@
     if([self.delegate respondsToSelector:@selector(menuGameCenterButton)]){
         [self.delegate menuGameCenterButton];
     }
+}
+
+-(void) gameFrame:(CADisplayLink*)tmr{
+    if([self.delegate respondsToSelector:@selector(getAppState)]){
+        if([self.delegate getAppState] == MainMenu){
+            randomForkliftTimer += tmr.duration;
+            forkliftWheelTimer += tmr.duration;
+            
+            if(randomForkliftTimer >= timeToCreateRandomForklift){
+                [self createRandomForklift];
+                randomForkliftTimer = 0;
+            }
+            
+            if(forkliftWheelTimer >= timeToAnimateWheels){
+                for(Forklift* f in forklifts){
+                    switch (f.currentState) {
+                        case None:
+                            break;
+                        case GoingToSock:
+                            [f animateWheels];
+                            break;
+                        case PickingUpSock:
+                            break;
+                        case GoingBack:
+                            [f animateWheelsBackward];
+                        default:
+                            break;
+                    }
+                }
+                
+                
+                forkliftWheelTimer = 0;
+            }
+        }
+    }
+}
+
+// TODO make them not overlap (seperate into rows or sth)
+-(void)createRandomForklift{
+    CGFloat y = [Functions randFromMin:0.5 toMax:0.9];
+    
+    int sockId = [self getRandomSockId];
+    SockSize size = [self getRandomSockSize];
+    
+    CGRect newSockFrame = [self propToRect:CGRectMake(0, y, [Functions propSizeFromSockSize:size], 0)];
+    //imageName:[NSString stringWithFormat:@"sock%i", sockId]
+    
+    bool fromLeft = [Functions randomNumberBetween:0 maxNumber:100] < 50;
+    
+    UIImage* img = [Functions randomNumberBetween:0 maxNumber:100] < 50 ? [sockPackages objectAtIndex:sockId] : nil;
+    
+    Forklift* fork = [[Forklift alloc] initDummyFromLeft:fromLeft sockImage:img sockSize:CGSizeMake(newSockFrame.size.width, newSockFrame.size.width) atY:newSockFrame.origin.y forkliftAnimationFrames:forkliftAnimation wheelAnimationFrames:wheelAnimation];
+    
+    fork.layer.zPosition = 102;
+    [forklifts addObject:fork];
+    [self.view addSubview:fork];
+    
+    CGFloat speed = [Functions randFromMin:1.5 toMax:4];
+    
+    
+    [fork dummyAnimateWithSpeed:speed xTranslate:fromLeft == true ? [self propX:1]+fork.frame.size.width : -([self propX: 1]+fork.frame.size.width) withCompletion:^void{
+        [fork removeFromSuperview];
+        [forklifts removeObject:fork];
+    }];
+    
+    
+//    [UIView animateWithDuration:10 animations:^void{
+//        fork.frame = CGRectOffset(fork.frame, fromLeft == true ? [self propX:1]+fork.frame.size.width : -([self propX: 1]+fork.frame.size.width), 0);
+//    } completion:^(BOOL completed){
+//        [fork removeFromSuperview];
+//        [forklifts removeObject:fork];
+//    }];
+//    [fork animateWithSpeed:1 withCompletion:^void{
+//        [fork removeFromSuperview];
+//        [forklifts removeObject:fork];
+//    }];
+}
+
+-(int) getRandomSockId {
+    return [Functions randomNumberBetween:0 maxNumber:4];
+}
+
+-(SockSize) getRandomSockSize {
+    return [Functions randomNumberBetween:1 maxNumber:1];
 }
 
 - (void)didReceiveMemoryWarning {

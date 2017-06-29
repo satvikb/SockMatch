@@ -11,9 +11,23 @@
 
 @interface Forklift : UIImageView
 
+typedef enum ForkliftState {
+    None = 0,
+    GoingToSock = 1,
+    PickingUpSock = 2,
+    GoingBack = 3,
+    Finished = 4
+} ForkliftState;
 
--(id)initWithSock:(Sock*)s forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation emissionAnimationFrames:(NSMutableArray<UIImage*>*)emissionAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation;
+-(id)initWithSock:(Sock*)s forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation;
+-(id)initDummyFromLeft:(bool)fromLeft sockImage:(UIImage*)sockImage sockSize:(CGSize)sockSize atY:(CGFloat)y forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation;
 -(void) animateAnimation;
 -(void) animateWheels;
+-(void) animateWheelsBackward;
 -(void) animateWithSpeed:(NSTimeInterval)animateSpeed withCompletion: (void (^)(void)) completion;
+-(void)dummyAnimateWithSpeed:(NSTimeInterval)speed xTranslate:(CGFloat)xTranslate withCompletion: (void (^)(void)) completion;
+
+@property (nonatomic, assign) ForkliftState currentState;
+@property (nonatomic, assign) bool forkliftFacesRight;
+
 @end

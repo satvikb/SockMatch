@@ -21,6 +21,7 @@
 @synthesize gameOverController;
 @synthesize gameCenterEnabled;
 @synthesize leaderboardIdentifier;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self authenticateLocalPlayer];
@@ -28,10 +29,6 @@
     currentAppState = MainMenu;
     
     // Do any additional setup after loading the view.
-    menuController = [[MenuViewController alloc] init];
-    menuController.view.layer.zPosition = 100;
-    menuController.delegate = self;
-    
     gameController = [[GameViewController alloc] init];
     gameController.view.layer.zPosition = -100;
     gameController.delegate = self;
@@ -39,6 +36,10 @@
     gameOverController = [[GameOverViewController alloc] init];
     gameOverController.view.layer.zPosition = 150;
     gameOverController.delegate = self;
+    
+    menuController = [[MenuViewController alloc] initWithForkliftAnimation:gameController.forkLiftAnimationFrames andWheel:gameController.wheelFrames sockPackages:gameController.sockPackages];//[[MenuViewController alloc] init];
+    menuController.view.layer.zPosition = 100;
+    menuController.delegate = self;
     
     [self displayContentController:gameController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
     [self displayContentController:gameOverController withFrame:[self propToRect:CGRectMake(1, 0, 1, 1)]];
@@ -60,6 +61,11 @@
     
     [menuController.gameTitle removeFromSuperview];
     [self.view addSubview:menuController.gameTitle];
+    
+    for(Forklift* f in menuController.forklifts){
+        [f removeFromSuperview];
+        [self.view addSubview:f];
+    }
     
     [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointZero animationFinished:^{
         NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
@@ -86,7 +92,7 @@
 
 -(void)animateFromViewController:(UIViewController*)vc toPoint:(CGPoint)point toViewController:(UIViewController*)otherVc toPoint:(CGPoint)otherPoint animationFinished:(void (^)(void)) completion{
 
-    [UIView animateWithDuration:0.25 animations:^{
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
         otherVc.view.frame = CGRectMake(otherPoint.x, otherPoint.y, otherVc.view.frame.size.width, otherVc.view.frame.size.height);
         vc.view.frame = CGRectMake(point.x, point.y, vc.view.frame.size.width, vc.view.frame.size.height);
     } completion:^(BOOL finished){
@@ -102,13 +108,24 @@
     }
 }
 
+-(int)getAppState{
+    return currentAppState;
+}
+
 -(void)reportGCScore:(int)currentScore {
-    [self gcReportScore:currentScore];
+    if(gameCenterEnabled == true && leaderboardIdentifier.length > 0){
+        [self gcReportScore:currentScore];
+    }
 }
 
 -(void)startGameLoop {
     gameTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(gameLoop:)];
-    gameTimer.preferredFramesPerSecond = 60;
+    if (@available(iOS 10.0, *)) {
+        gameTimer.preferredFramesPerSecond = 60;
+    } else {
+        // Fallback on earlier versions
+        gameTimer.frameInterval = 1;
+    }
     [gameTimer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
@@ -134,6 +151,8 @@
             currentAppState = Game;
         }
     }
+    
+    [menuController gameFrame:tmr];
     [gameController gameFrame:tmr];
 }
 
@@ -173,14 +192,16 @@
 }
 
 -(void)gcReportScore:(int)s{
-    GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:leaderboardIdentifier];
-    score.value = s;
-    
-    [GKScore reportScores:@[score] withCompletionHandler:^(NSError *error) {
-        if (error != nil) {
-            NSLog(@"%@", [error localizedDescription]);
-        }
-    }];
+    if(gameCenterEnabled == true && leaderboardIdentifier.length > 0){
+        GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:leaderboardIdentifier];
+        score.value = s;
+        
+        [GKScore reportScores:@[score] withCompletionHandler:^(NSError *error) {
+            if (error != nil) {
+                NSLog(@"%@", [error localizedDescription]);
+            }
+        }];
+    }
 }
 
 -(void)gcShowLeaderboard{

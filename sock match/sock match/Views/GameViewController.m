@@ -7,6 +7,7 @@
 //
 
 #import "GameViewController.h"
+#import "Functions.h"
 
 #define SOCK_HIGHEST_LAYER (50)
 
@@ -16,46 +17,36 @@
     
     CGFloat sockMatchThreshold;
     
-    NSMutableArray <UIImage*>* sockMainImages;
     NSMutableArray <Sock*>* socks;
     NSMutableArray <Sock*>* socksBeingAnimatedIntoBox;
     
     CGRect conveyorBeltRect;
     NSMutableArray <UIImageView*>* conveyorBeltTiles;
-    
     NSMutableArray <UIImageView*>* bottomConveyorBeltWheels;
     NSMutableArray <NSNumber*>* bottomConveyorBeltWheelsFrames;
     NSMutableArray <UIImageView*>* topConveyorBeltWheels;
     NSMutableArray <NSNumber*>* topConveyorBeltWheelsFrames;
     
-    NSMutableArray <UIImage*>* wheelFrames;
-    
     NSMutableArray <UIImageView*>* scoreDigits;
-    NSMutableArray <UIImage*>* scoreDigitImages;
+    
+    NSMutableArray <UIImageView*>* lifeLights;
     
     int score;
     int currentAnimatingScore;
+    int lives;
+    
     CGFloat timeToAnimateScoreValue;
     CGFloat animateScoreValueTimer;
     
-    int lives;
-    NSMutableArray <UIImageView*>* lifeLights;
-    UIImage* lifeLightOff;
-    UIImage* lifeLightOn;
-    
     CGFloat _beltImagesSideExtra;
     
+    CGFloat animateWheelSpeed;
     CGFloat timeToAnimateWheels;
     CGFloat animateWheelTimer;
     
-    NSMutableArray <UIImage*>* boxAnimationFrames;
-    NSMutableArray <UIImage*>* sockPackages;
-    
     CGFloat timeForClawAnimation;
     CGFloat clawAnimationTimer;
-    
     NSMutableArray <Claw*>* claws;
-    NSMutableArray <UIImage*>* clawAnimationFrames;
     UIImage* clawMiddleImage;
     UIImage* clawTopImage;
     UIImage* clawBottomImage;
@@ -63,15 +54,25 @@
     CGFloat timeForForkliftAnimation;
     CGFloat forkliftAnimationTimer;
     NSMutableArray <Forklift*>* forklifts;
-    NSMutableArray <UIImage*>* forkLiftAnimationFrames;
-    NSMutableArray <UIImage*>* emissionAnimationFrames;
     
-    CGFloat animateWheelSpeed;
+    //TODO put these two in one image
+    UIImage* lifeLightOff;
+    UIImage* lifeLightOn;
 }
 
 @end
 
 @implementation GameViewController
+
+@synthesize sockMainImages;
+@synthesize sockPackages;
+@synthesize scoreDigitImages;
+
+@synthesize boxAnimationFrames;
+@synthesize wheelFrames;
+@synthesize clawAnimationFrames;
+@synthesize forkLiftAnimationFrames;
+@synthesize emissionAnimationFrames;
 
 @synthesize beltMoveSpeed;
 @synthesize animateBeltMoveSpeed;
@@ -79,6 +80,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSLog(@"GAME VIEW");
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
@@ -283,11 +285,12 @@
         animateScoreValueTimer += tmr.duration;
         
         if(animateScoreValueTimer >= timeToAnimateScoreValue){
-            int dd = abs(currentAnimatingScore-score);
-            int d = dd/4;
-            int ad = dd/d;
-            int diff = ad < d ? 1 : ad;
+//            int dd = abs(currentAnimatingScore-score);
+//            int d = dd/4;
+//            int ad = dd/d;
+//            int diff = ad < d ? 1 : ad;
 //            NSLog(@"D %i", diff);
+            int diff = 1;
             [self animateScore: diff];
             animateScoreValueTimer = 0;
         }
@@ -631,7 +634,7 @@
         }
         
         if([self handleIntersection:s previousOverlap:false direction:0 recursionCount:0]){
-            [UIView animateWithDuration:0.25 animations:^void{
+            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
                 s.frame = s.theoreticalFrame;
                 s.theoreticalFrame = s.frame;
             } completion:^(BOOL completion){
@@ -799,7 +802,17 @@
 -(void) animateAllForklifts {
     for (Forklift* f in forklifts) {
         [f animateAnimation];
-        [f animateWheels];
+        
+        switch (f.currentState) {
+            case GoingToSock:
+                [f animateWheels];
+                break;
+            case GoingBack:
+                [f animateWheelsBackward];
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -811,9 +824,9 @@
     s.onConvayorBelt = onBelt;
     
     if(nextFrame == boxAnimationFrames.count*0.5){
-        [UIView animateWithDuration:0.5 animations:^void{
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
 //            s.coreImageView.frame = CGRectMake(s.frame.origin.x+s.frame.size.width/4, s.frame.origin.y+s.frame.size.height/4, s.frame.size.width/2, s.frame.size.height/2);
-            s.coreImageView.transform = CGAffineTransformMakeScale(0.8, 0.8);
+            s.coreImageView.transform = CGAffineTransformMakeScale(0.7, 0.7);
         } completion:^(BOOL finished){
             [s.coreImageView setImage:nil];
         }];
@@ -866,7 +879,7 @@
 }
 
 -(void)createForklift:(Sock*)s givePoint:(BOOL)point{
-    Forklift* lift = [[Forklift alloc] initWithSock:s forkliftAnimationFrames:forkLiftAnimationFrames emissionAnimationFrames:emissionAnimationFrames wheelAnimationFrames:wheelFrames];
+    Forklift* lift = [[Forklift alloc] initWithSock:s forkliftAnimationFrames:forkLiftAnimationFrames wheelAnimationFrames:wheelFrames];
     lift.layer.zPosition = 102;
     [forklifts addObject:lift];
     [self.view addSubview:lift];

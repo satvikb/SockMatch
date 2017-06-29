@@ -21,6 +21,24 @@ typedef enum SockSize {
     Large = 2
 } SockSize;
 
+
+typedef enum AppState {
+    MainMenu = 0,
+    TransitioningFromMainMenuToGame = 1,
+    Game = 2,
+    TransitioningFromGameToGameOver = 4,
+    GameOver = 4,
+    TransitioningFromGameOverToMainMenu = 3,
+    TransitioningFromGameOverToGame = 3
+} AppState;
+
+typedef enum GameState {
+    NotPlaying = 0,
+    WarmingUp = 1,
+    Playing = 2,
+    Stopping = 3
+} GameState;
+
 + (int)randomNumberBetween:(int)min maxNumber:(int)max;
 + (CGFloat) randFromMin:(CGFloat)min toMax:(CGFloat)max;
 + (CGFloat) propSizeFromSockSize:(SockSize) size;

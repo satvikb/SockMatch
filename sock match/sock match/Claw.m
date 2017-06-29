@@ -31,7 +31,7 @@
     sock = sockPackage;
     animationFrames = animFrames;
     screenSize = UIScreen.mainScreen.bounds.size;
-    
+        
     CGFloat distToLeft = sockPackage.frame.origin.x+sockPackage.theoreticalFrame.size.width/2;
     CGFloat distToRight = screenSize.width - distToLeft;
     
@@ -147,14 +147,14 @@
 
 -(void) animateWithSpeed:(NSTimeInterval)animateSpeed withCompletion: (void (^)(void)) completion {
     currentlyAnimating = true;
-    [UIView animateWithDuration:animateSpeed animations:^{
+    [UIView animateWithDuration:animateSpeed delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
         self.frame = CGRectMake(craneFacesRight == true ? sock.frame.origin.x-totalWidth+craneSize.width-middleSize.width : sock.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
     } completion:^(BOOL finished){
         [sock removeFromSuperview];
         sock.frame = CGRectMake(craneFacesRight == true ? bodySize.width+middleSize.width : 0, topSize.height, sock.frame.size.width, sock.frame.size.height);
         [self addSubview:sock];
         
-        [UIView animateWithDuration:animateSpeed animations:^{
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             CGRect newRect = CGRectMake(craneFacesRight == true ? -totalWidth : screenSize.width, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
             self.frame = newRect;
         } completion:^(BOOL finished){
