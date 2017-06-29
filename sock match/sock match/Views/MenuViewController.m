@@ -236,7 +236,7 @@
 }
 
 -(SockSize) getRandomSockSize {
-    return [Functions randomNumberBetween:1 maxNumber:1];
+    return [Functions randomNumberBetween:0 maxNumber:2];
 }
 
 - (void)didReceiveMemoryWarning {

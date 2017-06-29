@@ -11,9 +11,7 @@ tutorial
 
 sounds
 claw texture/forklift
-forklift wheels (stopping, inverse animation)
 forklifts near belt
-forklift linear animation
 
 score number countdown
 
@@ -24,4 +22,3 @@ good icon
 
 bugs
 -moving multiple socks at one time
--score countdown only by 5s
