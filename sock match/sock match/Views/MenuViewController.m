@@ -71,9 +71,8 @@
     //    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
     
     UIImage* playImage = [UIImage imageNamed:@"play"];
-    playImage = [playImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    playImage = [self image:playImage WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
-//    playButton.tintColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1];
+//    playImage = [playImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    playImage = [self image:playImage WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
     [playButton setImage:playImage];
     playButton.layer.magnificationFilter = kCAFilterNearest;
     playButton.contentMode = UIViewContentModeScaleAspectFit;
@@ -211,24 +210,11 @@
     [self.view addSubview:fork];
     
     CGFloat speed = [Functions randFromMin:1.5 toMax:4];
-    
-    
+        
     [fork dummyAnimateWithSpeed:speed xTranslate:fromLeft == true ? [self propX:1]+fork.frame.size.width : -([self propX: 1]+fork.frame.size.width) withCompletion:^void{
         [fork removeFromSuperview];
         [forklifts removeObject:fork];
     }];
-    
-    
-//    [UIView animateWithDuration:10 animations:^void{
-//        fork.frame = CGRectOffset(fork.frame, fromLeft == true ? [self propX:1]+fork.frame.size.width : -([self propX: 1]+fork.frame.size.width), 0);
-//    } completion:^(BOOL completed){
-//        [fork removeFromSuperview];
-//        [forklifts removeObject:fork];
-//    }];
-//    [fork animateWithSpeed:1 withCompletion:^void{
-//        [fork removeFromSuperview];
-//        [forklifts removeObject:fork];
-//    }];
 }
 
 -(int) getRandomSockId {
