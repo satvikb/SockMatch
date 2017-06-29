@@ -9,16 +9,20 @@
 #import <UIKit/UIKit.h>
 #import "Functions.h"
 
-@interface Sock : UIImageView {
+@interface Sock : UIView {
     CGPoint touchPoint;
 }
 
-typedef void (^SockTouchBegan)(Sock* s, CGPoint p);
-typedef void (^SockTouchMoved)(Sock* s, CGPoint p, CGPoint oldPos);
-typedef void (^SockTouchEnded)(Sock* s, CGPoint p);
+typedef void (^TouchBegan)(Sock* s, CGPoint p);
+typedef void (^TouchMoved)(Sock* s, CGPoint p, CGPoint oldPos);
+typedef void (^TouchEnded)(Sock* s, CGPoint p);
 
 
--(id) initWithFrame:(CGPoint)pos width:(CGFloat)width sockSize:(SockSize)size sockId:(int)sId image:(UIImage*) image onBelt:(bool)startOnBelt;
+-(id) initWithFrame:(CGPoint)pos width:(CGFloat)width sockSize:(SockSize)size sockId:(int)sId image:(UIImage*) image onBelt:(bool)startOnBelt extraPropTouchSpace:(CGFloat)extraSpace;
+-(CGRect)getCoreRect;
+-(void)setRectFromCoreRect:(CGRect)rect;
+-(CGRect)getCoreTheoreticalRect;
+-(void)setTheoreticalRectFromCoreTheoreticalRect:(CGRect)rect;
 
 @property (nonatomic, assign) bool inAPair;
 @property (nonatomic, assign) bool mainSockInPair;
@@ -30,6 +34,7 @@ typedef void (^SockTouchEnded)(Sock* s, CGPoint p);
 
 @property (nonatomic, assign) CGRect theoreticalFrame;
 
+@property (nonatomic, strong) UIImageView* coreImageView;
 @property (nonatomic, strong) UIImageView* overlayImageView;
 @property (nonatomic, strong) UIImageView* veryTopImageView;
 
@@ -39,8 +44,8 @@ typedef void (^SockTouchEnded)(Sock* s, CGPoint p);
 
 @property (nonatomic, assign) bool animatingIntoBox;
 
-@property (nonatomic, copy) SockTouchBegan touchBeganBlock;
-@property (nonatomic, copy) SockTouchMoved touchMovedBlock;
-@property (nonatomic, copy) SockTouchEnded touchEndedBlock;
+@property (nonatomic, copy) TouchBegan touchBeganBlock;
+@property (nonatomic, copy) TouchMoved touchMovedBlock;
+@property (nonatomic, copy) TouchEnded touchEndedBlock;
 
 @end

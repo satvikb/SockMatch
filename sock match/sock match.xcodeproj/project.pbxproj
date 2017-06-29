@@ -10,6 +10,7 @@
 		401DA09B1EF882CF00B7CF6E /* Claw.m in Sources */ = {isa = PBXBuildFile; fileRef = 401DA09A1EF882CF00B7CF6E /* Claw.m */; };
 		4028FEA31F023BF200E06D31 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4028FEA21F023BF200E06D31 /* GameKit.framework */; };
 		4037169D1F042AB40070C3A6 /* Forklift.m in Sources */ = {isa = PBXBuildFile; fileRef = 4037169C1F042AB40070C3A6 /* Forklift.m */; };
+		403716A01F047EBF0070C3A6 /* SockTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4037169F1F047EBF0070C3A6 /* SockTouch.m */; };
 		403A89281EF7B2D700C81DB4 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403A89271EF7B2D700C81DB4 /* ContainerViewController.m */; };
 		403A892C1EF7C56800C81DB4 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403A892A1EF7C49000C81DB4 /* MenuViewController.m */; };
 		403A892F1EF7CEA500C81DB4 /* GameOverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403A892E1EF7CEA500C81DB4 /* GameOverViewController.m */; };
@@ -28,6 +29,8 @@
 		4028FEA21F023BF200E06D31 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		4037169B1F042AB40070C3A6 /* Forklift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Forklift.h; sourceTree = "<group>"; };
 		4037169C1F042AB40070C3A6 /* Forklift.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Forklift.m; sourceTree = "<group>"; };
+		4037169E1F047EBF0070C3A6 /* SockTouch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SockTouch.h; sourceTree = "<group>"; };
+		4037169F1F047EBF0070C3A6 /* SockTouch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SockTouch.m; sourceTree = "<group>"; };
 		403A89261EF7B2D700C81DB4 /* ContainerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContainerViewController.h; sourceTree = "<group>"; };
 		403A89271EF7B2D700C81DB4 /* ContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContainerViewController.m; sourceTree = "<group>"; };
 		403A89291EF7C49000C81DB4 /* MenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
@@ -100,6 +103,8 @@
 				4037169C1F042AB40070C3A6 /* Forklift.m */,
 				408E6B6D1EEFF1920011C450 /* Functions.h */,
 				408E6B6E1EEFF2530011C450 /* Functions.m */,
+				4037169E1F047EBF0070C3A6 /* SockTouch.h */,
+				4037169F1F047EBF0070C3A6 /* SockTouch.m */,
 				408E6B531EEF88180011C450 /* Assets.xcassets */,
 				408E6B591EEF88180011C450 /* main.m */,
 				408E6B581EEF88180011C450 /* Info.plist */,
@@ -206,6 +211,7 @@
 				408E6B651EEFA5EA0011C450 /* Sock.m in Sources */,
 				401DA09B1EF882CF00B7CF6E /* Claw.m in Sources */,
 				408E6B6F1EEFF2530011C450 /* Functions.m in Sources */,
+				403716A01F047EBF0070C3A6 /* SockTouch.m in Sources */,
 				408E6B4C1EEF88180011C450 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

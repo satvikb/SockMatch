@@ -109,6 +109,7 @@
     CGRect newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width, newSize.height));
     CGImageRef imageRef = image.CGImage;
     
+    // TODO newSize had zero area?
     UIGraphicsBeginImageContextWithOptions(newSize, NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     

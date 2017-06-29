@@ -38,9 +38,12 @@
 
 -(id)initWithSock:(Sock*)s forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation emissionAnimationFrames:(NSMutableArray<UIImage*>*)emissionAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation{
     screenSize = UIScreen.mainScreen.bounds.size;
+    
+    UIImage* firstForklift = [forkliftAnimation objectAtIndex:0];
+    
     forkliftForkLength = 0.696969697;
-    pickupPadding = 0.06060606061;
-    pickupScaleExtra = 0.0303030303;
+    pickupPadding = 0.06060606061;///firstForklift.scale;
+    pickupScaleExtra = 0.06060606061*firstForklift.scale;
     
     sock = s;
     
@@ -55,41 +58,36 @@
     currentEmissionFrame = 0;
     currentWheelFrame = 0;
     
-    UIImage* first = [forkliftAnimation objectAtIndex:0];
-    CGFloat sockHeight = sock.theoreticalFrame.size.height;
-    CGFloat aspectRatio = sockHeight / first.size.height;
-    CGFloat finalWidth = first.size.width*aspectRatio;
+    CGFloat sockHeight = [sock getCoreTheoreticalRect].size.height;
+    CGFloat aspectRatio = sockHeight / firstForklift.size.height;
+    CGFloat finalWidth = firstForklift.size.width*aspectRatio;
     
     height = sockHeight;
     width = finalWidth;
     
-    forkliftFacesRight = sock.frame.origin.x+(sock.frame.size.width/2) < screenSize.width/2;
+    forkliftFacesRight = [sock getCoreRect].origin.x+([sock getCoreRect].size.width/2) < screenSize.width/2;
     
-    first = forkliftFacesRight ? [UIImage imageWithCGImage:first.CGImage scale:first.scale orientation:UIImageOrientationUpMirrored] : first;
+    firstForklift = forkliftFacesRight ? [UIImage imageWithCGImage:firstForklift.CGImage scale:firstForklift.scale orientation:UIImageOrientationUpMirrored] : firstForklift;
     
     CGFloat x = forkliftFacesRight ? -width : screenSize.width;
     
-    CGRect frame = CGRectMake(x, sock.frame.origin.y, width, height);
+    CGRect frame = CGRectMake(x, [sock getCoreRect].origin.y, width, height);
     self = [super initWithFrame:frame];
-    [self setImage:first];
+    [self setImage:firstForklift];
     self.contentMode = UIViewContentModeScaleAspectFit;
     self.layer.magnificationFilter = kCAFilterNearest;
 //    self.layer.borderWidth = 2;
 //    self.layer.borderColor = [UIColor blueColor].CGColor;
     
-    UIImage* firstEmission = [emissionAnimation objectAtIndex:0];
-    CGFloat emissionHeight = self.frame.size.height*0.5;
-    CGFloat emissionAspectRatio = emissionHeight / firstEmission.size.height;
-    CGFloat finalEmissionWidth = firstEmission.size.width*emissionAspectRatio;
-    
-    firstEmission = forkliftFacesRight ? [UIImage imageWithCGImage:firstEmission.CGImage scale:firstEmission.scale orientation:UIImageOrientationUpMirrored] : firstEmission;
-    
-    emissionImageView = [[UIImageView alloc] initWithFrame:CGRectMake(forkliftFacesRight ? -finalEmissionWidth : self.frame.size.width, 0, finalEmissionWidth, emissionHeight)];
-    emissionImageView.contentMode = UIViewContentModeScaleAspectFit;
-    emissionImageView.layer.magnificationFilter = kCAFilterNearest;
-//    emissionImageView.layer.borderWidth = 0.5;
-//    emissionImageView.layer.borderColor = [UIColor greenColor].CGColor;
-    [emissionImageView setImage:firstEmission];
+//    UIImage* firstEmission = [emissionAnimation objectAtIndex:0];
+//    CGFloat emissionHeight = self.frame.size.height*0.5;
+//    CGFloat emissionAspectRatio = emissionHeight / firstEmission.size.height;
+//    CGFloat finalEmissionWidth = firstEmission.size.width*emissionAspectRatio;
+//    firstEmission = forkliftFacesRight ? [UIImage imageWithCGImage:firstEmission.CGImage scale:firstEmission.scale orientation:UIImageOrientationUpMirrored] : firstEmission;
+//    emissionImageView = [[UIImageView alloc] initWithFrame:CGRectMake(forkliftFacesRight ? -finalEmissionWidth : self.frame.size.width, 0, finalEmissionWidth, emissionHeight)];
+//    emissionImageView.contentMode = UIViewContentModeScaleAspectFit;
+//    emissionImageView.layer.magnificationFilter = kCAFilterNearest;
+//    [emissionImageView setImage:firstEmission];
 //    [self addSubview:emissionImageView];
     
     UIImage* firstWheel = [wheelAnimation objectAtIndex:0];
@@ -144,10 +142,11 @@
     currentlyAnimating = true;
     
     [UIView animateWithDuration:animateSpeed animations:^{
-        self.frame = CGRectMake(forkliftFacesRight == true ? sock.frame.origin.x-((1-forkliftForkLength+pickupPadding)*self.frame.size.width) : sock.frame.origin.x+((forkliftForkLength+pickupPadding)*self.frame.size.width)-(self.frame.size.width*forkliftForkLength), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+        self.frame = CGRectMake(forkliftFacesRight == true ? [sock getCoreRect].origin.x-((1-forkliftForkLength+pickupPadding)*self.frame.size.width) : [sock getCoreRect].origin.x+((forkliftForkLength+pickupPadding)*self.frame.size.width)-(self.frame.size.width*forkliftForkLength), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
     } completion:^(BOOL finished){
         [sock removeFromSuperview];
-        sock.frame = CGRectMake(forkliftFacesRight == true ? self.frame.size.width*(1-forkliftForkLength+pickupPadding) : (-pickupPadding*self.frame.size.width), 0, sock.frame.size.width, sock.frame.size.height);
+//        sock.frame = CGRectMake(forkliftFacesRight == true ? self.frame.size.width*(1-forkliftForkLength+pickupPadding) : (-pickupPadding*self.frame.size.width), 0, sock.frame.size.width, sock.frame.size.height);
+        [sock setRectFromCoreRect: CGRectMake(forkliftFacesRight == true ? self.frame.size.width*(1-forkliftForkLength+pickupPadding) : (-pickupPadding*self.frame.size.width), 0, sock.frame.size.width, sock.frame.size.height)];
         sock.layer.anchorPoint = CGPointMake(0.5, 0.5);
         [self addSubview:sock];
         
@@ -156,8 +155,9 @@
             CGAffineTransform t = CGAffineTransformMakeScale(1+pickupScaleExtra, 1+pickupScaleExtra);
             sock.transform = t;
         } completion:^(BOOL completed){
+            CGRect transformedBounds = CGRectApplyAffineTransform(sock.bounds, sock.transform);
             [UIView animateWithDuration:animateSpeed animations:^{
-                CGRect newRect = CGRectMake(forkliftFacesRight == true ? -self.frame.size.width : screenSize.width, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+                CGRect newRect = CGRectMake(forkliftFacesRight == true ? -(self.frame.size.width+(transformedBounds.size.width-sock.bounds.size.width)) : screenSize.width+(transformedBounds.size.width-sock.bounds.size.width), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
                 self.frame = newRect;
             } completion:^(BOOL finished){
                 currentlyAnimating = false;

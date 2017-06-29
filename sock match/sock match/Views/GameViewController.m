@@ -283,7 +283,12 @@
         animateScoreValueTimer += tmr.duration;
         
         if(animateScoreValueTimer >= timeToAnimateScoreValue){
-            [self animateScore];
+            int dd = abs(currentAnimatingScore-score);
+            int d = dd/4;
+            int ad = dd/d;
+            int diff = ad < d ? 1 : ad;
+//            NSLog(@"D %i", diff);
+            [self animateScore: diff];
             animateScoreValueTimer = 0;
         }
         
@@ -415,7 +420,7 @@
 -(bool) anySocksOnConveyorBelt {
     bool anySockOnBelt = false;
     for (Sock* sock in socks) {
-        bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX(sock.frame), CGRectGetMidY(sock.frame)));
+        bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX([sock getCoreRect]), CGRectGetMidY([sock getCoreRect])));
         if(onBelt == true || sock.onConvayorBelt){
             anySockOnBelt = true;
         }
@@ -462,6 +467,9 @@
 }
 
 -(void) updateSocksOnBeltWithSpeed:(CGFloat)speed delta:(CGFloat)delta {
+    NSMutableIndexSet *discardedItems = [NSMutableIndexSet indexSet];
+    NSUInteger index = 0;
+    
     for(int i = 0; i < socks.count; i++){
         Sock* sock = [socks objectAtIndex:i];
         
@@ -470,7 +478,7 @@
                 CGFloat propMoveX = speed/100.0;
                 CGFloat moveX = [self propX:propMoveX];
                 
-                if(sock.frame.origin.x < -sock.frame.size.width){
+                if([sock getCoreRect].origin.x < -[sock getCoreRect].size.width){
                     if(!sock.inAPair){
                         [self lostLife];
                     }else{
@@ -478,8 +486,8 @@
                     }
                     
                     sock.onConvayorBelt = false;
-                    //TODO this causes jittering of socks on belt
-                    [socks removeObject:sock];
+                    [discardedItems addIndex:index];
+                    
                     
                     [sock removeFromSuperview];
                 }
@@ -492,7 +500,10 @@
         }else{
 //            NSLog(@"NO SOCK WHILE UPDATING BELT");
         }
+        
+        index++;
     }
+    [socks removeObjectsAtIndexes:discardedItems];
 }
 
 -(void) gotPoint {
@@ -501,10 +512,12 @@
     score += 1;
 }
 
--(void) animateScore {
+-(void) animateScore:(int)times {
     if(currentAnimatingScore != score){
-        currentAnimatingScore = currentAnimatingScore < score ? currentAnimatingScore+1 : currentAnimatingScore-1;
-        [self setScoreImages:currentAnimatingScore];
+        for (int i = 0; i < times; i++) {
+            currentAnimatingScore = currentAnimatingScore < score ? currentAnimatingScore+1 : currentAnimatingScore-1;
+            [self setScoreImages:currentAnimatingScore];
+        }
     }
 }
 
@@ -583,7 +596,7 @@
 
 -(void) createSockAtPos:(CGPoint)pos width:(CGFloat)width sockSize:(SockSize)size sockId:(int) sockId onBelt:(bool) onBelt {
     UIImage* sockImage = [sockMainImages objectAtIndex:sockId];
-    Sock* newSock = [[Sock alloc] initWithFrame:pos width: width sockSize: size sockId: sockId image: sockImage onBelt:onBelt];
+    Sock* newSock = [[Sock alloc] initWithFrame:pos width: width sockSize: size sockId: sockId image: sockImage onBelt:onBelt extraPropTouchSpace:0.75];
 //    newSock.layer.borderWidth = 2;
 //    newSock.layer.borderColor = [UIColor grayColor].CGColor;
     
@@ -613,7 +626,7 @@
     
     [newSock setTouchEndedBlock:^void (Sock* s, CGPoint p) {
         if(s.allowMovement){
-            bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
+            bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX([s getCoreRect]), CGRectGetMidY([s getCoreRect])));
             s.onConvayorBelt = onBelt;
         }
         
@@ -622,7 +635,7 @@
                 s.frame = s.theoreticalFrame;
                 s.theoreticalFrame = s.frame;
             } completion:^(BOOL completion){
-                bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX(s.frame), CGRectGetMidY(s.frame)));
+                bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX([s getCoreRect]), CGRectGetMidY([s getCoreRect])));
                 s.onConvayorBelt = onBelt;
 //                [self checkPairsWithSock:s];
             }];
@@ -651,12 +664,12 @@
     for(Sock* ss in socks){
         if(ss != s){
             if(!ss.inAPair){
-                CGRect f = s.theoreticalFrame;
-                CGRect r = ss.frame;
-                if(CGRectIntersectsRect(ss.frame, f) && !(ss.sockId == s.sockId)){
+                CGRect f = [s getCoreTheoreticalRect];//s.theoreticalFrame;
+                CGRect r = [ss getCoreRect];//ss.frame;
+                if(CGRectIntersectsRect(r, f) && !(ss.sockId == s.sockId)){
                     overlap = true;
                     
-                    CGRect resolveRect = CGRectIntersection(f, ss.frame);
+                    CGRect resolveRect = CGRectIntersection(f, r);
                     [self createIntersectionRectTest:resolveRect];
                     
                     CGFloat finalWidth = 0;
@@ -721,7 +734,8 @@
                     }
                     
                     CGRect newFrame = CGRectMake(f.origin.x+finalWidth, f.origin.y+finalHeight, f.size.width, f.size.height);
-                    s.theoreticalFrame = newFrame;
+//                    s.theoreticalFrame = newFrame;
+                    [s setTheoreticalRectFromCoreTheoreticalRect:newFrame];
                 }
             }
         }
@@ -798,9 +812,10 @@
     
     if(nextFrame == boxAnimationFrames.count*0.5){
         [UIView animateWithDuration:0.5 animations:^void{
-            s.frame = CGRectMake(s.frame.origin.x, s.frame.origin.y, s.frame.size.width, 0);
+//            s.coreImageView.frame = CGRectMake(s.frame.origin.x+s.frame.size.width/4, s.frame.origin.y+s.frame.size.height/4, s.frame.size.width/2, s.frame.size.height/2);
+            s.coreImageView.transform = CGAffineTransformMakeScale(0.8, 0.8);
         } completion:^(BOOL finished){
-            [s setImage:nil];
+            [s.coreImageView setImage:nil];
         }];
     }
     
@@ -856,7 +871,7 @@
     [forklifts addObject:lift];
     [self.view addSubview:lift];
     
-    [lift animateWithSpeed:2 withCompletion:^void{
+    [lift animateWithSpeed:1 withCompletion:^void{
         if(point == true){
             [self pointForSock:s];
         }
@@ -889,6 +904,7 @@
 }
 
 -(bool) socksFormPairWith:(Sock*)oneSock andOther:(Sock*)otherSock{
+    // does not need to use core rect because of position normalization
     CGPoint delta = CGPointMake(otherSock.frame.origin.x-oneSock.frame.origin.x, otherSock.frame.origin.y-oneSock.frame.origin.y);
     
     if(fabs(delta.x) < sockMatchThreshold && fabs(delta.y) < sockMatchThreshold){

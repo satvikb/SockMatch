@@ -11,6 +11,7 @@
 #import "Claw.h"
 #import "Forklift.h"
 #import "Functions.h"
+#import "SockTouch.h"
 
 @protocol GameDelegate;
 
