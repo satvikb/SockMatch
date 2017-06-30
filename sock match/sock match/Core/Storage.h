@@ -13,7 +13,7 @@
 
 +(void)saveHighScore:(int)score;
 +(int)getSavedHighScore;
-+(bool)isFirstLaunch;
-+(void)setFirstLaunch;
++(bool)didCompleteTutorial;
++(void)completeTutorial;
 
 @end

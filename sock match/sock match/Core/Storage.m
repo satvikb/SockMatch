@@ -29,19 +29,19 @@
     return currentHighScore.intValue;
 }
 
-static NSString* const firstLaunchKey = @"firstLaunch";
+static NSString* const completeTutorialKey = @"completeTutorial";
 
-+(bool)isFirstLaunch {
++(bool)didCompleteTutorial {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults boolForKey:firstLaunchKey] == NO){
-        return true;
+    if ([defaults boolForKey:completeTutorialKey] == NO){
+        return false;
     }
-    return false;
+    return true;
 }
 
-+(void)setFirstLaunch{
++(void)completeTutorial{
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setBool:YES forKey:firstLaunchKey];
+    [defaults setBool:YES forKey:completeTutorialKey];
 }
 
 @end

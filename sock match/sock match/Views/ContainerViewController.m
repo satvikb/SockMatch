@@ -22,17 +22,17 @@
 @synthesize gameOverController;
 @synthesize gameCenterEnabled;
 @synthesize leaderboardIdentifier;
-@synthesize firstLaunch;
+@synthesize completeTutorial;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self authenticateLocalPlayer];
-    firstLaunch = [Storage isFirstLaunch];
+    completeTutorial = [Storage didCompleteTutorial];
     
     currentAppState = MainMenu;
     
     // Do any additional setup after loading the view.
-    gameController = [[GameViewController alloc] initWithTutorial:firstLaunch];
+    gameController = [[GameViewController alloc] initWithTutorial:!completeTutorial];
     gameController.view.layer.zPosition = -100;
     gameController.delegate = self;
     
@@ -52,9 +52,6 @@
     [self displayContentController:gameOverController withFrame:[self propToRect:CGRectMake(1, 0, 1, 1)]];
     [self displayContentController:menuController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
     
-    if(firstLaunch){
-        [Storage setFirstLaunch];
-    }
     [self startGameLoop];
 }
 
@@ -81,6 +78,11 @@
     
     [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointZero animationFinished:^{
         NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
+        
+        if(!completeTutorial){
+            [gameController.tutorialView animateTutorialLabelIn];
+        }
+        
         [gameController startGame];
     }];
 }

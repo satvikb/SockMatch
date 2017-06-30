@@ -19,6 +19,8 @@
 @synthesize sockOneTouchEndBlock;
 @synthesize sockTwoTouchMoveBlock;
 
+@synthesize tutorialText;
+
 -(id)initWithScreenFrame:(CGRect)frame andSockImage:(UIImage*)sockImage{
     self = [super initWithFrame:frame];
     
@@ -111,6 +113,16 @@
     self.sockTwo = s2;
     [self addSubview:sockOne];
     [self addSubview:sockTwo];
+    
+    tutorialText = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.05, 1, .9, 0.1)]];
+    tutorialText.text = @"welcome to sock shop!";
+    tutorialText.textAlignment = NSTextAlignmentCenter;
+    tutorialText.adjustsFontSizeToFitWidth = true;
+    tutorialText.layer.borderColor = [UIColor blackColor].CGColor;
+    tutorialText.layer.borderWidth = 2;
+    tutorialText.numberOfLines = 0;
+    [self addSubview:tutorialText];
+    
     return self;
 }
 
@@ -124,6 +136,7 @@
         [sockOne setRectFromCoreRect:core];
         [sockOne setTheoreticalRectFromCoreTheoreticalRect:core];
     } completion:^(BOOL finished){
+        tutorialText.text = @"move socks from the belt to the matching area";
         tutorialState = WaitingToMoveSockOne;
         sockOne.allowMovement = true;
         //TODO figure out why
@@ -142,11 +155,24 @@
         [sockTwo setRectFromCoreRect:core];
         [sockTwo setTheoreticalRectFromCoreTheoreticalRect:core];
     } completion:^(BOOL finished){
+        tutorialText.text = @"combine socks of similar colors to form a package";
         tutorialState = WaitingToMoveSockTwo;
         sockTwo.allowMovement = true;
         //TODO figure out why
         sockTwo.theoreticalFrame = sockTwo.frame;
         animateSockTwoCompleteBlock(sockTwo);
+    }];
+}
+
+-(void)animateTutorialLabelIn {
+    [UIView animateWithDuration:0.5 animations:^void{
+        tutorialText.frame = [self propToRect:CGRectMake(0.05, 0.85, .9, 0.1)];
+    }];
+}
+
+-(void)animateTutorialLabelOut {
+    [UIView animateWithDuration:0.5 animations:^void{
+        tutorialText.frame = [self propToRect:CGRectMake(0.05, 1, .9, 0.1)];
     }];
 }
 

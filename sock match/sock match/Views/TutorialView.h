@@ -21,9 +21,13 @@ typedef void (^SockTwoTouchMove)(Sock* s);
 @property (nonatomic, strong) Sock* sockOne;
 @property (nonatomic, strong) Sock* sockTwo;
 
+@property (strong, nonatomic) UILabel* tutorialText;
+
 -(id)initWithScreenFrame:(CGRect)frame andSockImage:(UIImage*)sockImage;
 -(void)animateSockOneToX:(CGFloat)xPos withBeltMoveSpeed:(CGFloat)beltMoveSpeed;
 -(void)animateSockTwoToX:(CGFloat)xPos withBeltMoveSpeed:(CGFloat)beltMoveSpeed;
+-(void)animateTutorialLabelIn;
+-(void)animateTutorialLabelOut;
 
 @property (nonatomic, copy) AnimateSockOneComplete animateSockOneCompleteBlock;
 @property (nonatomic, copy) AnimateSockTwoComplete animateSockTwoCompleteBlock;

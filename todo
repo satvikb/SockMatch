@@ -12,7 +12,8 @@ sounds
 claw texture/forklift
 forklifts near belt
 
-improve game over
+clearing socks on game over
+improve game over screen (menu, replay, and share)
 
 *score digits*
 
@@ -29,4 +30,5 @@ improve code.
 maybe only do pair checking when touch end on sock instead of hover over sock
 
 bugs
+-matching socks while stopping game buggy
 -moving multiple socks at one time

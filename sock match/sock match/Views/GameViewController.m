@@ -9,6 +9,7 @@
 #import "GameViewController.h"
 #import "Functions.h"
 #import "Flurry.h"
+#import "Storage.h"
 
 #define SOCK_HIGHEST_LAYER (50)
 
@@ -122,17 +123,24 @@
             if([self socksFormPairWith:tutorialView.sockOne andOther:tutorialView.sockTwo] == true){
                 timerPaused = false;
                 ws.tutorialView.tutorialState = Completed;
+                ws.tutorialView.tutorialText.text = @"you can also match socks directly on the belt";
+                [ws performSelector:@selector(hideTutLabel) withObject:nil afterDelay:5];
                 currentGameState = Playing;
                 [ws madePairBetweenMainSock:ws.tutorialView.sockOne andOtherSock:ws.tutorialView.sockTwo];
+                [Flurry endTimedEvent:@"tutorial" withParameters:nil];
+                [Storage completeTutorial];
             }
         }];
         
         [self.view addSubview:tutorialView];
         doingTutorial = true;
+        [Flurry logEvent:@"tutorial" timed:true];
     }
     
     return self;
 }
+
+-(void)hideTutLabel{[tutorialView animateTutorialLabelOut];}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -184,7 +192,7 @@
     lives = 3;
     timeToGenerateSock = 1.5;
     generateSockTimer = 0;
-    sockMatchThreshold = [self propX:0.04];
+    sockMatchThreshold = [self propX:0.055];
     socks = [[NSMutableArray alloc] init];
     claws = [[NSMutableArray alloc] init];
     forklifts = [[NSMutableArray alloc] init];
