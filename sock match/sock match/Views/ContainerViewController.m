@@ -7,7 +7,7 @@
 //
 
 #import "ContainerViewController.h"
-
+#import "Storage.h"
 @interface ContainerViewController () {
     CADisplayLink* gameTimer;
 }
@@ -32,6 +32,8 @@
     gameController = [[GameViewController alloc] init];
     gameController.view.layer.zPosition = -100;
     gameController.delegate = self;
+    
+    [gameController setScoreImages:[Storage getSavedHighScore]];
     
     gameOverController = [[GameOverViewController alloc] init];
     gameOverController.view.layer.zPosition = 150;

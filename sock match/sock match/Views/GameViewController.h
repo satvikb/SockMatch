@@ -36,6 +36,7 @@
 -(void)startGame;
 -(void) gameFrame:(CADisplayLink*)tmr;
 -(void)switchGameStateTo:(GameState)newGameState;
+-(void) setScoreImages:(int)s;
 
 @end
 

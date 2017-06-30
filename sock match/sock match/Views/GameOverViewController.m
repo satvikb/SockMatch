@@ -7,6 +7,7 @@
 //
 
 #import "GameOverViewController.h"
+#import "Storage.h"
 
 @interface GameOverViewController (){
     UIImageView* gameOverText;
@@ -94,6 +95,7 @@
     if([self.delegate respondsToSelector:@selector(reportGCScore:)]){
         [self.delegate reportGCScore:score];
     }
+    [Storage saveHighScore:score];
 }
 
 -(void)pressMenuButton:(id)sender{
