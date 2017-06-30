@@ -8,6 +8,8 @@
 
 #import "ContainerViewController.h"
 #import "Storage.h"
+#import "Flurry.h"
+
 @interface ContainerViewController () {
     CADisplayLink* gameTimer;
 }

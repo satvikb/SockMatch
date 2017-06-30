@@ -16,6 +16,7 @@
 		404D1AE41F05EBED003C9383 /* Storage.m in Sources */ = {isa = PBXBuildFile; fileRef = 404D1AE31F05EBED003C9383 /* Storage.m */; };
 		404D1AEB1F05F44D003C9383 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404D1AEA1F05F439003C9383 /* Security.framework */; };
 		404D1AEC1F05F4E7003C9383 /* Lockbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 404D1AE81F05F1FD003C9383 /* Lockbox.m */; };
+		404D1B101F06002D003C9383 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404D1B0F1F060026003C9383 /* SystemConfiguration.framework */; };
 		408E6B4C1EEF88180011C450 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B4B1EEF88180011C450 /* AppDelegate.m */; };
 		408E6B541EEF88180011C450 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 408E6B531EEF88180011C450 /* Assets.xcassets */; };
 		408E6B5A1EEF88180011C450 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B591EEF88180011C450 /* main.m */; };
@@ -42,6 +43,10 @@
 		404D1AE81F05F1FD003C9383 /* Lockbox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Lockbox.m; sourceTree = "<group>"; };
 		404D1AE91F05F1FD003C9383 /* Lockbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Lockbox.h; sourceTree = "<group>"; };
 		404D1AEA1F05F439003C9383 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		404D1B0F1F060026003C9383 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		404D1B121F0600B4003C9383 /* libFlurry_8.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_8.1.0.a; sourceTree = "<group>"; };
+		404D1B131F0600B4003C9383 /* Flurry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		404D1B141F060103003C9383 /* FlurrySessionBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlurrySessionBuilder.h; sourceTree = "<group>"; };
 		408E6B471EEF88180011C450 /* sock match.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "sock match.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		408E6B4A1EEF88180011C450 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		408E6B4B1EEF88180011C450 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -62,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				404D1B101F06002D003C9383 /* SystemConfiguration.framework in Frameworks */,
 				404D1AEB1F05F44D003C9383 /* Security.framework in Frameworks */,
 				4028FEA31F023BF200E06D31 /* GameKit.framework in Frameworks */,
 			);
@@ -73,10 +79,21 @@
 		4028FEA11F023BF200E06D31 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				404D1B0F1F060026003C9383 /* SystemConfiguration.framework */,
 				404D1AEA1F05F439003C9383 /* Security.framework */,
 				4028FEA21F023BF200E06D31 /* GameKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		404D1B111F06003F003C9383 /* Flurry */ = {
+			isa = PBXGroup;
+			children = (
+				404D1B141F060103003C9383 /* FlurrySessionBuilder.h */,
+				404D1B131F0600B4003C9383 /* Flurry.h */,
+				404D1B121F0600B4003C9383 /* libFlurry_8.1.0.a */,
+			);
+			path = Flurry;
 			sourceTree = "<group>";
 		};
 		408E6B3E1EEF88180011C450 = {
@@ -99,6 +116,7 @@
 		408E6B491EEF88180011C450 /* sock match */ = {
 			isa = PBXGroup;
 			children = (
+				404D1B111F06003F003C9383 /* Flurry */,
 				408E6B4A1EEF88180011C450 /* AppDelegate.h */,
 				408E6B4B1EEF88180011C450 /* AppDelegate.m */,
 				40C9F19B1EFC635A0057971F /* Views */,
