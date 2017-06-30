@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <GameKit/GameKit.h>
+#import "Flurry.h"
 #import "MenuViewController.h"
 #import "GameViewController.h"
 #import "GameOverViewController.h"

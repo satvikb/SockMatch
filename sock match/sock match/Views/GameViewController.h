@@ -18,6 +18,10 @@
     
 }
 
+@property (nonatomic, assign) int score;
+@property (nonatomic, assign) int currentAnimatingScore;
+@property (nonatomic, assign) int lives;
+
 @property (nonatomic, strong) id<GameDelegate> delegate;
 @property (nonatomic, assign) CGFloat beltMoveSpeed;
 @property (nonatomic, assign) CGFloat animateBeltMoveSpeed;

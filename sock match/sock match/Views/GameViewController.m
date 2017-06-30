@@ -8,6 +8,7 @@
 
 #import "GameViewController.h"
 #import "Functions.h"
+#import "Flurry.h"
 
 #define SOCK_HIGHEST_LAYER (50)
 
@@ -30,11 +31,7 @@
     NSMutableArray <UIImageView*>* scoreDigits;
     
     NSMutableArray <UIImageView*>* lifeLights;
-    
-    int score;
-    int currentAnimatingScore;
-    int lives;
-    
+        
     CGFloat timeToAnimateScoreValue;
     CGFloat animateScoreValueTimer;
     
@@ -63,6 +60,10 @@
 @end
 
 @implementation GameViewController
+
+@synthesize score;
+@synthesize currentAnimatingScore;
+@synthesize lives;
 
 @synthesize sockMainImages;
 @synthesize sockPackages;
@@ -177,8 +178,6 @@
         [scoreDigits addObject:scoreDig];
         [self.view addSubview:scoreDig];
     }
-    //TODO, setup with all time high score?
-    [self setScoreImages:0];
     
     lifeLightOff = [UIImage imageNamed:@"redlightoff"];
     lifeLightOn = [UIImage imageNamed:@"redlighton"];
@@ -352,12 +351,41 @@
     [self disableSockMovement];
     
     if([self canEndGame]){
+//        NSDictionary* a = [self analyticsWithSocks];
+        [Flurry endTimedEvent:@"game" withParameters:@{@"score":[NSNumber numberWithInt:score], @"numSocks":[self analyticsNumSocks]}];
         [self cleanUpSocksWithClaws];
         [self turnLightsOff];
         [self transitionToGameOver];
         [self switchGameStateTo:NotPlaying];
     }
 }
+
+-(NSNumber*)analyticsNumSocks{
+    int i = 0;
+    
+    for(Sock* s in socks){
+        if(!s.inAPair){
+            i++;
+        }
+    }
+    
+    return [NSNumber numberWithInt:i];
+}
+//-(NSDictionary*)analyticsWithSocks{
+//
+//    NSMutableDictionary<NSNumber*, NSDictionary*>* analytics = [[NSMutableDictionary alloc] init];
+////    NSMutableDictionary<NSNumber*, NSDictionary*>
+//    int i = 0;
+//    for(Sock* sock in socks){
+//        if(!sock.inAPair){
+//            NSDictionary* data = @{[NSNumber numberWithInt:i] : @{@"sockId":[NSNumber numberWithInt:sock.sockId], @"size":[NSNumber numberWithInt:sock.sockSize], @"position":NSStringFromCGPoint([sock getCoreRect].origin)}};
+////            [analytics addObject:data];
+//            [analytics addEntriesFromDictionary:data];
+//        }
+//        i++;
+//    }
+//    return [analytics copy];
+//}
 
 -(void) transitionToGameOver {
     if([self.delegate respondsToSelector:@selector(switchFromGameToGameOver:withScore:)]){

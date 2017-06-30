@@ -8,7 +8,6 @@
 
 #import "ContainerViewController.h"
 #import "Storage.h"
-#import "Flurry.h"
 
 @interface ContainerViewController () {
     CADisplayLink* gameTimer;
@@ -35,7 +34,9 @@
     gameController.view.layer.zPosition = -100;
     gameController.delegate = self;
     
-    [gameController setScoreImages:[Storage getSavedHighScore]];
+    int highScore = [Storage getSavedHighScore];
+    gameController.currentAnimatingScore = highScore;
+    [gameController setScoreImages:highScore];
     
     gameOverController = [[GameOverViewController alloc] init];
     gameOverController.view.layer.zPosition = 150;
@@ -71,6 +72,8 @@
         [self.view addSubview:f];
     }
     
+    [Flurry logEvent:@"Switch_MenuToGame"];
+    
     [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointZero animationFinished:^{
         NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
         [gameController startGame];
@@ -79,6 +82,8 @@
 
 - (void) switchFromGameToGameOver:(GameViewController *)game withScore:(int)score {
     currentAppState = TransitioningFromGameOverToGame;
+    [Flurry logEvent:@"Switch_GameToGameOver"];
+    
     [gameOverController setScore:score];
     [self animateFromViewController:game toPoint:CGPointZero toViewController:gameOverController toPoint:CGPointZero animationFinished:^{
         currentAppState = GameOver;
@@ -88,6 +93,7 @@
 
 - (void) switchFromGameOverToMenu:(GameOverViewController *)gameOver {
     currentAppState = TransitioningFromGameOverToMainMenu;
+    [Flurry logEvent:@"Switch_GameOverToMenu"];
     [self animateFromViewController:gameOver toPoint:[self propToRect:CGRectMake(1, 0, 0, 0)].origin toViewController:menuController toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin animationFinished:^{
         currentAppState = MainMenu;
         NSLog(@"transitioned from game over to menu %@", NSStringFromCGRect(gameController.view.frame));
@@ -152,6 +158,7 @@
             [menuController.gameTitle removeFromSuperview];
             menuController.gameTitle.frame = menuController.titleFrame;
             [menuController.view addSubview:menuController.gameTitle];
+            [Flurry logEvent:@"game" timed:true];
             currentAppState = Game;
         }
     }
@@ -175,6 +182,7 @@
         else{
             if ([GKLocalPlayer localPlayer].authenticated) {
                 gameCenterEnabled = YES;
+                [Flurry logEvent:@"GameCenterEnabled"];
                 
                 // Get the default leaderboard identifier.
                 [[GKLocalPlayer localPlayer] loadDefaultLeaderboardIdentifierWithCompletionHandler:^(NSString *li, NSError *error) {
@@ -204,6 +212,8 @@
             if (error != nil) {
                 NSLog(@"%@", [error localizedDescription]);
             }
+            
+            [Flurry logEvent:@"GameCenterReportScore" withParameters:@{@"score":[NSNumber numberWithInt:s]}];
         }];
     }
 }

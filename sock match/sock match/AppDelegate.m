@@ -20,6 +20,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    FlurrySessionBuilder* builder = [[[[[FlurrySessionBuilder new]
+                                        withLogLevel:FlurryLogLevelAll]
+                                       withCrashReporting:YES]
+                                      withSessionContinueSeconds:10]
+                                     withAppVersion:@"1.0"];
+    
+    [Flurry startSession:@"V96ZNZW9Q9SB9SG6RFTJ" withSessionBuilder:builder];
+    
     srand48(time(0));    
     containerController = [[ContainerViewController alloc] init];
     

@@ -8,6 +8,7 @@
 
 #import "MenuViewController.h"
 #import "Sock.h"
+#import "Flurry.h"
 
 @interface MenuViewController () {
     NSMutableArray<UIImage*>* sockPackages;
@@ -149,6 +150,8 @@
 
 -(void)pressGCButton:(id)sender{
     NSLog(@"GAME CENTER");
+    [Flurry logEvent:@"GameCenterButtonPress"];
+    
     if([self.delegate respondsToSelector:@selector(menuGameCenterButton)]){
         [self.delegate menuGameCenterButton];
     }
