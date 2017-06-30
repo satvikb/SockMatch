@@ -164,6 +164,7 @@
             forkliftWheelTimer += tmr.duration;
             
             if(randomForkliftTimer >= timeToCreateRandomForklift){
+                timeToCreateRandomForklift = [Functions randFromMin:1 toMax:4];
                 [self createRandomForklift];
                 randomForkliftTimer = 0;
             }

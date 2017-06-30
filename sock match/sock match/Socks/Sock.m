@@ -101,6 +101,7 @@
 }
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    // TODO remove mainSockInPair
     if((!inAPair || mainSockInPair) && allowMovement){
         UITouch *touch = [touches anyObject];
         CGPoint location = [touch locationInView:nil];

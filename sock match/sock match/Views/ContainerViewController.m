@@ -22,15 +22,17 @@
 @synthesize gameOverController;
 @synthesize gameCenterEnabled;
 @synthesize leaderboardIdentifier;
+@synthesize firstLaunch;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self authenticateLocalPlayer];
+    firstLaunch = [Storage isFirstLaunch];
     
     currentAppState = MainMenu;
     
     // Do any additional setup after loading the view.
-    gameController = [[GameViewController alloc] init];
+    gameController = [[GameViewController alloc] initWithTutorial:firstLaunch];
     gameController.view.layer.zPosition = -100;
     gameController.delegate = self;
     
@@ -50,6 +52,9 @@
     [self displayContentController:gameOverController withFrame:[self propToRect:CGRectMake(1, 0, 1, 1)]];
     [self displayContentController:menuController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
     
+    if(firstLaunch){
+        [Storage setFirstLaunch];
+    }
     [self startGameLoop];
 }
 

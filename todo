@@ -2,6 +2,7 @@ all thats left
 gamecenter
 -custom leaderboard
 sharing on game over screen
+check security of lockbox
 
 no ads
 
@@ -19,6 +20,13 @@ buttons
 
 universality
 good icon
+
+splash screen
+
+make sure @property's are right
+improve code.
+
+maybe only do pair checking when touch end on sock instead of hover over sock
 
 bugs
 -moving multiple socks at one time

@@ -8,7 +8,9 @@
 
 #import "Storage.h"
 
-@implementation Storage
+@implementation Storage{
+    
+}
 
 +(void)saveHighScore:(int)score{
 //    NSInteger* s = [NSInteger numberWithInt:score];
@@ -25,6 +27,21 @@
         return 0;
     }
     return currentHighScore.intValue;
+}
+
+static NSString* const firstLaunchKey = @"firstLaunch";
+
++(bool)isFirstLaunch {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:firstLaunchKey] == NO){
+        return true;
+    }
+    return false;
+}
+
++(void)setFirstLaunch{
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setBool:YES forKey:firstLaunchKey];
 }
 
 @end

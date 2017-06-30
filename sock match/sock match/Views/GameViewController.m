@@ -79,15 +79,67 @@
 @synthesize animateBeltMoveSpeed;
 @synthesize currentGameState;
 
+@synthesize tutorialView;
+@synthesize doingTutorial;
+@synthesize timerPaused;
+
+-(id)initWithTutorial:(bool)tutorial{
+    self = [super init];
+    
+    timerPaused = false;
+    [self loadBufferImages];
+    [self setupGameValues];
+    
+    if(tutorial == true){
+        tutorialView = [[TutorialView alloc] initWithScreenFrame:self.view.frame andSockImage:[sockMainImages objectAtIndex:0]];
+        tutorialView.layer.zPosition = 110;
+        
+        
+        __unsafe_unretained typeof(self) ws = self;
+        
+        [tutorialView setAnimateSockOneCompleteBlock:^(Sock* s){
+            timerPaused = true;
+        }];
+        
+        [tutorialView setSockOneTouchEndBlock:^(Sock* s){
+            bool onBelt = CGRectContainsPoint(ws->conveyorBeltRect, CGPointMake(CGRectGetMidX([ws.tutorialView.sockOne getCoreRect]), CGRectGetMidY([ws.tutorialView.sockOne getCoreRect])));
+            
+            if(ws.tutorialView.tutorialState <= 3){
+               if(!onBelt){
+                   timerPaused = false;
+                   [ws.tutorialView animateSockTwoToX:[ws propX:0.5] withBeltMoveSpeed:beltMoveSpeed/100.0];
+                   ws.tutorialView.sockOne.allowMovement = false;
+               }
+           }
+        }];
+        
+        [tutorialView setAnimateSockTwoCompleteBlock:^(Sock* s){
+            timerPaused = true;
+            ws.tutorialView.sockOne.allowMovement = true;
+        }];
+        
+        [tutorialView setSockTwoTouchMoveBlock:^(Sock* s){
+            if([self socksFormPairWith:tutorialView.sockOne andOther:tutorialView.sockTwo] == true){
+                timerPaused = false;
+                ws.tutorialView.tutorialState = Completed;
+                currentGameState = Playing;
+                [ws madePairBetweenMainSock:ws.tutorialView.sockOne andOtherSock:ws.tutorialView.sockTwo];
+            }
+        }];
+        
+        [self.view addSubview:tutorialView];
+        doingTutorial = true;
+    }
+    
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"GAME VIEW");
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
-    [self loadBufferImages];
-    
-    [self setupGameValues];
     [self createUI];
     [self createBeltAndWheels];
 }
@@ -132,7 +184,7 @@
     lives = 3;
     timeToGenerateSock = 1.5;
     generateSockTimer = 0;
-    sockMatchThreshold = [self propX:0.06];
+    sockMatchThreshold = [self propX:0.04];
     socks = [[NSMutableArray alloc] init];
     claws = [[NSMutableArray alloc] init];
     forklifts = [[NSMutableArray alloc] init];
@@ -270,12 +322,11 @@
 -(void) gameFrame:(CADisplayLink*)tmr {
     CGFloat delta = tmr.duration;
     
-    if (currentGameState != NotPlaying) {
+    if (currentGameState != NotPlaying && timerPaused == false) {
         
         [self animateBeltWithSpeed:animateBeltMoveSpeed delta:delta];
         [self updateSocksOnBeltWithSpeed:animateBeltMoveSpeed delta:delta];
         [self handleAnimateWheel:delta];
-        [self handleGenerateSock:delta];
         [self handleClawAnimation: delta];
         [self handleForkliftAnimation:delta];
         [self animateAllSockBoxes];
@@ -307,11 +358,24 @@
                 if(animateBeltMoveSpeed >= beltMoveSpeed){
                     animateBeltMoveSpeed = beltMoveSpeed;
                     if(animateWheelSpeed <= timeToAnimateWheels){
-                        [self switchGameStateTo:Playing];
+                        
+                        if(doingTutorial){
+                            if(tutorialView != nil){
+                                NSLog(@"animating tutorial");
+                                [tutorialView animateSockOneToX:[self propX:0.5] withBeltMoveSpeed:beltMoveSpeed/100.0];
+                                [self switchGameStateTo:Tutorial];
+                            }
+                        }else{
+                            [self switchGameStateTo:Playing];
+                        }
                     }
                 }
                 break;
+            case Tutorial:
+                
+                break;
             case Playing:
+                [self handleGenerateSock:delta];
                 break;
             case Stopping:
                 animateBeltMoveSpeed -= delta*8;
@@ -324,8 +388,6 @@
                 break;
         }
     }
-    
-    
 }
 
 -(void)startGame{
@@ -636,6 +698,12 @@
             s.onConvayorBelt = false;
             [self decreaseSockLayerPositions];
             s.layer.zPosition = SOCK_HIGHEST_LAYER;
+            
+            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
+                s.coreImageView.transform = CGAffineTransformMakeScale(1.2, 1.2);
+            } completion:^(BOOL completed){
+                
+            }];
         }
     }];
     
@@ -659,6 +727,12 @@
         if(s.allowMovement){
             bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX([s getCoreRect]), CGRectGetMidY([s getCoreRect])));
             s.onConvayorBelt = onBelt;
+            
+            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
+                s.coreImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(1.2, 1.2);
+            } completion:^(BOOL completed){
+                
+            }];
         }
         
         if([self handleIntersection:s previousOverlap:false direction:0 recursionCount:0]){
@@ -801,6 +875,10 @@
     [sock removeFromSuperview];
     [socks removeObject:sock];
     
+    
+    otherSock.frame = CGRectOffset(otherSock.frame, (sock.frame.origin.x-otherSock.frame.origin.x)/2, (sock.frame.origin.y-otherSock.frame.origin.y)/2);
+    otherSock.theoreticalFrame = otherSock.frame;
+    
     otherSock.inAPair = sock.inAPair = true;
     otherSock.mainSockInPair = true;
     
@@ -810,7 +888,7 @@
     [otherSock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
     
     otherSock.allowMovement = false;
-    otherSock.layer.zPosition= 150;
+    otherSock.layer.zPosition = 150;
     [socksBeingAnimatedIntoBox addObject:otherSock];
 }
 

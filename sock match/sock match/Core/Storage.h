@@ -13,5 +13,7 @@
 
 +(void)saveHighScore:(int)score;
 +(int)getSavedHighScore;
++(bool)isFirstLaunch;
++(void)setFirstLaunch;
 
 @end

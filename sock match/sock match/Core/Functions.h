@@ -21,7 +21,6 @@ typedef enum SockSize {
     Large = 2
 } SockSize;
 
-
 typedef enum AppState {
     MainMenu = 0,
     TransitioningFromMainMenuToGame = 1,
@@ -35,9 +34,19 @@ typedef enum AppState {
 typedef enum GameState {
     NotPlaying = 0,
     WarmingUp = 1,
-    Playing = 2,
-    Stopping = 3
+    Tutorial = 2,
+    Playing = 3,
+    Stopping = 4
 } GameState;
+
+typedef enum TutorialState {
+    NoState = 0,
+    AnimatingSockOne = 1,
+    WaitingToMoveSockOne = 2,
+    AnimatingSockTwo = 3,
+    WaitingToMoveSockTwo = 4,
+    Completed = 5
+} TutorialState;
 
 + (int)randomNumberBetween:(int)min maxNumber:(int)max;
 + (CGFloat) randFromMin:(CGFloat)min toMax:(CGFloat)max;

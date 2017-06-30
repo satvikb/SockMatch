@@ -25,6 +25,8 @@
 @property (nonatomic, assign) bool gameCenterEnabled;
 @property (nonatomic, strong) NSString* leaderboardIdentifier;
 
+@property (nonatomic, assign) bool firstLaunch;
+
 - (void) displayContentController: (UIViewController*) content withFrame:(CGRect) frame;
 -(void)authenticateLocalPlayer;
 -(void)gcReportScore:(int)s;
