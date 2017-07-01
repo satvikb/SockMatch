@@ -119,7 +119,6 @@
 }
 
 -(void)menuGameCenterButton{
-    NSLog(@"leaderboard %i", currentAppState);
     if(currentAppState == MainMenu){
         [self gcShowLeaderboard];
     }
@@ -137,12 +136,13 @@
 
 -(void)startGameLoop {
     gameTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(gameLoop:)];
-    if (@available(iOS 10.0, *)) {
-        gameTimer.preferredFramesPerSecond = 60;
-    } else {
-        // Fallback on earlier versions
-        gameTimer.frameInterval = 1;
-    }
+//    if (@available(iOS 10.0, *)) {
+//        gameTimer.preferredFramesPerSecond = 60;
+//    } else {
+//        // Fallback on earlier versions
+//        gameTimer.frameInterval = 1;
+//    }
+    gameTimer.preferredFramesPerSecond = 60;
     [gameTimer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
@@ -226,15 +226,51 @@
 }
 
 -(void)gcShowLeaderboard{
-    GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
-    
-    gcViewController.gameCenterDelegate = self;
-    
-    gcViewController.viewState = GKGameCenterViewControllerStateLeaderboards;
-    gcViewController.leaderboardIdentifier = leaderboardIdentifier;
-    
-    [self presentViewController:gcViewController animated:YES completion:nil];
+    if(gameCenterEnabled){
+        GKLeaderboard* gameLeaderboard = [[GKLeaderboard alloc] init];
+        gameLeaderboard.identifier = leaderboardIdentifier;
+        gameLeaderboard.playerScope = GKLeaderboardPlayerScopeGlobal;
+//        gameLeaderboard.ra
+        
+        [gameLeaderboard loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error){
+            if(error){
+                NSLog(@"Error retreiving scores %@", error);
+            }else{
+                for(GKScore* score in scores){
+                    NSLog(@"SCORE: %@ %lli", score.player.displayName, score.value);
+                }
+                
+                GCLeaderboardViewController* scoreViewController = [[GCLeaderboardViewController alloc] initWithScores: scores];
+                scoreViewController.view.layer.zPosition = 200;
+                scoreViewController.view.frame = [self propToRect:CGRectMake(0, 0, 1, 1)];
+                scoreViewController.delegate = self;
+                [self addChildViewController:scoreViewController];
+                [self.view addSubview:scoreViewController.view];
+                [scoreViewController createScoreCells];
+                [scoreViewController animateIn];
+            }
+        }];
+        
+//        GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
+//        
+//        gcViewController.gameCenterDelegate = self;
+//        
+//        gcViewController.viewState = GKGameCenterViewControllerStateLeaderboards;
+//        gcViewController.leaderboardIdentifier = leaderboardIdentifier;
+//        
+//        [self presentViewController:gcViewController animated:YES completion:nil];
+    }
 }
+
+-(void)dismissLeaderboard:(GCLeaderboardViewController*) vc{
+    NSLog(@"dismiss leaderboard");
+    [vc animateOutWithCompletion:^void{
+        [vc willMoveToParentViewController:nil];
+        [vc.view removeFromSuperview];
+        [vc removeFromParentViewController];
+    }];
+}
+
 
 -(void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController {
     [gameCenterViewController dismissViewControllerAnimated:YES completion:nil];

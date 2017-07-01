@@ -12,8 +12,9 @@
 #import "MenuViewController.h"
 #import "GameViewController.h"
 #import "GameOverViewController.h"
+#import "GCLeaderboardViewController.h"
 
-@interface ContainerViewController : UIViewController <MenuDelegate, GameDelegate, GameOverDelegate, GKGameCenterControllerDelegate>{
+@interface ContainerViewController : UIViewController <MenuDelegate, GameDelegate, GameOverDelegate, LeaderboardDelegate, GKGameCenterControllerDelegate>{
     
 }
 

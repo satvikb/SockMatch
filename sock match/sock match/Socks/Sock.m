@@ -32,6 +32,7 @@
 @synthesize touchBeganBlock;
 @synthesize touchMovedBlock;
 @synthesize touchEndedBlock;
+@synthesize animatingSize;
 
 -(id) initWithFrame:(CGPoint)pos width:(CGFloat)width sockSize:(SockSize)size sockId:(int)sId image:(UIImage*) image onBelt:(bool)startOnBelt extraPropTouchSpace:(CGFloat)extraSpace{
     
@@ -41,6 +42,7 @@
     inAPair = false;
     allowMovement = true;
     validSock = true;
+    animatingSize = false;
     
     CGFloat heightAspectMutliplier = image.size.height/image.size.width;
     boxFrame = CGRectMake(pos.x, pos.y, width, width*heightAspectMutliplier);

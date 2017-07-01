@@ -58,10 +58,11 @@
         if(s.allowMovement){
             sockOneTouchEndBlock(s);
             
+            s.animatingSize = true;
             [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
                 s.coreImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(1.2, 1.2);
             } completion:^(BOOL completed){
-                
+                s.animatingSize = false;
             }];
         }
     }];
@@ -100,11 +101,11 @@
     
     [s2 setTouchEndedBlock:^void (Sock* s, CGPoint p) {
         if(s.allowMovement){
-            
+            s.animatingSize = true;
             [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
                 s.coreImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(1.2, 1.2);
             } completion:^(BOOL completed){
-                
+                s.animatingSize = false;
             }];
         }
     }];

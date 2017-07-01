@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		400BC5011F065EAA00D465D7 /* DummySock.m in Sources */ = {isa = PBXBuildFile; fileRef = 400BC5001F065EAA00D465D7 /* DummySock.m */; };
 		401DA09B1EF882CF00B7CF6E /* Claw.m in Sources */ = {isa = PBXBuildFile; fileRef = 401DA09A1EF882CF00B7CF6E /* Claw.m */; };
 		4028FEA31F023BF200E06D31 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4028FEA21F023BF200E06D31 /* GameKit.framework */; };
 		4037169D1F042AB40070C3A6 /* Forklift.m in Sources */ = {isa = PBXBuildFile; fileRef = 4037169C1F042AB40070C3A6 /* Forklift.m */; };
@@ -27,11 +26,10 @@
 		408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B671EEFCA1B0011C450 /* GameViewController.m */; };
 		408E6B6F1EEFF2530011C450 /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B6E1EEFF2530011C450 /* Functions.m */; };
 		4093A0A11EF1D400008FA288 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */; };
+		40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D501F0833060051D180 /* GCLeaderboardViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		400BC4FF1F065EAA00D465D7 /* DummySock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DummySock.h; sourceTree = "<group>"; };
-		400BC5001F065EAA00D465D7 /* DummySock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DummySock.m; sourceTree = "<group>"; };
 		401DA0991EF882CF00B7CF6E /* Claw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Claw.h; sourceTree = "<group>"; };
 		401DA09A1EF882CF00B7CF6E /* Claw.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Claw.m; sourceTree = "<group>"; };
 		4028FEA21F023BF200E06D31 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
@@ -67,6 +65,8 @@
 		408E6B6D1EEFF1920011C450 /* Functions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Functions.h; sourceTree = "<group>"; };
 		408E6B6E1EEFF2530011C450 /* Functions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Functions.m; sourceTree = "<group>"; };
 		4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		40D12D4F1F0833060051D180 /* GCLeaderboardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCLeaderboardViewController.h; sourceTree = "<group>"; };
+		40D12D501F0833060051D180 /* GCLeaderboardViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCLeaderboardViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,8 +89,6 @@
 			children = (
 				408E6B631EEFA5EA0011C450 /* Sock.h */,
 				408E6B641EEFA5EA0011C450 /* Sock.m */,
-				400BC4FF1F065EAA00D465D7 /* DummySock.h */,
-				400BC5001F065EAA00D465D7 /* DummySock.m */,
 			);
 			path = Socks;
 			sourceTree = "<group>";
@@ -203,6 +201,8 @@
 				403A892E1EF7CEA500C81DB4 /* GameOverViewController.m */,
 				40849FA91F066B2700953616 /* TutorialView.h */,
 				40849FAA1F066B2700953616 /* TutorialView.m */,
+				40D12D4F1F0833060051D180 /* GCLeaderboardViewController.h */,
+				40D12D501F0833060051D180 /* GCLeaderboardViewController.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -282,12 +282,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				40849FAB1F066B2700953616 /* TutorialView.m in Sources */,
-				400BC5011F065EAA00D465D7 /* DummySock.m in Sources */,
 				404D1B1A1F060DE6003C9383 /* Lockbox.m in Sources */,
 				404D1AE41F05EBED003C9383 /* Storage.m in Sources */,
 				403A892F1EF7CEA500C81DB4 /* GameOverViewController.m in Sources */,
 				403A892C1EF7C56800C81DB4 /* MenuViewController.m in Sources */,
 				4037169D1F042AB40070C3A6 /* Forklift.m in Sources */,
+				40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */,
 				408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */,
 				408E6B5A1EEF88180011C450 /* main.m in Sources */,
 				403A89281EF7B2D700C81DB4 /* ContainerViewController.m in Sources */,
@@ -411,7 +411,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 6TYW8P6552;
 				INFOPLIST_FILE = "$(PROJECT_DIR)/sock match/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -429,7 +429,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 6TYW8P6552;
 				INFOPLIST_FILE = "$(PROJECT_DIR)/sock match/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

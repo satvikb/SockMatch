@@ -736,10 +736,11 @@
             bool onBelt = CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX([s getCoreRect]), CGRectGetMidY([s getCoreRect])));
             s.onConvayorBelt = onBelt;
             
+            s.animatingSize = true;
             [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
                 s.coreImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(1.2, 1.2);
             } completion:^(BOOL completed){
-                
+                s.animatingSize = false;
             }];
         }
         
@@ -761,6 +762,7 @@
 
 #define NSLog(FORMAT, ...) printf("%s\n", [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
 
+// TODO improve this
 /*
  Dir:
  0 none
@@ -869,11 +871,13 @@
     for(int i = 0; i < socks.count; i++){
         Sock* otherSock = [socks objectAtIndex:i];
         
-        if(otherSock != sock && sock.inAPair == false && otherSock.inAPair == false){
-            bool pairFormed = [self socksFormPairWith:sock andOther:otherSock];
-            
-            if(pairFormed == true){
-                [self madePairBetweenMainSock:sock andOtherSock:otherSock];
+        if(!otherSock.animatingSize && !sock.animatingSize){
+            if(otherSock != sock && sock.inAPair == false && otherSock.inAPair == false){
+                bool pairFormed = [self socksFormPairWith:sock andOther:otherSock];
+                
+                if(pairFormed == true){
+                    [self madePairBetweenMainSock:sock andOtherSock:otherSock];
+                }
             }
         }
     }

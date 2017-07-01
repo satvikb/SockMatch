@@ -1,6 +1,7 @@
 all thats left
 gamecenter
 -custom leaderboard
+-prevent cheating (maybe use score context with saved high score)
 sharing on game over screen
 check security of lockbox
 
@@ -16,6 +17,7 @@ clearing socks on game over
 improve game over screen (menu, replay, and share)
 
 *score digits*
+fonts
 
 buttons
 
@@ -32,3 +34,12 @@ maybe only do pair checking when touch end on sock instead of hover over sock
 bugs
 -matching socks while stopping game buggy
 -moving multiple socks at one time
+
+
+code
+custom leaderboard data
+share sheet
+gameplay manager, increasing difficulty
+refactoring
+improve containerviewcontroller
+

@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "Sock.h"
-#import "DummySock.h"
 #import "Claw.h"
 #import "Forklift.h"
 #import "Functions.h"
