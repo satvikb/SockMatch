@@ -26,7 +26,7 @@
 @property (nonatomic, assign) bool gameCenterEnabled;
 @property (nonatomic, strong) NSString* leaderboardIdentifier;
 
-@property (nonatomic, assign) bool completeTutorial;
+@property (nonatomic, assign) bool didCompleteTutorial;
 
 - (void) displayContentController: (UIViewController*) content withFrame:(CGRect) frame;
 -(void)authenticateLocalPlayer;

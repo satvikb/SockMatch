@@ -66,7 +66,7 @@
         UIView* scoreCell = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(-1, propHeight*i, 1, propHeight)]];
         
         UILabel* rankLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 0.18, 1) withinFrame:scoreCell.frame]];
-        rankLabel.text = [NSString stringWithFormat:@"%li", score.rank];
+        rankLabel.text = [NSString stringWithFormat:@"%li", (long)score.rank];
         rankLabel.textAlignment = NSTextAlignmentCenter;
         [scoreCell addSubview:rankLabel];
         
@@ -143,12 +143,12 @@
         currentDelay += increaseDelayBy;
     }
     
-    CGFloat totalDelay = increaseDelayBy*scoreCells.count;
+    CGFloat totalDelay = increaseDelayBy*(CGFloat)scoreCells.count;
     [self performSelector:@selector(doAnimateOutCompletion:) withObject:completion afterDelay:totalDelay];
 }
 
 -(void)doAnimateOutCompletion:(void (^)(void))completion{
-    
+    completion();
 }
 
 - (void)viewDidLoad {

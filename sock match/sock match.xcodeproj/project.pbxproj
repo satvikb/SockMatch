@@ -27,6 +27,7 @@
 		408E6B6F1EEFF2530011C450 /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B6E1EEFF2530011C450 /* Functions.m */; };
 		4093A0A11EF1D400008FA288 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */; };
 		40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D501F0833060051D180 /* GCLeaderboardViewController.m */; };
+		40D12D541F084C690051D180 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D531F084C690051D180 /* Button.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,9 @@
 		4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		40D12D4F1F0833060051D180 /* GCLeaderboardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCLeaderboardViewController.h; sourceTree = "<group>"; };
 		40D12D501F0833060051D180 /* GCLeaderboardViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCLeaderboardViewController.m; sourceTree = "<group>"; };
+		40D12D521F084C690051D180 /* Button.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
+		40D12D531F084C690051D180 /* Button.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Button.m; sourceTree = "<group>"; };
+		40D12D551F0862DD0051D180 /* NotoColorEmoji.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = NotoColorEmoji.ttf; path = "../../../NotoColorEmoji-unhinted/NotoColorEmoji.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +185,9 @@
 				401DA09A1EF882CF00B7CF6E /* Claw.m */,
 				4037169B1F042AB40070C3A6 /* Forklift.h */,
 				4037169C1F042AB40070C3A6 /* Forklift.m */,
+				40D12D521F084C690051D180 /* Button.h */,
+				40D12D531F084C690051D180 /* Button.m */,
+				40D12D551F0862DD0051D180 /* NotoColorEmoji.ttf */,
 				400BC5041F065EE400D465D7 /* Libraries */,
 				408E6B531EEF88180011C450 /* Assets.xcassets */,
 				400BC5061F065F4200D465D7 /* Supporting Files */,
@@ -293,6 +300,7 @@
 				403A89281EF7B2D700C81DB4 /* ContainerViewController.m in Sources */,
 				408E6B651EEFA5EA0011C450 /* Sock.m in Sources */,
 				401DA09B1EF882CF00B7CF6E /* Claw.m in Sources */,
+				40D12D541F084C690051D180 /* Button.m in Sources */,
 				408E6B6F1EEFF2530011C450 /* Functions.m in Sources */,
 				408E6B4C1EEF88180011C450 /* AppDelegate.m in Sources */,
 			);

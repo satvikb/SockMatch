@@ -22,7 +22,7 @@
     // Override point for customization after application launch.
     
     FlurrySessionBuilder* builder = [[[[[FlurrySessionBuilder new]
-                                        withLogLevel:FlurryLogLevelCriticalOnly]
+                                        withLogLevel:FlurryLogLevelNone]
                                        withCrashReporting:YES]
                                       withSessionContinueSeconds:10]
                                      withAppVersion:@"1.0"];

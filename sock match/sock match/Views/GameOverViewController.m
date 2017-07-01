@@ -11,7 +11,7 @@
 
 @interface GameOverViewController (){
     UIImageView* gameOverText;
-    UIImageView* againButton;
+    Button* againButton;
 }
 
 @end
@@ -42,21 +42,13 @@
 //    menuButton.frame = [self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)];
 //    [self.view addSubview:menuButton];
     
-    againButton = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.195)]];
     UIImage* againImage = [UIImage imageNamed:@"again"];
-    againImage = [againImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     againImage = [self image:againImage WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
-    //    playButton.tintColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1];
-    [againButton setImage:againImage];
-    againButton.layer.magnificationFilter = kCAFilterNearest;
-    againButton.contentMode = UIViewContentModeScaleAspectFit;
-    
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pressMenuButton:)];
-    [tapRecognizer setNumberOfTouchesRequired:1];
-    [tapRecognizer setDelegate:self];
-    //Don't forget to set the userInteractionEnabled to YES, by default It's NO.
-    againButton.userInteractionEnabled = YES;
-    [againButton addGestureRecognizer:tapRecognizer];
+    UIImage* againDownImage = [UIImage imageNamed:@"againPressed"];
+    againDownImage = [self image:againDownImage WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
+    againButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)] withNormalImage:againImage pressedDownImage:againDownImage withBlock:^void{
+        [self pressMenuButton];
+    }];
     
     [self.view addSubview:againButton];
 }
@@ -98,7 +90,7 @@
     [Storage saveHighScore:score];
 }
 
--(void)pressMenuButton:(id)sender{
+-(void)pressMenuButton{
 //    NSLog(@"play button press");
     
     if([self.delegate respondsToSelector:@selector(switchFromGameOverToMenu:)]){

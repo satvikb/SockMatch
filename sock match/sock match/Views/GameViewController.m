@@ -124,11 +124,11 @@
                 timerPaused = false;
                 ws.tutorialView.tutorialState = Completed;
                 ws.tutorialView.tutorialText.text = @"you can also match socks directly on the belt";
-                [ws performSelector:@selector(hideTutLabel) withObject:nil afterDelay:5];
                 currentGameState = Playing;
                 [ws madePairBetweenMainSock:ws.tutorialView.sockOne andOtherSock:ws.tutorialView.sockTwo];
                 [Flurry endTimedEvent:@"tutorial" withParameters:nil];
                 [Storage completeTutorial];
+                [ws performSelector:@selector(hideTutLabel) withObject:nil afterDelay:5];
             }
         }];
         

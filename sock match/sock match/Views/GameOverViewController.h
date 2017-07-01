@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Functions.h"
+#import "Button.h"
 
 @protocol GameOverDelegate;
 

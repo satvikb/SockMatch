@@ -67,23 +67,13 @@
     
     titleFrame = gameTitle.frame;
     
-    playButton = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.195)]];
-    //    testLabel.layer.borderWidth = 1;
-    //    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
-    
     UIImage* playImage = [UIImage imageNamed:@"play"];
-//    playImage = [playImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    UIImage* playImageDown = [UIImage imageNamed:@"playPressed"];
     playImage = [self image:playImage WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
-    [playButton setImage:playImage];
-    playButton.layer.magnificationFilter = kCAFilterNearest;
-    playButton.contentMode = UIViewContentModeScaleAspectFit;
-    
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pressPlayButton:)];
-    [tapRecognizer setNumberOfTouchesRequired:1];
-    [tapRecognizer setDelegate:self];
-    //Don't forget to set the userInteractionEnabled to YES, by default It's NO.
-    playButton.userInteractionEnabled = YES;
-    [playButton addGestureRecognizer:tapRecognizer];
+    playImageDown = [self image:playImageDown WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
+    playButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.195)] withNormalImage:playImage pressedDownImage:playImageDown withBlock:^void{
+        [self pressPlayButton:playButton];
+    }];
     
     [self.view addSubview:playButton];
     

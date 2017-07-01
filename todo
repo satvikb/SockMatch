@@ -1,6 +1,5 @@
 all thats left
 gamecenter
--custom leaderboard
 -prevent cheating (maybe use score context with saved high score)
 sharing on game over screen
 check security of lockbox
@@ -31,13 +30,14 @@ improve code.
 
 maybe only do pair checking when touch end on sock instead of hover over sock
 
+remove all custom animating code and use uiimageview animations instead?
+
 bugs
--matching socks while stopping game buggy
+-matching socks while stopping game is buggy
 -moving multiple socks at one time
 
 
 code
-custom leaderboard data
 share sheet
 gameplay manager, increasing difficulty
 refactoring

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Forklift.h"
 #import "Functions.h"
+#import "Button.h"
 
 @protocol MenuDelegate;
 
@@ -19,7 +20,7 @@
 
 @property (nonatomic, strong) UIImageView* gameTitle;
 @property (nonatomic, assign) CGRect titleFrame;
-@property (nonatomic, strong) UIImageView* playButton;
+@property (nonatomic, strong) Button* playButton;
 @property (nonatomic, strong) UIImageView* gameCenterButton;
 
 -(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages;
