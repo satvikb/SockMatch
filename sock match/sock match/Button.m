@@ -42,7 +42,9 @@
     CGPoint point = [touch locationInView:self];
     
     if(CGRectContainsPoint(CGRectMake(0, 0, self.frame.size.width, self.frame.size.height), point)){
-        
+        if(!pressedDown){
+            [self setPushedDown];
+        }
     }else{
         [self setPushedUp];
     }

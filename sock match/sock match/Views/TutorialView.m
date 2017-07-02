@@ -115,9 +115,19 @@
     [self addSubview:sockOne];
     [self addSubview:sockTwo];
     
+    for (NSString* family in [UIFont familyNames])
+    {
+        NSLog(@"FAM: %@", family);
+        
+        for (NSString* name in [UIFont fontNamesForFamilyName: family])
+        {
+            NSLog(@"  %@", name);
+        }
+    }
+    
     tutorialText = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.05, 1, .9, 0.1)]];
-    tutorialText.font = [UIFont fontWithName:@"NotoColorEmoji" size:10];
-    tutorialText.text = [NSString stringWithFormat:@"welcome to sock shop! \ue415 ", 0xe04f];//@"welcome to sock shop!😀";
+    tutorialText.font = [UIFont fontWithName:@"Helvetica" size:26];
+    tutorialText.text = @"welcome to sock shop!";
     tutorialText.textAlignment = NSTextAlignmentCenter;
     tutorialText.adjustsFontSizeToFitWidth = true;
     tutorialText.layer.borderColor = [UIColor blackColor].CGColor;

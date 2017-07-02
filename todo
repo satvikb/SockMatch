@@ -4,21 +4,24 @@ gamecenter
 sharing on game over screen
 check security of lockbox
 
-no ads
-
 tutorial
 
 sounds
+belt moving
+forklift moving
+light turning on
+sock package
+point
+
 claw texture/forklift
 forklifts near belt
+factory floor
 
 clearing socks on game over
 improve game over screen (menu, replay, and share)
 
 *score digits*
 fonts
-
-buttons
 
 universality
 good icon
@@ -27,8 +30,6 @@ splash screen
 
 make sure @property's are right
 improve code.
-
-maybe only do pair checking when touch end on sock instead of hover over sock
 
 remove all custom animating code and use uiimageview animations instead?
 

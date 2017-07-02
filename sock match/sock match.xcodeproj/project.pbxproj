@@ -70,7 +70,6 @@
 		40D12D501F0833060051D180 /* GCLeaderboardViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCLeaderboardViewController.m; sourceTree = "<group>"; };
 		40D12D521F084C690051D180 /* Button.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
 		40D12D531F084C690051D180 /* Button.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Button.m; sourceTree = "<group>"; };
-		40D12D551F0862DD0051D180 /* NotoColorEmoji.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = NotoColorEmoji.ttf; path = "../../../NotoColorEmoji-unhinted/NotoColorEmoji.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,7 +186,6 @@
 				4037169C1F042AB40070C3A6 /* Forklift.m */,
 				40D12D521F084C690051D180 /* Button.h */,
 				40D12D531F084C690051D180 /* Button.m */,
-				40D12D551F0862DD0051D180 /* NotoColorEmoji.ttf */,
 				400BC5041F065EE400D465D7 /* Libraries */,
 				408E6B531EEF88180011C450 /* Assets.xcassets */,
 				400BC5061F065F4200D465D7 /* Supporting Files */,

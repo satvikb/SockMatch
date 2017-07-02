@@ -226,11 +226,10 @@
     [self.view addSubview:topBackground];
     
     scoreDigits = [[NSMutableArray alloc] init];
-    CGPoint scoreDigitStartPos = CGPointMake(0.545, 0.035);
-    CGSize scoreDigitSize = CGSizeMake(0.11, 0.08);
+//    CGPoint scoreDigitStartPos = CGPointMake(0.545, 0.035);
+//    CGSize scoreDigitSize = CGSizeMake(0.11, 0.08);
     for(int i = 0; i < 4; i++){
-        UIImageView* scoreDig = [[UIImageView alloc] initWithFrame:[self propToRect:CGRectMake(scoreDigitStartPos.x+(i*scoreDigitSize.width), scoreDigitStartPos.y, scoreDigitSize.width, scoreDigitSize.height)]];
-        scoreDig.tag = -i;
+        UIImageView* scoreDig = [[UIImageView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 0, 0)]];
         scoreDig.contentMode = UIViewContentModeScaleAspectFit;
         scoreDig.layer.magnificationFilter = kCAFilterNearest;
 //        scoreDig.layer.borderWidth = 2;
@@ -238,6 +237,7 @@
         [scoreDigits addObject:scoreDig];
         [self.view addSubview:scoreDig];
     }
+    [self sizeDigits:4];
     
     lifeLightOff = [UIImage imageNamed:@"redlightoff"];
     lifeLightOn = [UIImage imageNamed:@"redlighton"];
@@ -252,6 +252,39 @@
         [redLight setImage:lifeLightOff];
         [self.view addSubview:redLight];
         [lifeLights addObject:redLight];
+    }
+}
+
+-(void)sizeDigits:(int)numberOfDigits{
+    if(scoreDigits.count < numberOfDigits){
+        //create more digits
+        while (scoreDigits.count < numberOfDigits) {
+            UIImageView* scoreDig = [[UIImageView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 0, 0)]];
+            scoreDig.contentMode = UIViewContentModeScaleAspectFit;
+            scoreDig.layer.magnificationFilter = kCAFilterNearest;
+//            scoreDig.layer.borderWidth = 2;
+//            scoreDig.layer.borderColor = [UIColor grayColor].CGColor;
+            [scoreDigits addObject:scoreDig];
+            [self.view addSubview:scoreDig];
+        }
+    }else if(scoreDigits.count > numberOfDigits){
+        //remove digits
+        UIImageView* remove = [scoreDigits objectAtIndex:0];
+        [remove removeFromSuperview];
+        [scoreDigits removeObject:remove];
+    }
+    //now resize them all
+    CGFloat scoreLeftMostPos = 0.65;//0.545;
+    CGPoint scoreRightMostPos = CGPointMake(0.95, 0.035);
+    UIImage* img = [scoreDigitImages objectAtIndex:0];
+    CGFloat realHeight = [self propY:0.08];
+    CGFloat aspect = realHeight/(img.size.height);
+    CGSize scoreDigitSize = CGSizeMake(((img.size.width*aspect)/self.view.frame.size.width)/*(scoreRightMostPos.x-scoreLeftMostPos)/(CGFloat)scoreDigits.count*/, 0.08);
+    
+    for(int i = 0; i < scoreDigits.count; i++){
+        CGRect newFrame = [self propToRect:CGRectMake(scoreRightMostPos.x-(scoreDigitSize.width*(i+1)), scoreRightMostPos.y, scoreDigitSize.width, scoreDigitSize.height)];
+        UIImageView* scoreDig = [scoreDigits objectAtIndex:i];
+        scoreDig.frame = newFrame;
     }
 }
 
@@ -622,29 +655,34 @@
     }
 }
 
-//TODO allow more digits than 4
 -(void) setScoreImages:(int) s {
     NSString* scoreStr = [NSString stringWithFormat:@"%i", s];
     
-    if(scoreStr.length <= 4){
-        for(int i = 0; i < scoreDigits.count; i++){
-            UIImageView* digitView = [scoreDigits objectAtIndex:i];
-            [digitView setImage: nil];
-        }
-        
-        for (int i = 0; i < scoreStr.length; i++) {
-            int ni = (int)scoreStr.length-i-1;
-            int ii = (int)scoreDigits.count-i-1; //imageview index
-            unichar ch = [scoreStr characterAtIndex:ni];
-            NSString* digit = [NSString stringWithFormat:@"%c", ch];
-            UIImageView* digitView = [scoreDigits objectAtIndex:ii];
-            UIImage* digitImage = [scoreDigitImages objectAtIndex:digit.intValue];
-            
-            [digitView setImage: digitImage];
-        }
-    }else{
-//        NSLog(@"MORE THAN FOUR DIGITS %@", scoreStr);
+    if(scoreStr.length <= 6){
+    if(scoreStr.length != scoreDigits.count){
+        [self sizeDigits:(int)scoreStr.length];
     }
+    
+    for(int i = 0; i < scoreDigits.count; i++){
+        UIImageView* digitView = [scoreDigits objectAtIndex:i];
+        [digitView setImage: nil];
+    }
+    
+    for (int i = 0; i < scoreStr.length; i++) {
+        int ni = (int)scoreStr.length-i-1;
+        int ii = i; //imageview index
+        unichar ch = [scoreStr characterAtIndex:ni];
+        NSString* digit = [NSString stringWithFormat:@"%c", ch];
+        UIImageView* digitView = [scoreDigits objectAtIndex:ii];
+        UIImage* digitImage = [scoreDigitImages objectAtIndex:digit.intValue];
+        
+        [digitView setImage: digitImage];
+    }
+    }else{
+        [Flurry logEvent:@"ScoreDigitsMoreThan6"];
+        NSLog(@"TOO MANY SCORE DIGITS.");
+    }
+    
 }
 
 -(void) lostLife {
@@ -1086,6 +1124,10 @@
         yPos += height;
     }
     return aMutArrImages;
+}
+
+-(CGFloat) propY:(CGFloat) y {
+    return y*self.view.frame.size.height;
 }
 
 -(CGFloat) propX:(CGFloat) x {

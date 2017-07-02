@@ -12,6 +12,7 @@
 @interface GameOverViewController (){
     UIImageView* gameOverText;
     Button* againButton;
+    int score;
 }
 
 @end
@@ -32,25 +33,39 @@
     gameOverText.contentMode = UIViewContentModeScaleAspectFit;
     [self.view addSubview:gameOverText];
     
-//    UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [menuButton addTarget:self action:@selector(pressMenuButton:) forControlEvents:UIControlEventTouchUpInside];
-//    [menuButton setTitle:@"menu" forState:UIControlStateNormal];
-//    [menuButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-//    menuButton.layer.borderWidth = 2;
-//    menuButton.layer.zPosition = 5;
-//    menuButton.layer.borderColor = [UIColor blueColor].CGColor;
-//    menuButton.frame = [self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)];
-//    [self.view addSubview:menuButton];
-    
-    UIImage* againImage = [UIImage imageNamed:@"again"];
-    againImage = [self image:againImage WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
-    UIImage* againDownImage = [UIImage imageNamed:@"againPressed"];
-    againDownImage = [self image:againDownImage WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
+    UIImage* againImage = [self image:[UIImage imageNamed:@"again"] WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
+    UIImage* againDownImage = [self image:[UIImage imageNamed:@"againPressed"] WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
     againButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)] withNormalImage:againImage pressedDownImage:againDownImage withBlock:^void{
+//        [self shareSheet];
         [self pressMenuButton];
     }];
     
     [self.view addSubview:againButton];
+}
+
+-(void)shareSheet {
+    NSString *textToShare = [NSString stringWithFormat:@"I got %i in sock shop.", score];
+    NSURL *myWebsite = [NSURL URLWithString:@"http://apple.co/2stt9uK"];
+    
+    NSArray *objectsToShare = @[textToShare, myWebsite];
+    
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+    
+    NSArray *excludeActivities = @[UIActivityTypeAirDrop,
+                                   UIActivityTypePrint,
+                                   UIActivityTypeAssignToContact,
+                                   UIActivityTypeSaveToCameraRoll,
+                                   UIActivityTypeAddToReadingList,
+                                   UIActivityTypePostToFlickr,
+                                   UIActivityTypePostToVimeo,
+                                   @"com.apple.mobilenotes.SharingExtension",
+                                   @"com.apple.reminders.RemindersEditorExtension",
+                                   @"com.google.Drive.ShareExtension"
+                                   ];
+    
+    activityVC.excludedActivityTypes = excludeActivities;
+//    activityVC.activit
+    [self presentViewController:activityVC animated:YES completion:nil];
 }
 
 - (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor {
@@ -84,6 +99,7 @@
 -(void)setScore:(int)score{
 //    testLabel.text = [NSString stringWithFormat:@"game over %i", score];
     NSLog(@"reporting score");
+    self->score = score;
     if([self.delegate respondsToSelector:@selector(reportGCScore:)]){
         [self.delegate reportGCScore:score];
     }
@@ -91,8 +107,6 @@
 }
 
 -(void)pressMenuButton{
-//    NSLog(@"play button press");
-    
     if([self.delegate respondsToSelector:@selector(switchFromGameOverToMenu:)]){
         [self.delegate switchFromGameOverToMenu:self];
     }
@@ -110,3 +124,16 @@
 }
 
 @end
+
+//@implementation ActivityViewController
+//
+//- (BOOL)_shouldExcludeActivityType:(UIActivity *)activity
+//{
+//    if ([[activity activityType] isEqualToString:@"com.apple.reminders.RemindersEditorExtension"] ||
+//        [[activity activityType] isEqualToString:@"com.apple.mobilenotes.SharingExtension"]) {
+//        return YES;
+//    }
+//    return [super _shouldExcludeActivityType:activity];
+//}
+//@end
+
