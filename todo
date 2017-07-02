@@ -1,46 +1,75 @@
 all thats left
-gamecenter
--prevent cheating (maybe use score context with saved high score)
-sharing on game over screen
-check security of lockbox
 
-tutorial
+gameplay
+	-improve tutorial (make more interactive)
+	-harder gameplay over time
+		-faster belt
+		-introduce more sock types
+		-introduce different sizes (S, M, L)
+		-increase variability of generated socks (less likely to create socks already on screen)
 
-sounds
-belt moving
-forklift moving
-light turning on
-sock package
-point
+graphics
+	-forklift texture
+	-design factory floor
+	-sock and package designs
 
-claw texture/forklift
-forklifts near belt
-factory floor
+collisions
+	-back on belt when no space
+	-prevent moving to top
+	-prevent moving sock back on belt once removed?
 
-collisions - back on belt when no space, prevent moving to top
 
 clearing socks on game over
-improve game over screen (menu, replay, and share)
+	-maybe don't remove socks and allow use on next round? (socks on belt are animated out on belt while slowing down, prevent movement)
+
+ui
+	-maybe use images for buttons instead of text
+	-improve custom Game Center leaderboard
+		-maybe wood textures
+		-users with no image use initials
+	-improve game over screen
+		-replay (main button)
+		-replay (smaller to the left)
+		-share (smaller to the right)
+
+sounds
+	-belt moving
+	-forklift moving
+	-light turning on
+	-sock package
+	-point
 
 fonts
+	-4 variants (made for different uses)
+		-titles/large text
+		-one for buttons and
+		-medium for normal text
+		-small for detail text
+	-game center leaderboard
+		-title font (variant 0)
+		-back button (variant 1)
+		-name font (variant 2)
+		-score font (variant 3)
+	-tutorial text
+	-possibly for score and buttons
 
-universality
-good icon
+gamecenter
+	-prevent cheating (maybe use score context with saved high score to filter cheaters)
 
-splash screen
+meta
+	-confirm device universality
+	-good icon
+	-splash screen
 
-make sure @property's are right
-improve code.
-
-remove all custom animating code and use uiimageview animations instead?
 
 bugs
--matching socks while stopping game is buggy
--moving multiple socks at one time
+	-socks on edge of screen
+	-matching socks while stopping game is buggy
+	-matching socks near belt overlap conveyor belt/wheels
+	-prevent forklift overlapping (maybe have four sections with one in each section)
 
-
-code
-gameplay manager, increasing difficulty
-refactoring
-improve containerviewcontroller
+other code stuff
+	-make sure @property's are right, learn what nonatomic/strong/assign/copy means
+	-improve code, refactoring
+	-improve containerviewcontroller (actually remove and create view controllers?)
 
