@@ -17,10 +17,11 @@ claw texture/forklift
 forklifts near belt
 factory floor
 
+collisions - back on belt when no space, prevent moving to top
+
 clearing socks on game over
 improve game over screen (menu, replay, and share)
 
-*score digits*
 fonts
 
 universality
@@ -39,7 +40,6 @@ bugs
 
 
 code
-share sheet
 gameplay manager, increasing difficulty
 refactoring
 improve containerviewcontroller

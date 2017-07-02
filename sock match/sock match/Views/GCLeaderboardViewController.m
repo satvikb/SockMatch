@@ -131,10 +131,11 @@
 
     CGFloat currentDelay = 0;
     CGFloat increaseDelayBy = 0.02;
+    int maxScoresInOneScreen = 20; //TODO
     for(int i = 0; i < scoreCells.count; i++){
         UIView* cell = [scoreCells objectAtIndex:i];
         
-        [UIView animateWithDuration:0.25 delay:currentDelay options:UIViewAnimationOptionCurveLinear animations:^void{
+        [UIView animateWithDuration:0.25 delay:increaseDelayBy*(i%maxScoresInOneScreen) options:UIViewAnimationOptionCurveLinear animations:^void{
             cell.frame = CGRectOffset(cell.frame, [self propX:-1], 0);
         } completion:^(BOOL finished){
             
@@ -143,8 +144,9 @@
         currentDelay += increaseDelayBy;
     }
     
-    CGFloat totalDelay = increaseDelayBy*(CGFloat)scoreCells.count;
-    [self performSelector:@selector(doAnimateOutCompletion:) withObject:completion afterDelay:totalDelay];
+    //TODO fix delay calulations
+//    CGFloat totalDelay = increaseDelayBy*(CGFloat)scoreCells.count;
+    [self performSelector:@selector(doAnimateOutCompletion:) withObject:completion afterDelay:increaseDelayBy*maxScoresInOneScreen];
 }
 
 -(void)doAnimateOutCompletion:(void (^)(void))completion{

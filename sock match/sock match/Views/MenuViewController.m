@@ -51,7 +51,7 @@
     self.view.backgroundColor = [UIColor clearColor];//[UIColor colorWithRed:0.168627451 green:0.168627451 blue:0.168627451 alpha:1];
     self.view.userInteractionEnabled = true;
     
-    randomForkliftTimer = 0;
+    randomForkliftTimer = 5; // immedietely create one
     timeToCreateRandomForklift = 3;
     
     forkliftWheelTimer = 0;

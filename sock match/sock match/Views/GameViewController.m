@@ -274,7 +274,7 @@
         [scoreDigits removeObject:remove];
     }
     //now resize them all
-    CGFloat scoreLeftMostPos = 0.65;//0.545;
+//    CGFloat scoreLeftMostPos = 0.65;//0.545;
     CGPoint scoreRightMostPos = CGPointMake(0.95, 0.035);
     UIImage* img = [scoreDigitImages objectAtIndex:0];
     CGFloat realHeight = [self propY:0.08];
@@ -381,7 +381,7 @@
 //            int ad = dd/d;
 //            int diff = ad < d ? 1 : ad;
 //            NSLog(@"D %i", diff);
-            int diff = 1;
+            int diff = 3;
             [self animateScore: diff];
             animateScoreValueTimer = 0;
         }
@@ -649,8 +649,10 @@
 -(void) animateScore:(int)times {
     if(currentAnimatingScore != score){
         for (int i = 0; i < times; i++) {
-            currentAnimatingScore = currentAnimatingScore < score ? currentAnimatingScore+1 : currentAnimatingScore-1;
-            [self setScoreImages:currentAnimatingScore];
+            if(currentAnimatingScore != score){
+                currentAnimatingScore = currentAnimatingScore < score ? currentAnimatingScore+1 : currentAnimatingScore-1;
+                [self setScoreImages:currentAnimatingScore];
+            }
         }
     }
 }

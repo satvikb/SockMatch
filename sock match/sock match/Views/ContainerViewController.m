@@ -253,12 +253,12 @@
         }];
         
 //        GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
-//        
+//
 //        gcViewController.gameCenterDelegate = self;
-//        
+//
 //        gcViewController.viewState = GKGameCenterViewControllerStateLeaderboards;
 //        gcViewController.leaderboardIdentifier = leaderboardIdentifier;
-//        
+//
 //        [self presentViewController:gcViewController animated:YES completion:nil];
     }
 }
