@@ -21,6 +21,9 @@
     
     CGFloat forkliftWheelTimer;
     CGFloat timeToAnimateWheels;
+    
+    CGFloat forkliftAnimateTimer;
+    CGFloat timeToAnimateForklift;
 }
 
 @end
@@ -55,7 +58,10 @@
     timeToCreateRandomForklift = 3;
     
     forkliftWheelTimer = 0;
-    timeToAnimateWheels = 0.2;
+    timeToAnimateWheels = 0.1;
+    
+    forkliftAnimateTimer = 0;
+    timeToAnimateForklift = 0.5;
     
     gameTitle = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.2, 0.5, 0.195)]];
 //    testLabel.layer.borderWidth = 1;
@@ -176,10 +182,23 @@
                     }
                 }
                 
-                
                 forkliftWheelTimer = 0;
             }
+            
+            [self handleForkliftAnimation:tmr.duration];
         }
+    }
+}
+
+// so container can continue animations when play button is pressed
+-(void)handleForkliftAnimation:(CGFloat)delta {
+    forkliftAnimateTimer += delta;
+    
+    if(forkliftAnimateTimer >= timeToAnimateForklift){
+        for(Forklift* f in forklifts){
+            [f animateAnimation];
+        }
+        forkliftAnimateTimer = 0;
     }
 }
 

@@ -25,6 +25,7 @@
 @synthesize coreImageView;
 @synthesize overlayImageView;
 @synthesize veryTopImageView;
+@synthesize veryTopImageView2;
 
 @synthesize allowMovement;
 @synthesize validSock;
@@ -76,7 +77,7 @@
     overlayImageView.layer.zPosition = 2;
     [self addSubview:overlayImageView];
     
-    veryTopImageView = [[UIImageView alloc] initWithFrame:CGRectMake(boxFrame.origin.x+boxFrame.size.width/4, boxFrame.origin.y+boxFrame.size.height/4, boxFrame.size.width/2, boxFrame.size.height/2)];
+    veryTopImageView = [[UIImageView alloc] initWithFrame:CGRectMake(boxFrame.origin.x+boxFrame.size.width/4, boxFrame.origin.y+boxFrame.size.height/8, boxFrame.size.width/2, boxFrame.size.height/2)];
     veryTopImageView.contentMode = UIViewContentModeScaleAspectFit;
     veryTopImageView.layer.magnificationFilter = kCAFilterNearest;
 //    veryTopImageView.layer.borderColor = [UIColor yellowColor].CGColor;
@@ -85,31 +86,25 @@
     veryTopImageView.layer.zPosition = 3;
     [self addSubview:veryTopImageView];
     
-//    __unsafe_unretained typeof(self) weakSelf = self;
-//    sockTouch = [[SockTouch alloc] initWithSock:self extraPropSpace:3];
-//    [sockTouch setTouchBeganBlock:^void (NSSet<UITouch*>* touches, UIEvent* event){
-//        NSLog(@"TOUCH BEGAN");
-//        [weakSelf sockTouchesBegan:touches withEvent:event];
-//    }];
-//    [sockTouch setTouchMovedBlock:^void (NSSet<UITouch*>* touches, UIEvent* event){
-//        [weakSelf sockTouchesMoved:touches withEvent:event];
-//    }];
-//    [sockTouch setTouchEndedBlock:^void (NSSet<UITouch*>* touches, UIEvent* event){
-//        [weakSelf sockTouchesEnded:touches withEvent:event];
-//    }];
-//    sockTouch.layer.zPosition = 10;
-//    [self addSubview:sockTouch];
+    veryTopImageView2 = [[UIImageView alloc] initWithFrame:CGRectMake(boxFrame.origin.x+((boxFrame.size.width/8)*3), boxFrame.origin.y+((boxFrame.size.height/8)*5), boxFrame.size.height/4, boxFrame.size.height/4)];
+    veryTopImageView2.contentMode = UIViewContentModeScaleAspectFit;
+    veryTopImageView2.layer.magnificationFilter = kCAFilterNearest;
+//        veryTopImageView2.layer.borderColor = [UIColor yellowColor].CGColor;
+//        veryTopImageView2.layer.borderWidth = 1;
+    veryTopImageView2.userInteractionEnabled = true;
+    veryTopImageView2.layer.zPosition = 4;
+    [self addSubview:veryTopImageView2];
     return self;
 }
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    // TODO remove mainSockInPair
     if((!inAPair || mainSockInPair) && allowMovement){
         UITouch *touch = [touches anyObject];
         CGPoint location = [touch locationInView:nil];
         touchPoint = location;
         
         if(touchBeganBlock != nil){
+            [self animateIncreaseCoreScale];
             touchBeganBlock(self, location);
         }
     }
@@ -142,9 +137,28 @@
         touchPoint = location;
         
         if(touchEndedBlock != nil){
+            [self animateDecreaseCoreScale];
             touchEndedBlock(self, location);
         }
     }
+}
+
+-(void)animateIncreaseCoreScale {
+    self.animatingSize = true;
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
+        self.coreImageView.transform = CGAffineTransformMakeScale(1.2, 1.2);
+    } completion:^(BOOL completed){
+        self.animatingSize = false;
+    }];
+}
+
+-(void)animateDecreaseCoreScale {
+    self.animatingSize = true;
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
+        self.coreImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(1.2, 1.2);
+    } completion:^(BOOL completed){
+        self.animatingSize = false;
+    }];
 }
 
 -(CGRect)getCoreRect{

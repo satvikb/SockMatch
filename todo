@@ -7,13 +7,18 @@ gameplay
 		-introduce more sock types
 		-introduce different sizes (S, M, L)
 		-increase variability of generated socks (less likely to create socks already on screen)
+	-combos
+		-extra score (+1 or +x based on combo's in a row) when multiple socks are packaged at once
 
 graphics
+	-conveyor belt overhead frame to the left
 	-forklift texture
 	-design factory floor
 	-sock and package designs
+	-forklifts on main menu carry boxes, not packages
 
 collisions
+	-IMPROVE COLLISIONS.
 	-back on belt when no space
 	-prevent moving to top
 	-prevent moving sock back on belt once removed?
@@ -23,6 +28,10 @@ clearing socks on game over
 	-maybe don't remove socks and allow use on next round? (socks on belt are animated out on belt while slowing down, prevent movement)
 
 ui
+	-pause button
+	-switch view
+		-shown while switching views, allows for game view to load and remove socks for game over
+		-or just for loading, for game over the 'camera' can move to the right to the game over screen
 	-maybe use images for buttons instead of text
 	-improve custom Game Center leaderboard
 		-maybe wood textures
@@ -38,6 +47,16 @@ sounds
 	-light turning on
 	-sock package
 	-point
+
+saving
+	-save
+		-current score
+		-valid socks (not packaged/animating)
+		-difficulty curve
+	-load
+		-menu score is current game score
+		-countdown to continue
+		-handle file load errors (corrupt file or modified)
 
 fonts
 	-4 variants (made for different uses)

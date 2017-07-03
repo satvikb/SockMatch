@@ -76,6 +76,15 @@
     
     [Flurry logEvent:@"Switch_MenuToGame"];
     
+    GameData* currentGameData = [GameData sharedGameData];
+    bool loadingData = false;
+    //TODO is this if required?
+    if(currentGameData.score > 0 && currentGameData.sockData.count > 0){
+        loadingData = true;
+        [gameController loadGame:currentGameData];
+        menuController.gameTitle.frame = CGRectOffset(menuController.gameTitle.frame, [self propX:-1], 0);
+    }
+    
     [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointZero animationFinished:^{
         NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
         
@@ -84,7 +93,7 @@
             [gameController.tutorialView animateTutorialLabelIn];
         }
         
-        [gameController startGame];
+        [gameController startGame:loadingData == true ? false : true];
     }];
 }
 
@@ -169,6 +178,8 @@
             [Flurry logEvent:@"game" timed:true];
             currentAppState = Game;
         }
+        
+        [menuController handleForkliftAnimation:delta];
     }
     
     [menuController gameFrame:tmr];

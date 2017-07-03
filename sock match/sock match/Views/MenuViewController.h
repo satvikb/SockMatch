@@ -25,6 +25,7 @@
 
 -(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages;
 -(void) gameFrame:(CADisplayLink*)tmr;
+-(void)handleForkliftAnimation:(CGFloat)delta;
 
 @end
 

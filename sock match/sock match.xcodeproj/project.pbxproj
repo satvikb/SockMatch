@@ -18,6 +18,8 @@
 		404D1B101F06002D003C9383 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404D1B0F1F060026003C9383 /* SystemConfiguration.framework */; };
 		404D1B1A1F060DE6003C9383 /* Lockbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 404D1AE81F05F1FD003C9383 /* Lockbox.m */; };
 		404D1B1D1F060EC8003C9383 /* libFlurry_8.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 404D1B191F060DCF003C9383 /* libFlurry_8.1.0.a */; };
+		40728D371F099FB3008D2F36 /* GameData.m in Sources */ = {isa = PBXBuildFile; fileRef = 40728D361F099FB3008D2F36 /* GameData.m */; };
+		40728D3A1F09A5E8008D2F36 /* SockData.m in Sources */ = {isa = PBXBuildFile; fileRef = 40728D391F09A5E8008D2F36 /* SockData.m */; };
 		40849FAB1F066B2700953616 /* TutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40849FAA1F066B2700953616 /* TutorialView.m */; };
 		408E6B4C1EEF88180011C450 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B4B1EEF88180011C450 /* AppDelegate.m */; };
 		408E6B541EEF88180011C450 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 408E6B531EEF88180011C450 /* Assets.xcassets */; };
@@ -51,6 +53,10 @@
 		404D1B171F060DCF003C9383 /* Flurry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		404D1B181F060DCF003C9383 /* FlurrySessionBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlurrySessionBuilder.h; sourceTree = "<group>"; };
 		404D1B191F060DCF003C9383 /* libFlurry_8.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_8.1.0.a; sourceTree = "<group>"; };
+		40728D351F099FB3008D2F36 /* GameData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameData.h; sourceTree = "<group>"; };
+		40728D361F099FB3008D2F36 /* GameData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameData.m; sourceTree = "<group>"; };
+		40728D381F09A5E8008D2F36 /* SockData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SockData.h; sourceTree = "<group>"; };
+		40728D391F09A5E8008D2F36 /* SockData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SockData.m; sourceTree = "<group>"; };
 		40849FA91F066B2700953616 /* TutorialView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TutorialView.h; sourceTree = "<group>"; };
 		40849FAA1F066B2700953616 /* TutorialView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TutorialView.m; sourceTree = "<group>"; };
 		408E6B471EEF88180011C450 /* sock match.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "sock match.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,6 +127,10 @@
 				408E6B6E1EEFF2530011C450 /* Functions.m */,
 				404D1AE21F05EBED003C9383 /* Storage.h */,
 				404D1AE31F05EBED003C9383 /* Storage.m */,
+				40728D351F099FB3008D2F36 /* GameData.h */,
+				40728D361F099FB3008D2F36 /* GameData.m */,
+				40728D381F09A5E8008D2F36 /* SockData.h */,
+				40728D391F09A5E8008D2F36 /* SockData.m */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -287,6 +297,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40849FAB1F066B2700953616 /* TutorialView.m in Sources */,
+				40728D3A1F09A5E8008D2F36 /* SockData.m in Sources */,
 				404D1B1A1F060DE6003C9383 /* Lockbox.m in Sources */,
 				404D1AE41F05EBED003C9383 /* Storage.m in Sources */,
 				403A892F1EF7CEA500C81DB4 /* GameOverViewController.m in Sources */,
@@ -295,6 +306,7 @@
 				40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */,
 				408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */,
 				408E6B5A1EEF88180011C450 /* main.m in Sources */,
+				40728D371F099FB3008D2F36 /* GameData.m in Sources */,
 				403A89281EF7B2D700C81DB4 /* ContainerViewController.m in Sources */,
 				408E6B651EEFA5EA0011C450 /* Sock.m in Sources */,
 				401DA09B1EF882CF00B7CF6E /* Claw.m in Sources */,

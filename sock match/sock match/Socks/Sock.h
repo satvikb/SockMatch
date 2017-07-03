@@ -19,6 +19,8 @@ typedef void (^TouchEnded)(Sock* s, CGPoint p);
 
 
 -(id) initWithFrame:(CGPoint)pos width:(CGFloat)width sockSize:(SockSize)size sockId:(int)sId image:(UIImage*) image onBelt:(bool)startOnBelt extraPropTouchSpace:(CGFloat)extraSpace;
+-(void)animateIncreaseCoreScale;
+-(void)animateDecreaseCoreScale;
 -(CGRect)getCoreRect;
 -(void)setRectFromCoreRect:(CGRect)rect;
 -(CGRect)getCoreTheoreticalRect;
@@ -37,6 +39,7 @@ typedef void (^TouchEnded)(Sock* s, CGPoint p);
 @property (nonatomic, strong) UIImageView* coreImageView;
 @property (nonatomic, strong) UIImageView* overlayImageView;
 @property (nonatomic, strong) UIImageView* veryTopImageView;
+@property (nonatomic, strong) UIImageView* veryTopImageView2;
 
 @property (nonatomic, assign) bool allowMovement;
 

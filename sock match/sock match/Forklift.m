@@ -157,11 +157,11 @@
     UIImage* firstWheel = [wheelAnimation objectAtIndex:0];
     CGFloat wheelX = 0.7575757576;
     CGFloat wheelLeft = 0.0303030303;
-    CGFloat wheelHeight = 0.1304347826*self.frame.size.height;
+    CGFloat wheelHeight = 0.152173913*self.frame.size.height;
     CGFloat wheelAspectRatio = wheelHeight / firstWheel.size.height;
     CGFloat finalWheelWidth = firstWheel.size.width*wheelAspectRatio;
     
-    wheelTop = [[UIImageView alloc] initWithFrame:CGRectMake(forkliftFacesRight ? self.frame.size.width*(wheelLeft) : self.frame.size.width*(wheelX), 0, finalWheelWidth, wheelHeight)];
+    wheelTop = [[UIImageView alloc] initWithFrame:CGRectMake(forkliftFacesRight ? self.frame.size.width*(wheelLeft) : self.frame.size.width*(wheelX-wheelLeft), 0, finalWheelWidth, wheelHeight)];
     wheelTop.contentMode = UIViewContentModeScaleAspectFit;
     wheelTop.layer.magnificationFilter = kCAFilterNearest;
     //    emissionImageView.layer.borderWidth = 0.5;
@@ -169,7 +169,7 @@
     [wheelTop setImage:firstWheel];
     [self addSubview:wheelTop];
     
-    wheelBottom = [[UIImageView alloc] initWithFrame:CGRectMake(forkliftFacesRight ? self.frame.size.width*(wheelLeft) : self.frame.size.width*(wheelX), self.frame.size.height-wheelHeight, finalWheelWidth, wheelHeight)];
+    wheelBottom = [[UIImageView alloc] initWithFrame:CGRectMake(forkliftFacesRight ? self.frame.size.width*(wheelLeft) : self.frame.size.width*(wheelX-wheelLeft), self.frame.size.height-wheelHeight, finalWheelWidth, wheelHeight)];
     wheelBottom.contentMode = UIViewContentModeScaleAspectFit;
     wheelBottom.layer.magnificationFilter = kCAFilterNearest;
     //    emissionImageView.layer.borderWidth = 0.5;

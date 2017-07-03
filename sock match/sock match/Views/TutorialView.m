@@ -44,7 +44,6 @@
         if(s.allowMovement){
             s.onConvayorBelt = false;
             
-            //TODO collisions
             CGPoint delta = CGPointMake(p.x-oldPos.x, p.y-oldPos.y);
             
             CGRect newFrame = CGRectOffset( s.theoreticalFrame, delta.x, delta.y );
@@ -89,7 +88,6 @@
             
             sockTwoTouchMoveBlock(s);
             
-            //TODO collisions
             CGPoint delta = CGPointMake(p.x-oldPos.x, p.y-oldPos.y);
             
             CGRect newFrame = CGRectOffset( s.theoreticalFrame, delta.x, delta.y );
@@ -151,7 +149,6 @@
         tutorialText.text = @"move socks from the belt to the matching area";
         tutorialState = WaitingToMoveSockOne;
         sockOne.allowMovement = true;
-        //TODO figure out why
         sockOne.theoreticalFrame = sockOne.frame;
         animateSockOneCompleteBlock(sockOne);
     }];
@@ -170,7 +167,6 @@
         tutorialText.text = @"combine socks of similar colors to form a package";
         tutorialState = WaitingToMoveSockTwo;
         sockTwo.allowMovement = true;
-        //TODO figure out why
         sockTwo.theoreticalFrame = sockTwo.frame;
         animateSockTwoCompleteBlock(sockTwo);
     }];
