@@ -53,6 +53,9 @@
     CGFloat forkliftAnimationTimer;
     NSMutableArray <Forklift*>* forklifts;
     
+    CGFloat saveGameTimer;
+    CGFloat saveGameInterval;
+    
     //TODO put these two in one image
     UIImage* lifeLightOff;
     UIImage* lifeLightOn;
@@ -190,13 +193,14 @@
 
 -(void)setupGameValues:(bool)withWarmup {
     currentGameState = NotPlaying;
-    score = 0;
-    lives = 3;
     timeToGenerateSock = 1.5;
     generateSockTimer = 0;
     sockMatchThreshold = [self propX:0.055];
     
     if(withWarmup == true){
+        score = 0;
+        lives = 3;
+        
         beltMoveSpeed = 25.0;
         animateBeltMoveSpeed = 0;
         
@@ -204,6 +208,7 @@
         timeToAnimateWheels = 0.036;
         animateWheelTimer = 0;
     }else{
+        
         beltMoveSpeed = 25.0;
         animateBeltMoveSpeed = beltMoveSpeed;
         
@@ -220,6 +225,9 @@
     
     timeToAnimateScoreValue = 0.04;
     animateScoreValueTimer = 0;
+    
+    saveGameTimer = 0;
+    saveGameInterval = 100;
 }
 
 -(void)setupArrays{
@@ -227,7 +235,6 @@
     claws = [[NSMutableArray alloc] init];
     forklifts = [[NSMutableArray alloc] init];
     socksBeingAnimatedIntoBox = [[NSMutableArray alloc] init];
-    
 }
 
 -(void)createUI {
@@ -243,22 +250,22 @@
     scoreDigits = [[NSMutableArray alloc] init];
     //    CGPoint scoreDigitStartPos = CGPointMake(0.545, 0.035);
     //    CGSize scoreDigitSize = CGSizeMake(0.11, 0.08);
-    for(int i = 0; i < 4; i++){
-        UIImageView* scoreDig = [[UIImageView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 0, 0)]];
-        scoreDig.contentMode = UIViewContentModeScaleAspectFit;
-        scoreDig.layer.magnificationFilter = kCAFilterNearest;
-        //        scoreDig.layer.borderWidth = 2;
-        //        scoreDig.layer.borderColor = [UIColor grayColor].CGColor;
-        [scoreDigits addObject:scoreDig];
-        [self.view addSubview:scoreDig];
-    }
+//    for(int i = 0; i < 4; i++){
+//        UIImageView* scoreDig = [[UIImageView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 0, 0)]];
+//        scoreDig.contentMode = UIViewContentModeScaleAspectFit;
+//        scoreDig.layer.magnificationFilter = kCAFilterNearest;
+//                scoreDig.layer.borderWidth = 2;
+//                scoreDig.layer.borderColor = [UIColor grayColor].CGColor;
+//        [scoreDigits addObject:scoreDig];
+//        [self.view addSubview:scoreDig];
+//    }
     [self sizeDigits:4];
     
     lifeLightOff = [UIImage imageNamed:@"redlightoff"];
     lifeLightOn = [UIImage imageNamed:@"redlighton"];
     
     for(int i = 0; i < 3; i++){
-        CGRect lightRect = [self propToRect:CGRectMake(0.025+(i*0.16)+(i*0.015), 0.035, 0.15, 0)];
+        CGRect lightRect = [self propToRect:CGRectMake(0.1+(i*0.125)+(i*0.015), 0.05, 0.125, 0)];
         UIImageView* redLight = [[UIImageView alloc] initWithFrame: CGRectMake(lightRect.origin.x, lightRect.origin.y, lightRect.size.width, lightRect.size.width)];
         redLight.layer.zPosition = 5;
         redLight.contentMode = UIViewContentModeScaleAspectFill;
@@ -277,8 +284,8 @@
             UIImageView* scoreDig = [[UIImageView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 0, 0)]];
             scoreDig.contentMode = UIViewContentModeScaleAspectFit;
             scoreDig.layer.magnificationFilter = kCAFilterNearest;
-            //            scoreDig.layer.borderWidth = 2;
-            //            scoreDig.layer.borderColor = [UIColor grayColor].CGColor;
+//                        scoreDig.layer.borderWidth = 2;
+//                        scoreDig.layer.borderColor = [UIColor grayColor].CGColor;
             [scoreDigits addObject:scoreDig];
             [self.view addSubview:scoreDig];
         }
@@ -289,7 +296,7 @@
         [scoreDigits removeObject:remove];
     }
     //now resize them all
-    //    CGFloat scoreLeftMostPos = 0.65;//0.545;
+//        CGFloat scoreLeftMostPos = 0.65;//0.545;
     CGPoint scoreRightMostPos = CGPointMake(0.95, 0.035);
     UIImage* img = [scoreDigitImages objectAtIndex:0];
     CGFloat realHeight = [self propY:0.08];
@@ -376,25 +383,32 @@
 }
 
 -(void)loadGame:(GameData*)game{
-    int newScore = game.score;
-    self.currentAnimatingScore = newScore;
-    [self setScoreImages:newScore];
-    
+    [self forceSetScore:game.score];
+    [self forceSetLives:game.lives];
     [self loadSocksFromSockData:game.sockData];
-    
-    animateWheelSpeed = timeToAnimateWheels;
-    animateBeltMoveSpeed = beltMoveSpeed;
     [self switchGameStateTo:Playing];
 }
 
 -(void)saveGame{
-    [[GameData sharedGameData] save:score socks:[self getSockDataToSaveGame]];
+    [[GameData sharedGameData] saveGameWithScore:self.score lives:self.lives andSocks:[self getSockDataToSaveGame]];
+//    [[GameData sharedGameData] save:score socks:[self getSockDataToSaveGame]];
+}
+
+-(void)forceSetScore:(int)aNewScore {
+    self.score = aNewScore;
+    self.currentAnimatingScore = self.score;
+    [self setScoreImages:self.score];
 }
 
 -(void)loadSocksFromSockData:(NSMutableArray<SockData*>*)sockData{
     for(SockData* d in sockData){
         [self createSockAtPos:d.origin sockSize:d.sockSize sockId:d.sockId onBelt:d.onConvayorBelt];
     }
+}
+
+-(void)updateUIBasedOnCurrentGame:(GameData*)game{
+    [self forceSetScore:game.score];
+    [self forceSetLives:game.lives];
 }
 
 -(void) gameFrame:(CADisplayLink*)tmr {
@@ -453,6 +467,7 @@
                 
                 break;
             case Playing:
+                [self handleSaveGameTimer:delta];
                 [self handleGenerateSock:delta];
                 break;
             case Stopping:
@@ -465,6 +480,14 @@
                 }
                 break;
         }
+    }
+}
+
+-(void)handleSaveGameTimer:(CGFloat)delta{
+    saveGameTimer += delta;
+    if(saveGameTimer > saveGameInterval){
+        [self saveGame];
+        saveGameTimer = 0;
     }
 }
 
@@ -492,6 +515,7 @@
     
     if([self canEndGame]){
         //        NSDictionary* a = [self analyticsWithSocks];
+        [[GameData sharedGameData] clearSave];
         [Flurry endTimedEvent:@"game" withParameters:@{@"score":[NSNumber numberWithInt:score], @"numSocks":[self analyticsNumSocks]}];
         [self cleanUpSocksWithClaws];
         [self turnLightsOff];
@@ -719,32 +743,38 @@
 
 -(void) setScoreImages:(int) s {
     NSString* scoreStr = [NSString stringWithFormat:@"%i", s];
+    scoreStr = [scoreStr substringToIndex:MIN(6, scoreStr.length)];
     
-    if(scoreStr.length <= 6){
+    NSLog(@"Stack trace : %@",[NSThread callStackSymbols]);
+    
+//    if(scoreStr.length <= 6){
         if(scoreStr.length != scoreDigits.count){
-            [self sizeDigits:(int)scoreStr.length];
+            [self sizeDigits:(int)scoreStr.length > 6 ? 6 : (int)scoreStr.length];
         }
         
         for(int i = 0; i < scoreDigits.count; i++){
-            UIImageView* digitView = [scoreDigits objectAtIndex:i];
-            [digitView setImage: nil];
+            if(i < 6){
+                UIImageView* digitView = [scoreDigits objectAtIndex:i];
+                [digitView setImage: nil];
+            }
         }
         
         for (int i = 0; i < scoreStr.length; i++) {
-            int ni = (int)scoreStr.length-i-1;
-            int ii = i; //imageview index
-            unichar ch = [scoreStr characterAtIndex:ni];
+            int stringIndex = (int)scoreStr.length-1-i;
+            int imageViewIndex = i;
+            unichar ch = [scoreStr characterAtIndex:stringIndex];
             NSString* digit = [NSString stringWithFormat:@"%c", ch];
-            UIImageView* digitView = [scoreDigits objectAtIndex:ii];
-            UIImage* digitImage = [scoreDigitImages objectAtIndex:digit.intValue];
-            
-            [digitView setImage: digitImage];
+            if(scoreDigits.count >= i){
+                UIImageView* digitView = [scoreDigits objectAtIndex:imageViewIndex];
+                UIImage* digitImage = [scoreDigitImages objectAtIndex:digit.intValue];
+                
+                [digitView setImage: digitImage];
+            }
         }
-    }else{
-        [Flurry logEvent:@"ScoreDigitsMoreThan6"];
-        NSLog(@"TOO MANY SCORE DIGITS.");
-    }
-    
+    //    }else{
+    //        [Flurry logEvent:@"ScoreDigitsMoreThan6"];
+    //        NSLog(@"TOO MANY SCORE DIGITS.");
+    //    }
 }
 
 -(void) lostLife {
@@ -762,6 +792,16 @@
     if(lives <= 0){
         //        NSLog(@"Game Over!");
         [self switchGameStateTo:Stopping];
+    }
+}
+
+-(void)forceSetLives:(int)newLives{
+    self.lives = newLives;
+    for(int i = 0; i < lifeLights.count; i++){
+        if(i > newLives-1){
+            UIImageView* light = [lifeLights objectAtIndex:3-(i+1)];
+            [light setImage:lifeLightOn];
+        }
     }
 }
 
@@ -957,12 +997,14 @@
     return overlap == true ? [self handleIntersection:s previousOverlap:true direction: dir recursionCount:rc+1] : prevOverlap;
 }
 
+
+
 -(void) createIntersectionRectTest:(CGRect)frame {
-    UIView* test = [[UIView alloc] initWithFrame: frame];
-    test.backgroundColor = [UIColor colorWithHue:drand48() saturation:1.0 brightness:1.0 alpha:0.6];
-    test.layer.zPosition = 1000;
-    [self.view addSubview:test];
-    [self performSelector:@selector(removeFromView:) withObject:test afterDelay:2];
+//    UIView* test = [[UIView alloc] initWithFrame: frame];
+//    test.backgroundColor = [UIColor colorWithHue:drand48() saturation:1.0 brightness:1.0 alpha:0.6];
+//    test.layer.zPosition = 1000;
+//    [self.view addSubview:test];
+//    [self performSelector:@selector(removeFromView:) withObject:test afterDelay:2];
 }
 
 -(void) checkPairsWithSock:(Sock*)sock{

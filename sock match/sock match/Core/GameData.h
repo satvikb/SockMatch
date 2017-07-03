@@ -12,9 +12,11 @@
 @interface GameData : NSObject <NSCoding>
 
 @property (assign, nonatomic) int score;
+@property (assign, nonatomic) int lives;
 @property (strong, nonatomic) NSMutableArray<SockData*>* sockData;
+
 +(instancetype)sharedGameData;
--(void)save:(int)score socks:(NSMutableArray<SockData*>*)sockData;
--(void)reset;
+-(void)saveGameWithScore:(int)score lives:(int)lives andSocks:(NSMutableArray<SockData*>*)sockData;
+-(void)clearSave;
 
 @end

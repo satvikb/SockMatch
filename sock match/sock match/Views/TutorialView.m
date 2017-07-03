@@ -113,16 +113,6 @@
     [self addSubview:sockOne];
     [self addSubview:sockTwo];
     
-    for (NSString* family in [UIFont familyNames])
-    {
-        NSLog(@"FAM: %@", family);
-        
-        for (NSString* name in [UIFont fontNamesForFamilyName: family])
-        {
-            NSLog(@"  %@", name);
-        }
-    }
-    
     tutorialText = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.05, 1, .9, 0.1)]];
     tutorialText.font = [UIFont fontWithName:@"Helvetica" size:26];
     tutorialText.text = @"welcome to sock shop!";

@@ -9,6 +9,8 @@ gameplay
 		-increase variability of generated socks (less likely to create socks already on screen)
 	-combos
 		-extra score (+1 or +x based on combo's in a row) when multiple socks are packaged at once
+	-gameover
+		-instead of stopping belt slowly maybe keep it going while showing game over.
 
 graphics
 	-conveyor belt overhead frame to the left
@@ -33,6 +35,7 @@ ui
 		-shown while switching views, allows for game view to load and remove socks for game over
 		-or just for loading, for game over the 'camera' can move to the right to the game over screen
 	-maybe use images for buttons instead of text
+	-maybe support more than 6 digits for score
 	-improve custom Game Center leaderboard
 		-maybe wood textures
 		-users with no image use initials

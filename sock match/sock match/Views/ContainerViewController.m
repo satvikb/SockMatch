@@ -11,6 +11,7 @@
 
 @interface ContainerViewController () {
     CADisplayLink* gameTimer;
+    GameData* currentGameData;
 }
 
 @end
@@ -31,14 +32,18 @@
     
     currentAppState = MainMenu;
     
+    currentGameData = [GameData sharedGameData];
+    
     // Do any additional setup after loading the view.
     gameController = [[GameViewController alloc] initWithTutorial:!didCompleteTutorial];
     gameController.view.layer.zPosition = -100;
     gameController.delegate = self;
     
-    int highScore = [Storage getSavedHighScore];
-    gameController.currentAnimatingScore = highScore;
-    [gameController setScoreImages:highScore];
+//    int loadedScore = currentGameData.score;//[Storage getSavedHighScore];
+//    gameController.currentAnimatingScore = loadedScore;
+//    gameController.score = loadedScore;
+//    [gameController setScoreImages:loadedScore];
+    [gameController updateUIBasedOnCurrentGame:currentGameData];
     
     gameOverController = [[GameOverViewController alloc] init];
     gameOverController.view.layer.zPosition = 150;
@@ -76,7 +81,6 @@
     
     [Flurry logEvent:@"Switch_MenuToGame"];
     
-    GameData* currentGameData = [GameData sharedGameData];
     bool loadingData = false;
     //TODO is this if required?
     if(currentGameData.score > 0 && currentGameData.sockData.count > 0){
@@ -224,10 +228,10 @@
 
 -(void)gcReportScore:(int)s{
     if(gameCenterEnabled == true && leaderboardIdentifier.length > 0){
-        GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:leaderboardIdentifier];
-        score.value = s;
+        GKScore *gkScore = [[GKScore alloc] initWithLeaderboardIdentifier:leaderboardIdentifier];
+        gkScore.value = s;
         
-        [GKScore reportScores:@[score] withCompletionHandler:^(NSError *error) {
+        [GKScore reportScores:@[gkScore] withCompletionHandler:^(NSError *error) {
             if (error != nil) {
                 NSLog(@"%@", [error localizedDescription]);
             }

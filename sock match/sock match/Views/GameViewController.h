@@ -51,6 +51,7 @@
 -(void) switchGameStateTo:(GameState)newGameState;
 -(void) setScoreImages:(int)s;
 
+-(void)updateUIBasedOnCurrentGame:(GameData*)game;
 -(void)loadGame:(GameData*)game;
 -(void)saveGame;
 

@@ -11,12 +11,20 @@
 @implementation GameData
 
 static NSString* const gameDataHighScoreKey = @"score";
+static NSString* const gameDataLivesKey = @"lives";
 static NSString* const gameDataSocksKey = @"socks";
+
+-(id)init{
+    self = [super init];
+    _lives = 3;
+    return self;
+}
 
 - (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [self init];
     if (self) {
         _score = [decoder decodeIntForKey: gameDataHighScoreKey];
+        _lives = [decoder decodeIntForKey:gameDataLivesKey];
         _sockData = [decoder decodeObjectForKey: gameDataSocksKey];
     }
     return self;
@@ -32,8 +40,9 @@ static NSString* const gameDataSocksKey = @"socks";
     return [[GameData alloc] init];
 }
 
--(void)save:(int)score socks:(NSMutableArray<SockData*>*)sockData {
+-(void)saveGameWithScore:(int)score lives:(int)lives andSocks:(NSMutableArray<SockData*>*)sockData {
     self.score = score;
+    self.lives = lives;
     self.sockData = sockData;
     NSData* encodedData = [NSKeyedArchiver archivedDataWithRootObject: self];
     [encodedData writeToFile:[GameData filePath] atomically:YES];
@@ -52,12 +61,16 @@ static NSString* const gameDataSocksKey = @"socks";
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
     [encoder encodeInt: self.score forKey: gameDataHighScoreKey];
+    [encoder encodeInt: self.lives forKey:gameDataLivesKey];
     [encoder encodeObject: self.sockData forKey: gameDataSocksKey];
 }
 
--(void)reset {
+-(void)clearSave {
     self.score = 0;
+    self.lives = 0;
     self.sockData = [[NSMutableArray alloc] init];
+    
+    [self saveGameWithScore:0 lives:0 andSocks:self.sockData];
 }
 
 +(NSString*)filePath
