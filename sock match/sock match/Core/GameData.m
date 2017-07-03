@@ -67,10 +67,10 @@ static NSString* const gameDataSocksKey = @"socks";
 
 -(void)clearSave {
     self.score = 0;
-    self.lives = 0;
+    self.lives = 3;
     self.sockData = [[NSMutableArray alloc] init];
     
-    [self saveGameWithScore:0 lives:0 andSocks:self.sockData];
+    [self saveGameWithScore:self.score lives:self.lives andSocks:self.sockData];
 }
 
 +(NSString*)filePath

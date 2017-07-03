@@ -56,6 +56,9 @@
     CGFloat saveGameTimer;
     CGFloat saveGameInterval;
     
+    CGFloat animateBoxTimer;
+    CGFloat animateBoxInterval;
+    
     //TODO put these two in one image
     UIImage* lifeLightOff;
     UIImage* lifeLightOn;
@@ -227,7 +230,10 @@
     animateScoreValueTimer = 0;
     
     saveGameTimer = 0;
-    saveGameInterval = 100;
+    saveGameInterval = 20;
+    
+    animateBoxTimer = 0;
+    animateBoxInterval = 0.005;
 }
 
 -(void)setupArrays{
@@ -421,7 +427,7 @@
         [self handleAnimateWheel:delta];
         [self handleClawAnimation: delta];
         [self handleForkliftAnimation:delta];
-        [self animateAllSockBoxes];
+        [self animateAllSockBoxes:delta];
         
         //TODO remove this system or make it more effiecent
         animateScoreValueTimer += tmr.duration;
@@ -744,9 +750,7 @@
 -(void) setScoreImages:(int) s {
     NSString* scoreStr = [NSString stringWithFormat:@"%i", s];
     scoreStr = [scoreStr substringToIndex:MIN(6, scoreStr.length)];
-    
-    NSLog(@"Stack trace : %@",[NSThread callStackSymbols]);
-    
+        
 //    if(scoreStr.length <= 6){
         if(scoreStr.length != scoreDigits.count){
             [self sizeDigits:(int)scoreStr.length > 6 ? 6 : (int)scoreStr.length];
@@ -796,6 +800,8 @@
 }
 
 -(void)forceSetLives:(int)newLives{
+    [self turnLightsOff];
+    
     self.lives = newLives;
     for(int i = 0; i < lifeLights.count; i++){
         if(i > newLives-1){
@@ -1045,10 +1051,15 @@
     [socksBeingAnimatedIntoBox addObject:otherSock];
 }
 
--(void) animateAllSockBoxes {
+-(void) animateAllSockBoxes:(CGFloat)delta {
     //    NSLog(@"animate all socks %li", socksBeingAnimatedIntoBox.count);
-    for (Sock* s in socksBeingAnimatedIntoBox) {
-        [self animateSock:s];
+    animateBoxTimer += delta;
+    
+    if(animateBoxTimer >= animateBoxInterval){
+        for (Sock* s in socksBeingAnimatedIntoBox) {
+            [self animateSock:s];
+        }
+        animateBoxTimer = 0;
     }
 }
 

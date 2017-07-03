@@ -16,6 +16,7 @@
 @property (strong, nonatomic) NSMutableArray<SockData*>* sockData;
 
 +(instancetype)sharedGameData;
++(NSString*)filePath;
 -(void)saveGameWithScore:(int)score lives:(int)lives andSocks:(NSMutableArray<SockData*>*)sockData;
 -(void)clearSave;
 

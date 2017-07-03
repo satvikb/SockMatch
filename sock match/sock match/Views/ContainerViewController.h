@@ -13,8 +13,9 @@
 #import "GameViewController.h"
 #import "GameOverViewController.h"
 #import "GCLeaderboardViewController.h"
+#import <MessageUI/MessageUI.h>
 
-@interface ContainerViewController : UIViewController <MenuDelegate, GameDelegate, GameOverDelegate, LeaderboardDelegate, GKGameCenterControllerDelegate>{
+@interface ContainerViewController : UIViewController <MenuDelegate, GameDelegate, GameOverDelegate, LeaderboardDelegate, GKGameCenterControllerDelegate, MFMailComposeViewControllerDelegate>{
     
 }
 

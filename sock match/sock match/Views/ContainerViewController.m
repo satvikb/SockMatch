@@ -28,6 +28,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self authenticateLocalPlayer];
+    
+//    [self testFile];
+    
     didCompleteTutorial = [Storage didCompleteTutorial];
     
     currentAppState = MainMenu;
@@ -59,6 +62,32 @@
     
     [self startGameLoop];
 }
+
+-(void)testFile{
+    
+    NSArray* dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
+                                                                        error:NULL];
+    NSLog(@"PATH: %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
+    [dirs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSString *filename = (NSString *)obj;
+        NSString *extension = [[filename pathExtension] lowercaseString];
+        NSLog(@"File %@.%@", filename, extension);
+    }];
+    
+    NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"gamedata"];
+    NSString *content = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
+    NSLog(@"CONTENT:%@", content);
+    
+    unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:filePath]) {
+        NSData* data = [NSData dataWithContentsOfFile:filePath];
+        UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[data, [NSURL fileURLWithPath:filePath]] applicationActivities:nil];
+        [self presentViewController:activityViewController animated:YES completion:nil];
+    }
+}
+
 
 - (void) displayContentController: (UIViewController*) content withFrame:(CGRect) frame{
     [self addChildViewController:content];
