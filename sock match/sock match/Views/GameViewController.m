@@ -83,6 +83,9 @@
 @synthesize forkLiftAnimationFrames;
 @synthesize emissionAnimationFrames;
 
+@synthesize countdownNumbers;
+@synthesize countdownDetails;
+
 @synthesize beltMoveSpeed;
 @synthesize animateBeltMoveSpeed;
 @synthesize currentGameState;
@@ -170,6 +173,10 @@
     emissionAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"emissions"] withYRow:5 withXColumn:1 maxFrames:0];
     scoreDigitImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"numbers"] withYRow:1 withXColumn:10 maxFrames:0];
     
+    countdownNumbers = [self getSplitImagesFromImage:[UIImage imageNamed:@"countdownNumbers"] withYRow:1 withXColumn:3 maxFrames:0];
+    countdownDetails = [self getSplitImagesFromImage:[UIImage imageNamed:@"countdownDetails"] withYRow:2 withXColumn:2 maxFrames:0];
+    
+    
     clawMiddleImage = [UIImage imageNamed:@"clawMiddle"];
     clawTopImage = [UIImage imageNamed:@"clawTop"];
     clawBottomImage = [UIImage imageNamed:@"clawBottom"];
@@ -190,9 +197,17 @@
 -(void)disableSockMovement {
     for (Sock* sock in socks) {
         sock.allowMovement = false;
-        sock.validSock = false;
+//        sock.validSock = false;
     }
 }
+
+-(void)enableSockMovement {
+    for (Sock* sock in socks) {
+        sock.allowMovement = true;
+//        sock.validSock = false;
+    }
+}
+
 
 -(void)setupGameValues:(bool)withWarmup {
     currentGameState = NotPlaying;
@@ -254,17 +269,6 @@
     [self.view addSubview:topBackground];
     
     scoreDigits = [[NSMutableArray alloc] init];
-    //    CGPoint scoreDigitStartPos = CGPointMake(0.545, 0.035);
-    //    CGSize scoreDigitSize = CGSizeMake(0.11, 0.08);
-//    for(int i = 0; i < 4; i++){
-//        UIImageView* scoreDig = [[UIImageView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 0, 0)]];
-//        scoreDig.contentMode = UIViewContentModeScaleAspectFit;
-//        scoreDig.layer.magnificationFilter = kCAFilterNearest;
-//                scoreDig.layer.borderWidth = 2;
-//                scoreDig.layer.borderColor = [UIColor grayColor].CGColor;
-//        [scoreDigits addObject:scoreDig];
-//        [self.view addSubview:scoreDig];
-//    }
     [self sizeDigits:4];
     
     lifeLightOff = [UIImage imageNamed:@"redlightoff"];
@@ -281,6 +285,19 @@
         [self.view addSubview:redLight];
         [lifeLights addObject:redLight];
     }
+//    [self createCountdown:^void{}];
+}
+
+-(void)createCountdown:(void (^)(void)) completion{
+    Countdown* testCD = [[Countdown alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.45, 1, 0.1)] numberImages:countdownNumbers detailAnimationImages:countdownDetails];
+    
+    __unsafe_unretained typeof(Countdown*) weak = testCD;
+    
+    [testCD setAnimationCompleteBlock:^(BOOL success){
+        completion();
+        [weak animateOut];
+    }];
+    [self.view addSubview:testCD];
 }
 
 -(void)sizeDigits:(int)numberOfDigits{
@@ -388,15 +405,23 @@
     }
 }
 
--(void)loadGame:(GameData*)game{
-    [self forceSetScore:game.score];
-    [self forceSetLives:game.lives];
-    [self loadSocksFromSockData:game.sockData];
-    [self switchGameStateTo:Playing];
+-(bool)loadGame:(GameData*)game{
+    if(game.lives > 0){
+        [self forceSetScore:game.score];
+        [self forceSetLives:game.lives];
+        [self loadSocksFromSockData:game.sockData];
+        [self switchGameStateTo:Playing];
+        return true;
+    }
+    return false;
 }
 
 -(void)saveGame{
-    [[GameData sharedGameData] saveGameWithScore:self.score lives:self.lives andSocks:[self getSockDataToSaveGame]];
+    if(lives <= 3 && lives > 0){
+        [[GameData sharedGameData] saveGameWithScore:self.score lives:self.lives andSocks:[self getSockDataToSaveGame]];
+    }else if(lives <= 0){
+        [self forceEndGame];
+    }
 //    [[GameData sharedGameData] save:score socks:[self getSockDataToSaveGame]];
 }
 
@@ -414,7 +439,7 @@
 
 -(void)updateUIBasedOnCurrentGame:(GameData*)game{
     [self forceSetScore:game.score];
-    [self forceSetLives:game.lives];
+    [self updateLightsForLives:game.lives];
 }
 
 -(void) gameFrame:(CADisplayLink*)tmr {
@@ -499,7 +524,16 @@
 
 -(void)startGame:(bool)withWarmup{
     [self setupGameValues:withWarmup];
-    [self switchGameStateTo:withWarmup == true ? WarmingUp: Playing];
+    
+    if(withWarmup == true){
+        [self switchGameStateTo:WarmingUp];
+    }else{
+        [self disableSockMovement];
+        [self createCountdown:^void{
+            [self enableSockMovement];
+            [self switchGameStateTo:Playing];
+        }];
+    }
 }
 
 -(void)switchGameStateTo:(GameState)newGameState{
@@ -520,13 +554,19 @@
     [self disableSockMovement];
     
     if([self canEndGame]){
-        //        NSDictionary* a = [self analyticsWithSocks];
-        [[GameData sharedGameData] clearSave];
-        [Flurry endTimedEvent:@"game" withParameters:@{@"score":[NSNumber numberWithInt:score], @"numSocks":[self analyticsNumSocks]}];
+        [self forceEndGame];
         [self cleanUpSocksWithClaws];
         [self turnLightsOff];
         [self transitionToGameOver];
         [self switchGameStateTo:NotPlaying];
+    }
+}
+
+-(void)forceEndGame {
+    [[GameData sharedGameData] clearSave];
+    [Flurry endTimedEvent:@"game" withParameters:@{@"score":[NSNumber numberWithInt:score], @"numSocks":[self analyticsNumSocks]}];
+    if([self.delegate respondsToSelector:@selector(gameEndScore:)]){
+        [self.delegate gameEndScore:score];
     }
 }
 
@@ -538,6 +578,8 @@
         if(s.inAPair == false && s.validSock){
             SockData* data = [[SockData alloc] initWithOrigin:s.frame.origin id:s.sockId size:s.sockSize onConveyorBelt:s.onConvayorBelt];
             [sockData addObject:data];
+        }else if(s.inAPair){
+            [self gotPoint];
         }
     }
     
@@ -803,10 +845,18 @@
     [self turnLightsOff];
     
     self.lives = newLives;
+    
+    [self updateLightsForLives:self.lives];
+}
+
+-(void)updateLightsForLives:(int)livesForLights{
     for(int i = 0; i < lifeLights.count; i++){
-        if(i > newLives-1){
+        if(i > livesForLights-1){
             UIImageView* light = [lifeLights objectAtIndex:3-(i+1)];
             [light setImage:lifeLightOn];
+        }else{
+            UIImageView* light = [lifeLights objectAtIndex:3-(i+1)];
+            [light setImage:lifeLightOff];
         }
     }
 }

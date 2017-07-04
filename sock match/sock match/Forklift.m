@@ -103,7 +103,8 @@
     return self;
 }
 
--(id)initDummyFromLeft:(bool)fromLeft sockImage:(UIImage*)sockImage sockSize:(CGSize)sockSize atY:(CGFloat)y forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation{
+// TODO add size image
+-(id)initDummyFromLeft:(bool)fromLeft boxImage:(UIImage*)boxImage sockImage:(UIImage*)sockImage sockSize:(CGSize)sockSize atY:(CGFloat)y forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation{
     
     screenSize = UIScreen.mainScreen.bounds.size;
     
@@ -139,11 +140,17 @@
     
     self = [super initWithFrame:frame];
     
-    if(sockImage != nil){
-        UIImageView* dummySock = [[UIImageView alloc] initWithImage:sockImage];
+    if(boxImage != nil && sockImage != nil){
+        UIImageView* dummySock = [[UIImageView alloc] initWithImage:boxImage];
         dummySock.contentMode = UIViewContentModeScaleAspectFit;
         dummySock.layer.magnificationFilter = kCAFilterNearest;
         dummySock.frame = CGRectMake(forkliftFacesRight == true ? self.frame.size.width*(1-forkliftForkLength+pickupPadding) : (-pickupPadding*self.frame.size.width), 0, sockSize.width, sockSize.height);
+        
+        UIImageView* sockPackageView = [[UIImageView alloc] initWithFrame:CGRectMake(dummySock.frame.size.width/4, dummySock.frame.size.height/4, dummySock.frame.size.width/2, dummySock.frame.size.height/2)];
+        sockPackageView.contentMode = UIViewContentModeScaleAspectFit;
+        sockPackageView.layer.magnificationFilter = kCAFilterNearest;
+        [sockPackageView setImage:sockImage];
+        [dummySock addSubview:sockPackageView];
         [self addSubview:dummySock];
     }
     

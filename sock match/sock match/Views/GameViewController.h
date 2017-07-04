@@ -13,6 +13,8 @@
 #import "Functions.h"
 #import "TutorialView.h"
 #import "GameData.h"
+#import "Countdown.h"
+
 
 @protocol GameDelegate;
 
@@ -42,6 +44,9 @@
 @property (strong, nonatomic) NSMutableArray<UIImage*>* forkLiftAnimationFrames;
 @property (strong, nonatomic) NSMutableArray<UIImage*>* emissionAnimationFrames;
 
+@property (strong, nonatomic) NSMutableArray<UIImage*>* countdownNumbers;
+@property (strong, nonatomic) NSMutableArray<UIImage*>* countdownDetails;
+
 @property (nonatomic, assign) bool timerPaused;
 @property (nonatomic, assign) bool doingTutorial;
 
@@ -50,13 +55,15 @@
 -(void) gameFrame:(CADisplayLink*)tmr;
 -(void) switchGameStateTo:(GameState)newGameState;
 -(void) setScoreImages:(int)s;
+-(void)turnLightsOff;
 
 -(void)updateUIBasedOnCurrentGame:(GameData*)game;
--(void)loadGame:(GameData*)game;
+-(bool)loadGame:(GameData*)game;
 -(void)saveGame;
 
 @end
 
 @protocol GameDelegate <NSObject>
 - (void) switchFromGameToGameOver:(GameViewController *)game withScore:(int)score;
+- (void) gameEndScore:(int)score;
 @end

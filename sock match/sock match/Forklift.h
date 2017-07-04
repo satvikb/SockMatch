@@ -20,7 +20,7 @@ typedef enum ForkliftState {
 } ForkliftState;
 
 -(id)initWithSock:(Sock*)s forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation;
--(id)initDummyFromLeft:(bool)fromLeft sockImage:(UIImage*)sockImage sockSize:(CGSize)sockSize atY:(CGFloat)y forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation;
+-(id)initDummyFromLeft:(bool)fromLeft boxImage:(UIImage*)boxImage sockImage:(UIImage*)sockImage sockSize:(CGSize)sockSize atY:(CGFloat)y forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation;
 -(void) animateAnimation;
 -(void) animateWheels;
 -(void) animateWheelsBackward;

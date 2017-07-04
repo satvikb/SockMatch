@@ -100,10 +100,9 @@
 //    testLabel.text = [NSString stringWithFormat:@"game over %i", score];
     NSLog(@"reporting score");
     self->score = score;
-    if([self.delegate respondsToSelector:@selector(reportGCScore:)]){
-        [self.delegate reportGCScore:score];
+    if([self.delegate respondsToSelector:@selector(gameEndScore:)]){
+        [self.delegate gameEndScore:score];
     }
-    [Storage saveHighScore:score];
 }
 
 -(void)pressMenuButton{

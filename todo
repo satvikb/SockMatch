@@ -53,12 +53,8 @@ sounds
 
 saving
 	-save
-		-current score
-		-valid socks (not packaged/animating)
 		-difficulty curve
 	-load
-		-menu score is current game score
-		-countdown to continue
 		-handle file load errors (corrupt file or modified)
 
 fonts

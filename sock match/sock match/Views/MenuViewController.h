@@ -23,7 +23,7 @@
 @property (nonatomic, strong) Button* playButton;
 @property (nonatomic, strong) UIImageView* gameCenterButton;
 
--(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages;
+-(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages boxImage:(UIImage*)boxImage;
 -(void) gameFrame:(CADisplayLink*)tmr;
 -(void)handleForkliftAnimation:(CGFloat)delta;
 

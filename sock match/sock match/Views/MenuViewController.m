@@ -14,6 +14,7 @@
     NSMutableArray<UIImage*>* sockPackages;
     NSMutableArray<UIImage*>* forkliftAnimation;
     NSMutableArray<UIImage*>* wheelAnimation;
+    UIImage* boxImage;
     
     // random forklifts
     CGFloat randomForkliftTimer;
@@ -37,14 +38,14 @@
 @synthesize playButton;
 @synthesize gameCenterButton;
 
--(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages{
+-(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages boxImage:(UIImage*)bxImage{
     self = [super init];
     
     forklifts = [[NSMutableArray alloc] init];
     sockPackages = packages;
     forkliftAnimation = forklift;
     wheelAnimation = wheels;
-    
+    boxImage = bxImage;
     return self;
 }
 
@@ -216,7 +217,7 @@
     
     UIImage* img = [Functions randomNumberBetween:0 maxNumber:100] < 50 ? [sockPackages objectAtIndex:sockId] : nil;
     
-    Forklift* fork = [[Forklift alloc] initDummyFromLeft:fromLeft sockImage:img sockSize:CGSizeMake(newSockFrame.size.width, newSockFrame.size.width) atY:newSockFrame.origin.y forkliftAnimationFrames:forkliftAnimation wheelAnimationFrames:wheelAnimation];
+    Forklift* fork = [[Forklift alloc] initDummyFromLeft:fromLeft boxImage:boxImage sockImage:img sockSize:CGSizeMake(newSockFrame.size.width, newSockFrame.size.width) atY:newSockFrame.origin.y forkliftAnimationFrames:forkliftAnimation wheelAnimationFrames:wheelAnimation];
     
     fork.layer.zPosition = 102;
     [forklifts addObject:fork];
