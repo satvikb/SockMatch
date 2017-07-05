@@ -14,7 +14,7 @@
 #import "TutorialView.h"
 #import "GameData.h"
 #import "Countdown.h"
-
+#import "EfficiencyBar.h"
 
 @protocol GameDelegate;
 
@@ -24,7 +24,7 @@
 
 @property (nonatomic, assign) int score;
 @property (nonatomic, assign) int currentAnimatingScore;
-@property (nonatomic, assign) int lives;
+@property (nonatomic, assign) CGFloat efficiency;
 
 @property (nonatomic, strong) id<GameDelegate> delegate;
 @property (nonatomic, assign) CGFloat beltMoveSpeed;
@@ -52,10 +52,9 @@
 
 -(id)initWithTutorial:(bool)tutorial;
 -(void)startGame:(bool)withWarmup;
--(void) gameFrame:(CADisplayLink*)tmr;
--(void) switchGameStateTo:(GameState)newGameState;
--(void) setScoreImages:(int)s;
--(void)turnLightsOff;
+-(void)gameFrame:(CADisplayLink*)tmr;
+-(void)switchGameStateTo:(GameState)newGameState;
+-(void)setScoreImages:(int)s;
 
 -(void)updateUIBasedOnCurrentGame:(GameData*)game;
 -(bool)loadGame:(GameData*)game;

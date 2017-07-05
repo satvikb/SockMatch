@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		40154E6D1F0D9177005AFFDD /* EfficiencyBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 40154E6C1F0D9177005AFFDD /* EfficiencyBar.m */; };
 		401DA09B1EF882CF00B7CF6E /* Claw.m in Sources */ = {isa = PBXBuildFile; fileRef = 401DA09A1EF882CF00B7CF6E /* Claw.m */; };
 		4028FEA31F023BF200E06D31 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4028FEA21F023BF200E06D31 /* GameKit.framework */; };
 		4037169D1F042AB40070C3A6 /* Forklift.m in Sources */ = {isa = PBXBuildFile; fileRef = 4037169C1F042AB40070C3A6 /* Forklift.m */; };
@@ -34,6 +35,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		40154E6B1F0D9177005AFFDD /* EfficiencyBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EfficiencyBar.h; sourceTree = "<group>"; };
+		40154E6C1F0D9177005AFFDD /* EfficiencyBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EfficiencyBar.m; sourceTree = "<group>"; };
 		401DA0991EF882CF00B7CF6E /* Claw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Claw.h; sourceTree = "<group>"; };
 		401DA09A1EF882CF00B7CF6E /* Claw.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Claw.m; sourceTree = "<group>"; };
 		4028FEA21F023BF200E06D31 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
@@ -148,6 +151,23 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		40154E6A1F0D9144005AFFDD /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				40728D3B1F0ABD2F008D2F36 /* Countdown.h */,
+				40728D3C1F0ABD2F008D2F36 /* Countdown.m */,
+				401DA0991EF882CF00B7CF6E /* Claw.h */,
+				401DA09A1EF882CF00B7CF6E /* Claw.m */,
+				4037169B1F042AB40070C3A6 /* Forklift.h */,
+				4037169C1F042AB40070C3A6 /* Forklift.m */,
+				40D12D521F084C690051D180 /* Button.h */,
+				40D12D531F084C690051D180 /* Button.m */,
+				40154E6B1F0D9177005AFFDD /* EfficiencyBar.h */,
+				40154E6C1F0D9177005AFFDD /* EfficiencyBar.m */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		4028FEA11F023BF200E06D31 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -192,13 +212,8 @@
 				408E6B4B1EEF88180011C450 /* AppDelegate.m */,
 				400BC5051F065F1300D465D7 /* Core */,
 				40C9F19B1EFC635A0057971F /* Views */,
+				40154E6A1F0D9144005AFFDD /* UI */,
 				400BC5021F065EC500D465D7 /* Socks */,
-				401DA0991EF882CF00B7CF6E /* Claw.h */,
-				401DA09A1EF882CF00B7CF6E /* Claw.m */,
-				4037169B1F042AB40070C3A6 /* Forklift.h */,
-				4037169C1F042AB40070C3A6 /* Forklift.m */,
-				40D12D521F084C690051D180 /* Button.h */,
-				40D12D531F084C690051D180 /* Button.m */,
 				400BC5041F065EE400D465D7 /* Libraries */,
 				408E6B531EEF88180011C450 /* Assets.xcassets */,
 				400BC5061F065F4200D465D7 /* Supporting Files */,
@@ -221,8 +236,6 @@
 				40849FAA1F066B2700953616 /* TutorialView.m */,
 				40D12D4F1F0833060051D180 /* GCLeaderboardViewController.h */,
 				40D12D501F0833060051D180 /* GCLeaderboardViewController.m */,
-				40728D3B1F0ABD2F008D2F36 /* Countdown.h */,
-				40728D3C1F0ABD2F008D2F36 /* Countdown.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -312,6 +325,7 @@
 				408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */,
 				408E6B5A1EEF88180011C450 /* main.m in Sources */,
 				40728D371F099FB3008D2F36 /* GameData.m in Sources */,
+				40154E6D1F0D9177005AFFDD /* EfficiencyBar.m in Sources */,
 				403A89281EF7B2D700C81DB4 /* ContainerViewController.m in Sources */,
 				408E6B651EEFA5EA0011C450 /* Sock.m in Sources */,
 				401DA09B1EF882CF00B7CF6E /* Claw.m in Sources */,

@@ -11,12 +11,12 @@
 @implementation GameData
 
 static NSString* const gameDataHighScoreKey = @"score";
-static NSString* const gameDataLivesKey = @"lives";
+static NSString* const gameDataEfficiencyKey = @"efficiency";
 static NSString* const gameDataSocksKey = @"socks";
 
 -(id)init{
     self = [super init];
-    _lives = 3;
+    _efficiency = 100.0;
     return self;
 }
 
@@ -24,7 +24,7 @@ static NSString* const gameDataSocksKey = @"socks";
     self = [self init];
     if (self) {
         _score = [decoder decodeIntForKey: gameDataHighScoreKey];
-        _lives = [decoder decodeIntForKey:gameDataLivesKey];
+        _efficiency = [decoder decodeIntForKey:gameDataEfficiencyKey];
         _sockData = [decoder decodeObjectForKey: gameDataSocksKey];
     }
     return self;
@@ -40,9 +40,9 @@ static NSString* const gameDataSocksKey = @"socks";
     return [[GameData alloc] init];
 }
 
--(void)saveGameWithScore:(int)score lives:(int)lives andSocks:(NSMutableArray<SockData*>*)sockData {
+-(void)saveGameWithScore:(int)score efficiency:(int)efficiency andSocks:(NSMutableArray<SockData*>*)sockData {
     self.score = score;
-    self.lives = lives;
+    self.efficiency = efficiency;
     self.sockData = sockData;
     NSData* encodedData = [NSKeyedArchiver archivedDataWithRootObject: self];
     [encodedData writeToFile:[GameData filePath] atomically:YES];
@@ -61,16 +61,16 @@ static NSString* const gameDataSocksKey = @"socks";
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
     [encoder encodeInt: self.score forKey: gameDataHighScoreKey];
-    [encoder encodeInt: self.lives forKey:gameDataLivesKey];
+    [encoder encodeInt: self.efficiency forKey:gameDataEfficiencyKey];
     [encoder encodeObject: self.sockData forKey: gameDataSocksKey];
 }
 
 -(void)clearSave {
     self.score = 0;
-    self.lives = 3;
+    self.efficiency = 100.0;
     self.sockData = [[NSMutableArray alloc] init];
     
-    [self saveGameWithScore:self.score lives:self.lives andSocks:self.sockData];
+    [self saveGameWithScore:self.score efficiency:self.efficiency andSocks:self.sockData];
 }
 
 +(NSString*)filePath

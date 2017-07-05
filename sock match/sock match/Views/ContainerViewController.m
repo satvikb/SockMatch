@@ -112,12 +112,12 @@
     
     bool loadingData = false;
     //TODO is this if required?
-    if(currentGameData.score > 0 && currentGameData.lives > 0 && currentGameData.sockData.count > 0){
+    if(currentGameData.score > 0 && currentGameData.efficiency > 0 && currentGameData.sockData.count > 0){
         if([gameController loadGame:currentGameData]){
             loadingData = true;
             menuController.gameTitle.frame = CGRectOffset(menuController.gameTitle.frame, [self propX:-1], 0);
         }else{
-            [gameController turnLightsOff];
+//            [gameController turnLightsOff];
         }
     }
     
