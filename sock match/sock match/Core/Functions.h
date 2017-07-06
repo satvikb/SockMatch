@@ -35,8 +35,9 @@ typedef enum GameState {
     NotPlaying = 0,
     WarmingUp = 1,
     Tutorial = 2,
-    Playing = 3,
-    Stopping = 4
+    Paused = 3,
+    Playing = 4,
+    Stopping = 5
 } GameState;
 
 typedef enum TutorialState {

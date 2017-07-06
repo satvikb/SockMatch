@@ -11,6 +11,9 @@
 
 @interface DifficultyCurve : NSObject <NSCoding>
 
+@property (nonatomic, assign) CGFloat timeToGenerateSock;
+
+-(void)reduceTimeToGenerateSock;
 -(SockSize)getNextSockSize;
 -(int)getNextSockType;
 

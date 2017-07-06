@@ -34,6 +34,7 @@
 		40D12D541F084C690051D180 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D531F084C690051D180 /* Button.m */; };
 		40D77E2A1F0DAFAD004577D7 /* DifficultyCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D77E291F0DAFAD004577D7 /* DifficultyCurve.m */; };
 		40D77E2D1F0E68CE004577D7 /* FocusOnRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D77E2C1F0E68CE004577D7 /* FocusOnRect.m */; };
+		40D77E301F0ECF4D004577D7 /* TouchImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D77E2F1F0ECF4D004577D7 /* TouchImage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +89,8 @@
 		40D77E291F0DAFAD004577D7 /* DifficultyCurve.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DifficultyCurve.m; sourceTree = "<group>"; };
 		40D77E2B1F0E68CE004577D7 /* FocusOnRect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FocusOnRect.h; sourceTree = "<group>"; };
 		40D77E2C1F0E68CE004577D7 /* FocusOnRect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FocusOnRect.m; sourceTree = "<group>"; };
+		40D77E2E1F0ECF4D004577D7 /* TouchImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchImage.h; sourceTree = "<group>"; };
+		40D77E2F1F0ECF4D004577D7 /* TouchImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchImage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +177,8 @@
 				40154E6C1F0D9177005AFFDD /* EfficiencyBar.m */,
 				40D77E2B1F0E68CE004577D7 /* FocusOnRect.h */,
 				40D77E2C1F0E68CE004577D7 /* FocusOnRect.m */,
+				40D77E2E1F0ECF4D004577D7 /* TouchImage.h */,
+				40D77E2F1F0ECF4D004577D7 /* TouchImage.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -333,6 +338,7 @@
 				403A892C1EF7C56800C81DB4 /* MenuViewController.m in Sources */,
 				4037169D1F042AB40070C3A6 /* Forklift.m in Sources */,
 				40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */,
+				40D77E301F0ECF4D004577D7 /* TouchImage.m in Sources */,
 				408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */,
 				40D77E2D1F0E68CE004577D7 /* FocusOnRect.m in Sources */,
 				408E6B5A1EEF88180011C450 /* main.m in Sources */,

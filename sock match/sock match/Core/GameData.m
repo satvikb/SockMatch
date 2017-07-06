@@ -13,6 +13,7 @@
 static NSString* const gameDataHighScoreKey = @"score";
 static NSString* const gameDataEfficiencyKey = @"efficiency";
 static NSString* const gameDataSocksKey = @"socks";
+static NSString* const gameDataDifficultyCurveKey = @"difficultyCurve";
 
 -(id)init{
     self = [super init];
@@ -26,6 +27,7 @@ static NSString* const gameDataSocksKey = @"socks";
         _score = [decoder decodeIntForKey: gameDataHighScoreKey];
         _efficiency = [decoder decodeIntForKey:gameDataEfficiencyKey];
         _sockData = [decoder decodeObjectForKey: gameDataSocksKey];
+        _difficultyCurve = [decoder decodeObjectForKey:gameDataDifficultyCurveKey];
     }
     return self;
 }
@@ -33,7 +35,7 @@ static NSString* const gameDataSocksKey = @"socks";
 +(instancetype)loadInstance {
     NSData* decodedData = [NSData dataWithContentsOfFile: [GameData filePath]];
     if (decodedData) {
-        GameData* gameData = [NSKeyedUnarchiver unarchiveObjectWithData:decodedData];//[NSKeyedUnarchiver unarchiveObjectWithData:decodedData];
+        GameData* gameData = [NSKeyedUnarchiver unarchiveObjectWithData:decodedData];
         return gameData;
     }
     
@@ -64,6 +66,7 @@ static NSString* const gameDataSocksKey = @"socks";
     [encoder encodeInt: self.score forKey: gameDataHighScoreKey];
     [encoder encodeInt: self.efficiency forKey:gameDataEfficiencyKey];
     [encoder encodeObject: self.sockData forKey: gameDataSocksKey];
+    [encoder encodeObject: self.difficultyCurve forKey:gameDataDifficultyCurveKey];
 }
 
 -(void)clearSave {

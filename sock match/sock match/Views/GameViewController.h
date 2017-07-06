@@ -16,6 +16,7 @@
 #import "Countdown.h"
 #import "EfficiencyBar.h"
 #import "DifficultyCurve.h"
+#import "TouchImage.h"
 
 @protocol GameDelegate;
 
@@ -32,7 +33,10 @@
 @property (nonatomic, assign) CGFloat animateBeltMoveSpeed;
 @property (nonatomic, assign) GameState currentGameState;
 
+@property (strong, nonatomic) TouchImage* pauseButton;
 @property (strong, nonatomic) TutorialView* tutorialView;
+
+@property (strong, nonatomic) UIView* pauseView;
 
 @property (strong, nonatomic) NSMutableArray<UIImage*>* sockMainImages;
 @property (strong, nonatomic) NSMutableArray<UIImage*>* sockPackages;
@@ -61,6 +65,12 @@
 -(bool)loadGame:(GameData*)game;
 -(void)saveGame;
 
+-(void)generateSock;
+
+-(void)updateBarForEfficiency:(CGFloat)efficiency;
+
+-(void)animateInPauseButton;
+-(void)animateOutPauseButton;
 @end
 
 @protocol GameDelegate <NSObject>

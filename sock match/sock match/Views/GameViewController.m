@@ -14,7 +14,6 @@
 #define SOCK_HIGHEST_LAYER (50)
 
 @interface GameViewController () {
-    CGFloat timeToGenerateSock;
     CGFloat generateSockTimer;
     
     CGFloat sockMatchThreshold;
@@ -63,6 +62,8 @@
     UIImage* efficiencyBarInner;
     
     DifficultyCurve* difficultyCurve;
+    
+    bool animatingInPauseView;
 }
 
 @end
@@ -91,9 +92,11 @@
 @synthesize animateBeltMoveSpeed;
 @synthesize currentGameState;
 
+@synthesize pauseButton;
 @synthesize tutorialView;
 @synthesize doingTutorial;
 @synthesize timerPaused;
+@synthesize pauseView;
 
 -(id)initWithTutorial:(bool)tutorial{
     self = [super init];
@@ -133,14 +136,33 @@
         [tutorialView setSockTwoTouchMoveBlock:^(Sock* s){
             if([self socksFormPairWith:tutorialView.sockOne andOther:tutorialView.sockTwo] == true){
                 timerPaused = false;
-                ws.tutorialView.tutorialState = Completed;
-                ws.tutorialView.tutorialText.text = @"you can also match socks directly on the belt";
-                currentGameState = Playing;
+                
                 [ws madePairBetweenMainSock:ws.tutorialView.sockOne andOtherSock:ws.tutorialView.sockTwo];
-                [Flurry endTimedEvent:@"tutorial" withParameters:nil];
-                //TODO uncomment for final
-//                [Storage completeTutorial];
-                [ws performSelector:@selector(hideTutLabel) withObject:nil afterDelay:5];
+                [ws hideTutLabel];
+                
+                UILabel* efficiencyInfo = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.65, 0.25)]];
+                efficiencyInfo.text = @"this is the efficiency of the factory.\nletting socks pass or building up socks reduces the efficiency.\n when efficiency reaches 0, you lose.";
+                efficiencyInfo.textAlignment = NSTextAlignmentCenter;
+                efficiencyInfo.numberOfLines = 0;
+                efficiencyInfo.layer.borderWidth = 2;
+                efficiencyInfo.textColor = [UIColor whiteColor];
+                
+                
+                UILabel* tapToContinue = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.25, 0.5, 0.5, 0.1)]];
+                tapToContinue.text = @"tap to continue.";
+                tapToContinue.textAlignment = NSTextAlignmentCenter;
+                tapToContinue.textColor = [UIColor whiteColor];
+                
+                [ws.tutorialView focusOnRect:[ws propToRect:CGRectMake(0.125, 0.03, 0.45, 0.1)] withLabels:@[efficiencyInfo, tapToContinue] touchBlock:^void{
+                    timerPaused = false;
+                    ws.tutorialView.tutorialState = Completed;
+                    ws.tutorialView.tutorialText.text = @"you can also match socks directly on the belt";
+                    currentGameState = Playing;
+                    [Flurry endTimedEvent:@"tutorial" withParameters:nil];
+                    //TODO uncomment for final
+                    //                [Storage completeTutorial];
+                    [ws performSelector:@selector(hideTutLabel) withObject:nil afterDelay:5];
+                }];
             }
         }];
         
@@ -208,7 +230,6 @@
 
 -(void)setupGameValues:(bool)withWarmup {
     currentGameState = NotPlaying;
-    timeToGenerateSock = 1.5;
     generateSockTimer = 0;
     sockMatchThreshold = [self propX:0.055];
     
@@ -216,7 +237,8 @@
         difficultyCurve = [[DifficultyCurve alloc] init];
         score = 0;
         efficiency = 100.0;
-        
+        [self forceSetScore:score];
+        [self updateBarForEfficiency:efficiency];
         beltMoveSpeed = 25.0;
         animateBeltMoveSpeed = 0;
         
@@ -275,18 +297,14 @@
     scoreLabel.font = [UIFont systemFontOfSize:25];
     [self.view addSubview:scoreLabel];
     
-    
     efficiencyBarFrame = [UIImage imageNamed:@"efficiencybar_frame"];
     efficiencyBarInner = [UIImage imageNamed:@"efficiencybar_inner"];
     
-    bar = [[EfficiencyBar alloc] initWithFrame:[self propToRect:CGRectMake(0.05, 0.0725, 0.4, 0.05)] frameImage:efficiencyBarFrame innerImage:efficiencyBarInner];
-//    bar.layer.borderWidth = 2;
+    bar = [[EfficiencyBar alloc] initWithFrame:[self propToRect:CGRectMake(0.15, 0.0725, 0.4, 0.05)] frameImage:efficiencyBarFrame innerImage:efficiencyBarInner];
     bar.layer.zPosition = 100;
     [self.view addSubview:bar];
     
-    //    [self createCountdown:^void{}];
-    
-    UILabel* text_factoryEfficiency = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.05, 0.035, 0.4, 0.0375)]];
+    UILabel* text_factoryEfficiency = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.15, 0.03, 0.4, 0.0375)]];
 //    text_factoryEfficiency.layer.borderWidth = 2;
     text_factoryEfficiency.text = @"factory efficiency";
     text_factoryEfficiency.layer.zPosition = 101;
@@ -304,7 +322,91 @@
     
     [self.view addSubview:text_score];
     
+//    pauseButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.8, 0.4, 0.1)] withText:@"p" withBlock:^void{
+//        NSLog(@"fasdffsdfadf");
+//    }];
     
+    __unsafe_unretained typeof(self) ws = self;
+    pauseButton = [[TouchImage alloc] initWithFrame:[self propToRect:CGRectMake(-0.1, 0.0325, 0.1, 0.075)] image:[UIImage imageNamed:@"pause"]];
+//    pauseButton.layer.borderWidth = 2;
+    pauseButton.layer.zPosition = 105;
+    [pauseButton setBlock:^void{
+        NSLog(@"pause");
+        
+        //TODO  maybe just do currentGameState == Playing;
+        if(currentGameState == Playing){//!= WarmingUp && currentGameState != Tutorial && currentGameState != Paused){
+            [ws showPauseView];
+        }
+    }];
+    
+    [self.view addSubview:pauseButton];
+    
+    
+    
+    pauseView = [[UIView alloc] initWithFrame:self.view.frame];
+    pauseView.layer.opacity = 0;
+    pauseView.layer.zPosition = 110;
+    pauseView.backgroundColor = [UIColor blackColor];
+    
+    UILabel* pauseViewPauseText = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.1)]];
+    pauseViewPauseText.text = @"paused";
+    pauseViewPauseText.textColor = [UIColor whiteColor];
+    pauseViewPauseText.layer.zPosition = 111;
+    pauseViewPauseText.textAlignment = NSTextAlignmentCenter;
+    pauseViewPauseText.font = [UIFont systemFontOfSize:40];
+    pauseViewPauseText.adjustsFontSizeToFitWidth = true;
+    [pauseView addSubview:pauseViewPauseText];
+    
+    UILabel* pauseViewContinueText = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.3, 0.35, 0.4, 0.1)]];
+    pauseViewContinueText.text = @"tap to continue";
+    pauseViewContinueText.textColor = [UIColor whiteColor];
+    pauseViewContinueText.layer.zPosition = 112;
+    pauseViewContinueText.textAlignment = NSTextAlignmentCenter;
+    pauseViewContinueText.font = [UIFont systemFontOfSize:20];
+    pauseViewContinueText.adjustsFontSizeToFitWidth = true;
+    [pauseView addSubview:pauseViewContinueText];
+}
+
+-(void)animateInPauseButton{
+    [UIView animateWithDuration:0.5 animations:^void{
+        pauseButton.frame = [self propToRect:CGRectMake(0.025, 0.0325, 0.1, 0.075)];
+    }];
+}
+
+-(void)animateOutPauseButton{
+    [UIView animateWithDuration:0.5 animations:^void{
+        pauseButton.frame = [self propToRect:CGRectMake(-0.1, 0.0325, 0.1, 0.075)];
+    }];
+}
+
+-(void)showPauseView{
+    if(!animatingInPauseView){
+        [self.view addSubview:pauseView];
+        currentGameState = Paused; //todo use functino to switch
+        timerPaused = true;
+        [UIView animateWithDuration:0.5 animations:^void{
+            pauseView.layer.opacity = 0.75;
+        } completion:^(BOOL completed){
+            animatingInPauseView = false;
+            
+        }];
+        animatingInPauseView = true;
+    }
+}
+
+-(void)hidePauseView{
+    if(!animatingInPauseView){
+        [UIView animateWithDuration:0.5 animations:^void{
+            pauseView.layer.opacity = 0;
+        } completion:^(BOOL completed){
+            [pauseView removeFromSuperview];
+            [self createCountdown:^{
+                currentGameState = Playing; //todo use function to switch
+                timerPaused = false;
+                animatingInPauseView = false;
+            }];
+        }];
+    }
 }
 
 -(void)createCountdown:(void (^)(void)) completion{
@@ -438,7 +540,9 @@
 
 -(void)saveGame{
     if(efficiency > 0){
-        [[GameData sharedGameData] saveGameWithScore:self.score efficiency:self.efficiency socks:[self getSockDataToSaveGame] andDifficulty:difficultyCurve];
+        //seperate so points in progress can be handled
+        NSMutableArray<SockData*>* sockData = [self getSockDataToSaveGame];
+        [[GameData sharedGameData] saveGameWithScore:self.score efficiency:self.efficiency socks:sockData andDifficulty:difficultyCurve];
     }else if(efficiency <= 0){
         [self forceEndGame];
     }
@@ -495,7 +599,7 @@
         switch (currentGameState) {
             case NotPlaying: break;
             case WarmingUp:
-                animateBeltMoveSpeed += delta*8;
+                animateBeltMoveSpeed += delta*5;
                 animateWheelSpeed -= delta/4;
                 
                 if(animateWheelSpeed <= timeToAnimateWheels){
@@ -510,16 +614,16 @@
                             if(tutorialView != nil){
                                 NSLog(@"animating tutorial");
                                 [tutorialView animateSockOneToX:[self propX:0.5] withBeltMoveSpeed:beltMoveSpeed/100.0];
-                                [tutorialView focusOnRect:[self propToRect:CGRectMake(0.01, 0.01, 0.45, 0.15)]];
                                 [self switchGameStateTo:Tutorial];
                             }
-                        }else{
-                            [self switchGameStateTo:Playing];
                         }
                     }
                 }
                 break;
             case Tutorial:
+                
+                break;
+            case Paused:
                 
                 break;
             case Playing:
@@ -588,6 +692,7 @@
 
 -(void)forceEndGame {
     [[GameData sharedGameData] clearSave];
+//    [self updateBarForEfficiency:<#(CGFloat)#>]
     [Flurry endTimedEvent:@"game" withParameters:@{@"score":[NSNumber numberWithInt:score], @"numSocks":[self analyticsNumSocks]}];
     if([self.delegate respondsToSelector:@selector(gameEndScore:)]){
         [self.delegate gameEndScore:score];
@@ -603,7 +708,7 @@
             SockData* data = [[SockData alloc] initWithOrigin:[s getCoreRect].origin id:s.sockId size:s.sockSize onConveyorBelt:s.onConvayorBelt];
             [sockData addObject:data];
         }else if(s.inAPair){
-            [self gotPoint];
+            [self pointForSock:s];
         }
     }
     
@@ -661,7 +766,7 @@
 -(void)handleGenerateSock:(CGFloat)delta {
     generateSockTimer += delta;
     
-    if(generateSockTimer >= timeToGenerateSock){
+    if(generateSockTimer >= difficultyCurve.timeToGenerateSock){
         if(currentGameState == Playing){
             [self generateSock];
         }
@@ -801,8 +906,7 @@
 }
 
 -(void) gotPoint {
-    timeToGenerateSock = timeToGenerateSock >= 1 ? timeToGenerateSock -= 0.025 : 1;
-    
+    [difficultyCurve reduceTimeToGenerateSock];
     score += 1;
 }
 
@@ -1223,6 +1327,12 @@
     s.allowMovement = false;
     if(s.validSock == true){
         [self gotPoint];
+    }
+}
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    if(currentGameState == Paused){
+        [self hidePauseView]; // todo prevent mutliple taps (during 0.5 second animation)
     }
 }
 

@@ -21,7 +21,7 @@
 //    self.layer.borderWidth = 2;
 //    self.layer.borderColor = [UIColor blueColor].CGColor;
     
-    CGFloat aspect = frame.size.width / frameImage.size.width;
+//    CGFloat aspect = frame.size.width / frameImage.size.width;
     
     frameImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];//frameImage.size.height*aspect)];
     frameImageView.layer.magnificationFilter = kCAFilterNearest;
@@ -47,11 +47,11 @@
     percentLabel.textAlignment = NSTextAlignmentLeft;
     percentLabel.text = @"100%";
     percentLabel.textColor = [UIColor whiteColor];
-    [innerImageView addSubview:percentLabel];
     
-    [self addSubview:innerImageView];
     [self addSubview:frameImageView];
-    
+    [self addSubview:innerImageView];
+    [innerImageView addSubview:percentLabel];
+
     return self;
 }
 

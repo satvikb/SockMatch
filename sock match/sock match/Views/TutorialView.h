@@ -29,8 +29,8 @@ typedef void (^SockTwoTouchMove)(Sock* s);
 -(void)animateSockTwoToX:(CGFloat)xPos withBeltMoveSpeed:(CGFloat)beltMoveSpeed;
 -(void)animateTutorialLabelIn;
 -(void)animateTutorialLabelOut;
--(void)focusOnRect:(CGRect)rect;
-
+-(void)focusOnRect:(CGRect)rect withLabels:(NSArray<UILabel*>*)labels touchBlock:(void (^)(void))touched;
+    
 @property (nonatomic, copy) AnimateSockOneComplete animateSockOneCompleteBlock;
 @property (nonatomic, copy) AnimateSockTwoComplete animateSockTwoCompleteBlock;
 @property (nonatomic, copy) SockOneTouchEnd sockOneTouchEndBlock;

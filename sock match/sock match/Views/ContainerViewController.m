@@ -38,7 +38,7 @@
     currentGameData = [GameData sharedGameData];
     
     // Do any additional setup after loading the view.
-    gameController = [[GameViewController alloc] initWithTutorial:!didCompleteTutorial];
+    gameController = [[GameViewController alloc] initWithTutorial:false];//!didCompleteTutorial];
     gameController.view.layer.zPosition = -100;
     gameController.delegate = self;
     
@@ -130,6 +130,7 @@
         }
         
         [gameController startGame:loadingData == true ? false : true];
+        [gameController animateInPauseButton];
     }];
 }
 
@@ -140,6 +141,7 @@
     [gameOverController setScore:score];
     [self animateFromViewController:game toPoint:CGPointZero toViewController:gameOverController toPoint:CGPointZero animationFinished:^{
         currentAppState = GameOver;
+        [game animateOutPauseButton];
         NSLog(@"Switched from game to game over %@ %@", NSStringFromCGRect(game.view.frame), gameOverController.view.backgroundColor);
     }];
 }
@@ -149,6 +151,7 @@
     [Flurry logEvent:@"Switch_GameOverToMenu"];
     [self animateFromViewController:gameOver toPoint:[self propToRect:CGRectMake(1, 0, 0, 0)].origin toViewController:menuController toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin animationFinished:^{
         currentAppState = MainMenu;
+        [gameController updateBarForEfficiency:100.0];
         NSLog(@"transitioned from game over to menu %@", NSStringFromCGRect(gameController.view.frame));
     }];
 }
@@ -218,6 +221,12 @@
             [menuController.view addSubview:menuController.gameTitle];
             [Flurry logEvent:@"game" timed:true];
             currentAppState = Game;
+            
+            //not in tutorial
+            if(gameController.currentGameState == WarmingUp){
+                gameController.currentGameState = Playing;
+                [gameController generateSock];
+            }
         }
         
         [menuController handleForkliftAnimation:delta];

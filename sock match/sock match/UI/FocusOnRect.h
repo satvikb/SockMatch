@@ -10,7 +10,12 @@
 
 @interface FocusOnRect : UIView
 
--(id)initWithRectToFocusOn:(CGRect)rect screenSize:(CGSize)screen;
--(void)animateToOpacity:(CGFloat)opacity withDuration:(NSTimeInterval)duration withCompletion:(void (^)(BOOL completed))completion;
+typedef void (^TouchFocusOnRect)(void);
+
+-(id)initWithRectToFocusOn:(CGRect)rect withLabels:(NSArray<UILabel*>*)labels screenSize:(CGSize)screen;
+-(void)show:(CGFloat)opacity withDuration:(NSTimeInterval)duration withCompletion:(void (^)(BOOL completed))completion;
+-(void)hide:(CGFloat)opacity withDuration:(NSTimeInterval)duration withCompletion:(void (^)(BOOL completed))completion;
+        
+@property (nonatomic, copy) TouchFocusOnRect touchBlock;
 
 @end

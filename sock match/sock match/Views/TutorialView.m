@@ -174,10 +174,17 @@
     }];
 }
 
--(void)focusOnRect:(CGRect)rect{
-    FocusOnRect* focus = [[FocusOnRect alloc] initWithRectToFocusOn:rect screenSize:UIScreen.mainScreen.bounds.size];
+-(void)focusOnRect:(CGRect)rect withLabels:(NSArray<UILabel*>*)labels touchBlock:(void (^)(void))touched{
+    FocusOnRect* focus = [[FocusOnRect alloc] initWithRectToFocusOn:rect withLabels:labels screenSize:UIScreen.mainScreen.bounds.size];
     
-    [focus animateToOpacity:0.3 withDuration:2 withCompletion:^(BOOL completed){
+    __unsafe_unretained typeof(FocusOnRect*) weak = focus;
+    
+    [focus setTouchBlock:^void{
+        touched();
+        [weak removeFromSuperview];
+    }];
+    
+    [focus show:0.3 withDuration:0.5 withCompletion:^(BOOL completed){
         
     }];
     [self addSubview:focus];

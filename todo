@@ -88,4 +88,5 @@ other code stuff
 	-make sure @property's are right, learn what nonatomic/strong/assign/copy means
 	-improve code, refactoring
 	-improve containerviewcontroller (actually remove and create view controllers?)
+		-when changing views, use the parameter or the global variable?
 	-anonymize code

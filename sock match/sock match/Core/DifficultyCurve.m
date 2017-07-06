@@ -10,15 +10,28 @@
 
 @implementation DifficultyCurve
 
+static NSString* const difficultyCurveTimeToGenerateSockKey = @"generateSock";
+
+-(id)init{
+    self = [super init];
+    _timeToGenerateSock = 1.5;
+    return self;
+}
+
+//TODO pass in parameters for each value
 -(id)initWithCurrentGame{
     self = [super init];
-                          
+    _timeToGenerateSock = 1.5;
     return self;
 }
 
 -(void)tickDifficulty {
     //increase the difficulty a little...
     
+}
+
+-(void)reduceTimeToGenerateSock{
+    _timeToGenerateSock = _timeToGenerateSock >= 1 ? _timeToGenerateSock -= 0.025 : 1;
 }
 
 -(SockSize)getNextSockSize {
@@ -30,11 +43,15 @@
 }
 
 -(instancetype)initWithCoder:(NSCoder *)decoder{
-    return [self init];
+    self = [self init];
+    if(self){
+        _timeToGenerateSock = [decoder decodeFloatForKey:difficultyCurveTimeToGenerateSockKey];
+    }
+    return self;
 }
 
 -(void)encodeWithCoder:(NSCoder *)encoder{
-    
+    [encoder encodeFloat:self.timeToGenerateSock forKey:difficultyCurveTimeToGenerateSockKey];
 }
 
 @end

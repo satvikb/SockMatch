@@ -37,7 +37,7 @@ const CGFloat innerBar3DOffset = 0.1111111111;
     self.layer.magnificationFilter = kCAFilterNearest;
     self.contentMode = UIViewContentModeScaleAspectFit;
     
-    [self setImage:imageFrame];
+//    [self setImage:imageFrame];
     
     CGFloat leftPadding = 0.025;
     CGFloat bottomPadding = 0.08333333333;
