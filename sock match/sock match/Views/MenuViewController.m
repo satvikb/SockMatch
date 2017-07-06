@@ -74,14 +74,14 @@
     
     titleFrame = gameTitle.frame;
     
-    UIImage* playImage = [UIImage imageNamed:@"play"];
+    UIImage* playImage = [UIImage imageNamed:@"efficiencybar_frame"];
     UIImage* playImageDown = [UIImage imageNamed:@"playPressed"];
     playImage = [self image:playImage WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
     playImageDown = [self image:playImageDown WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
-    playButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.195)] withNormalImage:playImage pressedDownImage:playImageDown withBlock:^void{
+    playButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)] withText:@"play" withBlock:^void{
         [self pressPlayButton:playButton];
     }];
-    
+//    playButton.layer.borderWidth = 3;
     [self.view addSubview:playButton];
     
     CGFloat gcBtnWidth = [self propX: 0.15];

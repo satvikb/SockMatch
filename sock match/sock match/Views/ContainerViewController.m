@@ -111,8 +111,8 @@
     [Flurry logEvent:@"Switch_MenuToGame"];
     
     bool loadingData = false;
-    //TODO is this if required?
-    if(currentGameData.score > 0 && currentGameData.efficiency > 0 && currentGameData.sockData.count > 0){
+    
+    if(currentGameData.efficiency > 0 && currentGameData.sockData.count > 0){
         if([gameController loadGame:currentGameData]){
             loadingData = true;
             menuController.gameTitle.frame = CGRectOffset(menuController.gameTitle.frame, [self propX:-1], 0);
@@ -280,38 +280,38 @@
 
 -(void)gcShowLeaderboard{
     if(gameCenterEnabled){
-        GKLeaderboard* gameLeaderboard = [[GKLeaderboard alloc] init];
-        gameLeaderboard.identifier = leaderboardIdentifier;
-        gameLeaderboard.playerScope = GKLeaderboardPlayerScopeGlobal;
-//        gameLeaderboard.ra
+//        GKLeaderboard* gameLeaderboard = [[GKLeaderboard alloc] init];
+//        gameLeaderboard.identifier = leaderboardIdentifier;
+//        gameLeaderboard.playerScope = GKLeaderboardPlayerScopeGlobal;
+////        gameLeaderboard.ra
+//
+//        [gameLeaderboard loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error){
+//            if(error){
+//                NSLog(@"Error retreiving scores %@", error);
+//            }else{
+//                for(GKScore* score in scores){
+//                    NSLog(@"SCORE: %@ %lli", score.player.displayName, score.value);
+//                }
+//
+//                GCLeaderboardViewController* scoreViewController = [[GCLeaderboardViewController alloc] initWithScores: scores];
+//                scoreViewController.view.layer.zPosition = 200;
+//                scoreViewController.view.frame = [self propToRect:CGRectMake(0, 0, 1, 1)];
+//                scoreViewController.delegate = self;
+//                [self addChildViewController:scoreViewController];
+//                [self.view addSubview:scoreViewController.view];
+//                [scoreViewController createScoreCells];
+//                [scoreViewController animateIn];
+//            }
+//        }];
         
-        [gameLeaderboard loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error){
-            if(error){
-                NSLog(@"Error retreiving scores %@", error);
-            }else{
-                for(GKScore* score in scores){
-                    NSLog(@"SCORE: %@ %lli", score.player.displayName, score.value);
-                }
-                
-                GCLeaderboardViewController* scoreViewController = [[GCLeaderboardViewController alloc] initWithScores: scores];
-                scoreViewController.view.layer.zPosition = 200;
-                scoreViewController.view.frame = [self propToRect:CGRectMake(0, 0, 1, 1)];
-                scoreViewController.delegate = self;
-                [self addChildViewController:scoreViewController];
-                [self.view addSubview:scoreViewController.view];
-                [scoreViewController createScoreCells];
-                [scoreViewController animateIn];
-            }
-        }];
+        GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
         
-//        GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
-//
-//        gcViewController.gameCenterDelegate = self;
-//
-//        gcViewController.viewState = GKGameCenterViewControllerStateLeaderboards;
-//        gcViewController.leaderboardIdentifier = leaderboardIdentifier;
-//
-//        [self presentViewController:gcViewController animated:YES completion:nil];
+        gcViewController.gameCenterDelegate = self;
+        
+        gcViewController.viewState = GKGameCenterViewControllerStateLeaderboards;
+        gcViewController.leaderboardIdentifier = leaderboardIdentifier;
+        
+        [self presentViewController:gcViewController animated:YES completion:nil];
     }
 }
 

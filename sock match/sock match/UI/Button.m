@@ -8,23 +8,61 @@
 
 #import "Button.h"
 
-@implementation Button
-@synthesize pressedDownImage;
-@synthesize normalImage;
+@implementation Button{
+    UIImageView* innerImageView;
+    CGFloat innerBarStartWidth;
+    
+    UILabel* textLabel;
+    bool labelDown;
+}
+
+@synthesize imageFrame;
+@synthesize innerImageUp;
+@synthesize innerImageDown;
 @synthesize block;
 @synthesize pressedDown;
 
--(id)initBoxButtonWithFrame:(CGRect)frame withNormalImage:(UIImage *)normalImg pressedDownImage:(UIImage*)pressedDownImg withBlock:(ButtonPressDown)btnPressDown{
-    pressedDownImage = pressedDownImg;
-    normalImage = normalImg;
+const CGFloat innerBar3DOffset = 0.1111111111;
+
+-(id)initBoxButtonWithFrame:(CGRect)frame withText:(NSString*)text withBlock:(ButtonPressDown)btnPressDown{
+    imageFrame = [UIImage imageNamed:@"buttonFrame"];//frameImg;
+    innerImageUp = [UIImage imageNamed:@"buttonInnerUp"];//innerImgUp;
+    innerImageDown = [UIImage imageNamed:@"buttonInnerDown"];//innerImgDown;
     block = btnPressDown;
     
-//    self = [super initWithImage:image highlightedImage:highlightedImage];
-    self = [super initWithFrame:frame];
+    CGFloat aspect = frame.size.width / imageFrame.size.width;
+    
+    self = [super initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, imageFrame.size.height*aspect)];
     self.userInteractionEnabled = true;
     self.layer.magnificationFilter = kCAFilterNearest;
     self.contentMode = UIViewContentModeScaleAspectFit;
-    [self setImage:normalImage];
+    
+    [self setImage:imageFrame];
+    
+    CGFloat leftPadding = 0.025;
+    CGFloat bottomPadding = 0.08333333333;
+    CGFloat x = self.frame.size.width*leftPadding;
+    CGFloat y = self.frame.size.height*bottomPadding;
+    
+    innerBarStartWidth = self.frame.size.width-(x*2);
+    innerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, innerBarStartWidth, self.frame.size.height-(y*2))];
+    innerImageView.layer.magnificationFilter = kCAFilterNearest;
+    innerImageView.contentMode = UIViewContentModeScaleToFill;
+//        innerImageView.layer.borderWidth = 2;
+    [innerImageView setImage:innerImageUp];
+    
+    [self addSubview:innerImageView];
+//    self = [super initWithImage:image highlightedImage:highlightedImage];
+    
+    
+    textLabel = [[UILabel alloc] initWithFrame:CGRectMake(innerImageView.frame.origin.x, innerImageView.frame.origin.y, innerImageView.frame.size.width, innerImageView.frame.size.height-(innerImageView.frame.size.height*innerBar3DOffset))];
+    textLabel.textAlignment = NSTextAlignmentCenter;
+    textLabel.textColor = [UIColor whiteColor];
+    textLabel.adjustsFontSizeToFitWidth = true;
+    textLabel.text = text;
+    textLabel.font = [UIFont systemFontOfSize:40];
+    [self addSubview:textLabel];
+    
     return self;
 }
 
@@ -74,12 +112,22 @@
 
 -(void) setPushedDown {
     self.pressedDown = true;
-    [self setImage:pressedDownImage];
+    [innerImageView setImage:innerImageDown];
+    
+    if(!labelDown){
+        textLabel.frame = CGRectOffset(textLabel.frame, 0, (innerImageView.frame.size.height*innerBar3DOffset));
+        labelDown = true;
+    }
 }
 
 -(void) setPushedUp {
     self.pressedDown = false;
-    [self setImage:normalImage];
+    [innerImageView setImage:innerImageUp];
+    
+    if(labelDown){
+        textLabel.frame = CGRectOffset(textLabel.frame, 0, -(innerImageView.frame.size.height*innerBar3DOffset));
+        labelDown = false;
+    }
 }
 
 @end

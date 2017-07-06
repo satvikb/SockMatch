@@ -27,7 +27,8 @@
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.35];
     
     UIImage* firstNumber = [numberImages objectAtIndex:0];
-    CGFloat aspect = frame.size.height / firstNumber.size.height;
+    CGFloat height = frame.size.height*0.75;
+    CGFloat aspect = height / firstNumber.size.height;
     CGFloat imageWidth = firstNumber.size.width*aspect;
     
     currentDetailImage = [[UIImageView alloc] initWithFrame:CGRectMake((frame.size.width/2)-(imageWidth), -imageWidth/2, imageWidth*2, imageWidth*2)];
@@ -40,7 +41,7 @@
     [currentDetailImage startAnimating];
 //    [self addSubview:currentDetailImage];
     
-    currentNumberImage = [[UIImageView alloc] initWithFrame:CGRectMake((frame.size.width/2)-(imageWidth/2), 0, imageWidth, frame.size.height)];
+    currentNumberImage = [[UIImageView alloc] initWithFrame:CGRectMake((frame.size.width/2)-(imageWidth/2), (frame.size.height-height)/2, imageWidth, height)];
     currentNumberImage.layer.magnificationFilter = kCAFilterNearest;
     currentNumberImage.contentMode = UIViewContentModeScaleAspectFit;
     currentNumberImage.animationImages = numberImages;

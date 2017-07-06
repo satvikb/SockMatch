@@ -30,6 +30,7 @@
     NSMutableArray <NSNumber*>* topConveyorBeltWheelsFrames;
     
     NSMutableArray <UIImageView*>* scoreDigits;
+    UILabel* scoreLabel;
     
     CGFloat timeToAnimateScoreValue;
     CGFloat animateScoreValueTimer;
@@ -60,6 +61,8 @@
     EfficiencyBar* bar;
     UIImage* efficiencyBarFrame;
     UIImage* efficiencyBarInner;
+    
+    DifficultyCurve* difficultyCurve;
 }
 
 @end
@@ -135,7 +138,8 @@
                 currentGameState = Playing;
                 [ws madePairBetweenMainSock:ws.tutorialView.sockOne andOtherSock:ws.tutorialView.sockTwo];
                 [Flurry endTimedEvent:@"tutorial" withParameters:nil];
-                [Storage completeTutorial];
+                //TODO uncomment for final
+//                [Storage completeTutorial];
                 [ws performSelector:@selector(hideTutLabel) withObject:nil afterDelay:5];
             }
         }];
@@ -209,6 +213,7 @@
     sockMatchThreshold = [self propX:0.055];
     
     if(withWarmup == true){
+        difficultyCurve = [[DifficultyCurve alloc] init];
         score = 0;
         efficiency = 100.0;
         
@@ -260,21 +265,50 @@
     topBackground.layer.zPosition = -5;
     [self.view addSubview:topBackground];
     
-    scoreDigits = [[NSMutableArray alloc] init];
-    [self sizeDigits:4];
+//    scoreDigits = [[NSMutableArray alloc] init];
+//    [self sizeDigits:4];
+    
+    scoreLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.65, 0.0725, 0.325, 0.05)]];
+    scoreLabel.text = @"0";
+    scoreLabel.textAlignment = NSTextAlignmentRight;
+    scoreLabel.textColor = [UIColor whiteColor];
+    scoreLabel.font = [UIFont systemFontOfSize:25];
+    [self.view addSubview:scoreLabel];
+    
     
     efficiencyBarFrame = [UIImage imageNamed:@"efficiencybar_frame"];
     efficiencyBarInner = [UIImage imageNamed:@"efficiencybar_inner"];
     
-    bar = [[EfficiencyBar alloc] initWithFrame:[self propToRect:CGRectMake(0.075, 0.05, 0.4, 0.075)] frameImage:efficiencyBarFrame innerImage:efficiencyBarInner];
-    bar.layer.zPosition = 250;
+    bar = [[EfficiencyBar alloc] initWithFrame:[self propToRect:CGRectMake(0.05, 0.0725, 0.4, 0.05)] frameImage:efficiencyBarFrame innerImage:efficiencyBarInner];
+//    bar.layer.borderWidth = 2;
+    bar.layer.zPosition = 100;
     [self.view addSubview:bar];
     
     //    [self createCountdown:^void{}];
+    
+    UILabel* text_factoryEfficiency = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.05, 0.035, 0.4, 0.0375)]];
+//    text_factoryEfficiency.layer.borderWidth = 2;
+    text_factoryEfficiency.text = @"factory efficiency";
+    text_factoryEfficiency.layer.zPosition = 101;
+    text_factoryEfficiency.textColor = [UIColor whiteColor];
+    text_factoryEfficiency.adjustsFontSizeToFitWidth = true;
+    text_factoryEfficiency.font = [UIFont systemFontOfSize:25];
+    [self.view addSubview:text_factoryEfficiency];
+    
+    UILabel* text_score = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.825, 0.035, 0.15, 0.0375)]];
+    text_score.text = @"score";
+    text_score.layer.zPosition = 102;
+    text_score.textAlignment = NSTextAlignmentRight;
+    text_score.textColor = [UIColor whiteColor];
+    text_score.font = [UIFont systemFontOfSize:20];
+    
+    [self.view addSubview:text_score];
+    
+    
 }
 
 -(void)createCountdown:(void (^)(void)) completion{
-    Countdown* testCD = [[Countdown alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.45, 1, 0.1)] numberImages:countdownNumbers detailAnimationImages:countdownDetails];
+    Countdown* testCD = [[Countdown alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.475, 1, 0.1)] numberImages:countdownNumbers detailAnimationImages:countdownDetails];
     
     __unsafe_unretained typeof(Countdown*) weak = testCD;
     
@@ -392,6 +426,7 @@
 
 -(bool)loadGame:(GameData*)game{
     if(game.efficiency > 0){
+        [self forceSetDiffucultyCurve:game.difficultyCurve];
         [self forceSetScore:game.score];
         [self forceSetEfficiency:game.efficiency];
         [self loadSocksFromSockData:game.sockData];
@@ -403,11 +438,15 @@
 
 -(void)saveGame{
     if(efficiency > 0){
-        [[GameData sharedGameData] saveGameWithScore:self.score efficiency:self.efficiency andSocks:[self getSockDataToSaveGame]];
+        [[GameData sharedGameData] saveGameWithScore:self.score efficiency:self.efficiency socks:[self getSockDataToSaveGame] andDifficulty:difficultyCurve];
     }else if(efficiency <= 0){
         [self forceEndGame];
     }
     //    [[GameData sharedGameData] save:score socks:[self getSockDataToSaveGame]];
+}
+
+-(void)forceSetDiffucultyCurve:(DifficultyCurve*)curve{
+    difficultyCurve = curve;
 }
 
 -(void)forceSetScore:(int)aNewScore {
@@ -471,6 +510,7 @@
                             if(tutorialView != nil){
                                 NSLog(@"animating tutorial");
                                 [tutorialView animateSockOneToX:[self propX:0.5] withBeltMoveSpeed:beltMoveSpeed/100.0];
+                                [tutorialView focusOnRect:[self propToRect:CGRectMake(0.01, 0.01, 0.45, 0.15)]];
                                 [self switchGameStateTo:Tutorial];
                             }
                         }else{
@@ -560,7 +600,7 @@
     for(Sock* s in socks){
         //TODO confirm conditions for saving sock
         if(s.inAPair == false && s.validSock){
-            SockData* data = [[SockData alloc] initWithOrigin:s.frame.origin id:s.sockId size:s.sockSize onConveyorBelt:s.onConvayorBelt];
+            SockData* data = [[SockData alloc] initWithOrigin:[s getCoreRect].origin id:s.sockId size:s.sockSize onConveyorBelt:s.onConvayorBelt];
             [sockData addObject:data];
         }else if(s.inAPair){
             [self gotPoint];
@@ -778,32 +818,34 @@
 }
 
 -(void) setScoreImages:(int) s {
-    NSString* scoreStr = [NSString stringWithFormat:@"%i", s];
-    scoreStr = [scoreStr substringToIndex:MIN(6, scoreStr.length)];
+    scoreLabel.text = [NSString stringWithFormat:@"%i", s];
     
-    if(scoreStr.length != scoreDigits.count){
-        [self sizeDigits:(int)scoreStr.length > 6 ? 6 : (int)scoreStr.length];
-    }
-    
-    for(int i = 0; i < scoreDigits.count; i++){
-        if(i < 6){
-            UIImageView* digitView = [scoreDigits objectAtIndex:i];
-            [digitView setImage: nil];
-        }
-    }
-    
-    for (int i = 0; i < scoreStr.length; i++) {
-        int stringIndex = (int)scoreStr.length-1-i;
-        int imageViewIndex = i;
-        unichar ch = [scoreStr characterAtIndex:stringIndex];
-        NSString* digit = [NSString stringWithFormat:@"%c", ch];
-        if(scoreDigits.count >= i){
-            UIImageView* digitView = [scoreDigits objectAtIndex:imageViewIndex];
-            UIImage* digitImage = [scoreDigitImages objectAtIndex:digit.intValue];
-            
-            [digitView setImage: digitImage];
-        }
-    }
+//    NSString* scoreStr = [NSString stringWithFormat:@"%i", s];
+//    scoreStr = [scoreStr substringToIndex:MIN(6, scoreStr.length)];
+//
+//    if(scoreStr.length != scoreDigits.count){
+//        [self sizeDigits:(int)scoreStr.length > 6 ? 6 : (int)scoreStr.length];
+//    }
+//
+//    for(int i = 0; i < scoreDigits.count; i++){
+//        if(i < 6){
+//            UIImageView* digitView = [scoreDigits objectAtIndex:i];
+//            [digitView setImage: nil];
+//        }
+//    }
+//
+//    for (int i = 0; i < scoreStr.length; i++) {
+//        int stringIndex = (int)scoreStr.length-1-i;
+//        int imageViewIndex = i;
+//        unichar ch = [scoreStr characterAtIndex:stringIndex];
+//        NSString* digit = [NSString stringWithFormat:@"%c", ch];
+//        if(scoreDigits.count >= i){
+//            UIImageView* digitView = [scoreDigits objectAtIndex:imageViewIndex];
+//            UIImage* digitImage = [scoreDigitImages objectAtIndex:digit.intValue];
+//
+//            [digitView setImage: digitImage];
+//        }
+//    }
 }
 
 -(void)lostEfficiency:(CGFloat)efficiencyLost {
@@ -834,21 +876,13 @@
 -(void) generateSock{
     CGFloat y = [Functions randFromMin:0.15 toMax:0.3];
     
-    int sockId = [self getRandomSockId];
-    SockSize size = [self getRandomSockSize];
+    int sockId = [difficultyCurve getNextSockType];
+    SockSize size = [difficultyCurve getNextSockSize];
     
     CGPoint newSockPos = [self propToRect:CGRectMake(1.0, y, 0, 0)].origin;
     //imageName:[NSString stringWithFormat:@"sock%i", sockId]
     [self createSockAtPos:newSockPos sockSize:size sockId:sockId onBelt:true];
     
-}
-
--(int) getRandomSockId {
-    return [Functions randomNumberBetween:0 maxNumber:4];
-}
-
--(SockSize) getRandomSockSize {
-    return [Functions randomNumberBetween:0 maxNumber:2];
 }
 
 -(void) decreaseSockLayerPositions {

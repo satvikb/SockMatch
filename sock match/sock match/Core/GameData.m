@@ -40,10 +40,11 @@ static NSString* const gameDataSocksKey = @"socks";
     return [[GameData alloc] init];
 }
 
--(void)saveGameWithScore:(int)score efficiency:(int)efficiency andSocks:(NSMutableArray<SockData*>*)sockData {
+-(void)saveGameWithScore:(int)score efficiency:(int)efficiency socks:(NSMutableArray<SockData*>*)sockData andDifficulty:(DifficultyCurve *)difficultyCurve {
     self.score = score;
     self.efficiency = efficiency;
     self.sockData = sockData;
+    self.difficultyCurve = difficultyCurve;
     NSData* encodedData = [NSKeyedArchiver archivedDataWithRootObject: self];
     [encodedData writeToFile:[GameData filePath] atomically:YES];
 }
@@ -69,8 +70,8 @@ static NSString* const gameDataSocksKey = @"socks";
     self.score = 0;
     self.efficiency = 100.0;
     self.sockData = [[NSMutableArray alloc] init];
-    
-    [self saveGameWithScore:self.score efficiency:self.efficiency andSocks:self.sockData];
+    self.difficultyCurve = [[DifficultyCurve alloc] init];
+    [self saveGameWithScore:self.score efficiency:self.efficiency socks:self.sockData andDifficulty:self.difficultyCurve];
 }
 
 +(NSString*)filePath

@@ -15,6 +15,7 @@
 #import "GameData.h"
 #import "Countdown.h"
 #import "EfficiencyBar.h"
+#import "DifficultyCurve.h"
 
 @protocol GameDelegate;
 

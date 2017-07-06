@@ -174,6 +174,15 @@
     }];
 }
 
+-(void)focusOnRect:(CGRect)rect{
+    FocusOnRect* focus = [[FocusOnRect alloc] initWithRectToFocusOn:rect screenSize:UIScreen.mainScreen.bounds.size];
+    
+    [focus animateToOpacity:0.3 withDuration:2 withCompletion:^(BOOL completed){
+        
+    }];
+    [self addSubview:focus];
+}
+
 -(CGFloat) propX:(CGFloat) x {
     return x*self.frame.size.width;
 }

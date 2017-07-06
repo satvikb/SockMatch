@@ -32,6 +32,8 @@
 		4093A0A11EF1D400008FA288 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */; };
 		40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D501F0833060051D180 /* GCLeaderboardViewController.m */; };
 		40D12D541F084C690051D180 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D531F084C690051D180 /* Button.m */; };
+		40D77E2A1F0DAFAD004577D7 /* DifficultyCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D77E291F0DAFAD004577D7 /* DifficultyCurve.m */; };
+		40D77E2D1F0E68CE004577D7 /* FocusOnRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D77E2C1F0E68CE004577D7 /* FocusOnRect.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +84,10 @@
 		40D12D501F0833060051D180 /* GCLeaderboardViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCLeaderboardViewController.m; sourceTree = "<group>"; };
 		40D12D521F084C690051D180 /* Button.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
 		40D12D531F084C690051D180 /* Button.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Button.m; sourceTree = "<group>"; };
+		40D77E281F0DAFAD004577D7 /* DifficultyCurve.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DifficultyCurve.h; sourceTree = "<group>"; };
+		40D77E291F0DAFAD004577D7 /* DifficultyCurve.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DifficultyCurve.m; sourceTree = "<group>"; };
+		40D77E2B1F0E68CE004577D7 /* FocusOnRect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FocusOnRect.h; sourceTree = "<group>"; };
+		40D77E2C1F0E68CE004577D7 /* FocusOnRect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FocusOnRect.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +143,8 @@
 				40728D361F099FB3008D2F36 /* GameData.m */,
 				40728D381F09A5E8008D2F36 /* SockData.h */,
 				40728D391F09A5E8008D2F36 /* SockData.m */,
+				40D77E281F0DAFAD004577D7 /* DifficultyCurve.h */,
+				40D77E291F0DAFAD004577D7 /* DifficultyCurve.m */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -164,6 +172,8 @@
 				40D12D531F084C690051D180 /* Button.m */,
 				40154E6B1F0D9177005AFFDD /* EfficiencyBar.h */,
 				40154E6C1F0D9177005AFFDD /* EfficiencyBar.m */,
+				40D77E2B1F0E68CE004577D7 /* FocusOnRect.h */,
+				40D77E2C1F0E68CE004577D7 /* FocusOnRect.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -314,6 +324,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40D77E2A1F0DAFAD004577D7 /* DifficultyCurve.m in Sources */,
 				40849FAB1F066B2700953616 /* TutorialView.m in Sources */,
 				40728D3A1F09A5E8008D2F36 /* SockData.m in Sources */,
 				404D1B1A1F060DE6003C9383 /* Lockbox.m in Sources */,
@@ -323,6 +334,7 @@
 				4037169D1F042AB40070C3A6 /* Forklift.m in Sources */,
 				40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */,
 				408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */,
+				40D77E2D1F0E68CE004577D7 /* FocusOnRect.m in Sources */,
 				408E6B5A1EEF88180011C450 /* main.m in Sources */,
 				40728D371F099FB3008D2F36 /* GameData.m in Sources */,
 				40154E6D1F0D9177005AFFDD /* EfficiencyBar.m in Sources */,

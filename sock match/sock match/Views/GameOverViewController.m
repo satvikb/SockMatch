@@ -33,13 +33,11 @@
     gameOverText.contentMode = UIViewContentModeScaleAspectFit;
     [self.view addSubview:gameOverText];
     
-    UIImage* againImage = [self image:[UIImage imageNamed:@"again"] WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
-    UIImage* againDownImage = [self image:[UIImage imageNamed:@"againPressed"] WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
-    againButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)] withNormalImage:againImage pressedDownImage:againDownImage withBlock:^void{
-//        [self shareSheet];
+//    UIImage* againImage = [self image:[UIImage imageNamed:@"again"] WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
+//    UIImage* againDownImage = [self image:[UIImage imageNamed:@"againPressed"] WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
+    againButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)] withText:@"home" withBlock:^void{
         [self pressMenuButton];
     }];
-    
     [self.view addSubview:againButton];
 }
 

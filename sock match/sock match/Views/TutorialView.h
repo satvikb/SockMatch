@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Sock.h"
 #import "Functions.h"
+#import "FocusOnRect.h"
 
 @interface TutorialView : UIView
 
@@ -28,6 +29,7 @@ typedef void (^SockTwoTouchMove)(Sock* s);
 -(void)animateSockTwoToX:(CGFloat)xPos withBeltMoveSpeed:(CGFloat)beltMoveSpeed;
 -(void)animateTutorialLabelIn;
 -(void)animateTutorialLabelOut;
+-(void)focusOnRect:(CGRect)rect;
 
 @property (nonatomic, copy) AnimateSockOneComplete animateSockOneCompleteBlock;
 @property (nonatomic, copy) AnimateSockTwoComplete animateSockTwoCompleteBlock;

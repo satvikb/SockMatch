@@ -15,12 +15,13 @@ typedef void (^ButtonPressDown)(void);
 }
 
 @property (nonatomic, copy) ButtonPressDown block;
-@property (nonatomic, copy) UIImage* normalImage;
-@property (nonatomic, copy) UIImage* pressedDownImage;
+@property (nonatomic, copy) UIImage* imageFrame;
+@property (nonatomic, copy) UIImage* innerImageUp;
+@property (nonatomic, copy) UIImage* innerImageDown;
 @property (nonatomic, assign) bool pressedDown;
 -(void) setPushedDown;
 -(void) setPushedUp;
 
--(id)initBoxButtonWithFrame:(CGRect)frame withNormalImage:(UIImage *)normalImg pressedDownImage:(UIImage*)pressedDownImg withBlock:(ButtonPressDown)btnPressDown;
-    
+-(id)initBoxButtonWithFrame:(CGRect)frame withText:(NSString*)text withBlock:(ButtonPressDown)btnPressDown;
+
 @end
