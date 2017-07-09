@@ -17,10 +17,11 @@
 #import "EfficiencyBar.h"
 #import "DifficultyCurve.h"
 #import "TouchImage.h"
+#import "InfoBanner.h"
 
 @protocol GameDelegate;
 
-@interface GameViewController : UIViewController{
+@interface GameViewController : UIViewController <DifficultyDelegate>{
     
 }
 
@@ -69,8 +70,8 @@
 
 -(void)updateBarForEfficiency:(CGFloat)efficiency;
 
--(void)animateInPauseButton;
--(void)animateOutPauseButton;
+-(void)animateInExtraUI;
+-(void)animateOutExtraUI;
 @end
 
 @protocol GameDelegate <NSObject>

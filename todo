@@ -7,7 +7,6 @@ gameplay
 		-introduce more sock types
 		-introduce different sizes (S, M, L)
 		-increase variability of generated socks (less likely to create socks already on screen)
-	-factory efficiency instead of lives
 	-combos
 		-extra score (+1 or +x based on combo's in a row) when multiple socks are packaged at once
 	-gameover
@@ -30,7 +29,6 @@ clearing socks on game over
 	-maybe don't remove socks and allow use on next round? (socks on belt are animated out on belt while slowing down, prevent movement)
 
 ui
-	-pause button
 	-switch view
 		-shown while switching views, allows for game view to load and remove socks for game over
 		-or just for loading, for game over the 'camera' can move to the right to the game over screen
@@ -77,9 +75,7 @@ meta
 	-good icon
 	-splash screen
 
-
 bugs
-	-socks on edge of screen
 	-matching socks while stopping game is buggy
 	-matching socks near belt overlap conveyor belt/wheels
 	-prevent forklift overlapping (maybe have four sections with one in each section)

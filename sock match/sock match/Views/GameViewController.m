@@ -61,6 +61,9 @@
     UIImage* efficiencyBarFrame;
     UIImage* efficiencyBarInner;
     
+    UILabel* text_factoryEfficiency;
+    UILabel* text_score;
+    
     DifficultyCurve* difficultyCurve;
     
     bool animatingInPauseView;
@@ -235,6 +238,7 @@
     
     if(withWarmup == true){
         difficultyCurve = [[DifficultyCurve alloc] init];
+        
         score = 0;
         efficiency = 100.0;
         [self forceSetScore:score];
@@ -255,6 +259,8 @@
         animateWheelTimer = 0;
     }
     
+    difficultyCurve.delegate = self;
+
     timeForClawAnimation = 0.05;
     clawAnimationTimer = 0;
     
@@ -300,11 +306,11 @@
     efficiencyBarFrame = [UIImage imageNamed:@"efficiencybar_frame"];
     efficiencyBarInner = [UIImage imageNamed:@"efficiencybar_inner"];
     
-    bar = [[EfficiencyBar alloc] initWithFrame:[self propToRect:CGRectMake(0.15, 0.0725, 0.4, 0.05)] frameImage:efficiencyBarFrame innerImage:efficiencyBarInner];
+    bar = [[EfficiencyBar alloc] initWithFrame:[self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.05)] frameImage:efficiencyBarFrame innerImage:efficiencyBarInner];
     bar.layer.zPosition = 100;
     [self.view addSubview:bar];
     
-    UILabel* text_factoryEfficiency = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.15, 0.03, 0.4, 0.0375)]];
+    text_factoryEfficiency = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.0375)]];
 //    text_factoryEfficiency.layer.borderWidth = 2;
     text_factoryEfficiency.text = @"factory efficiency";
     text_factoryEfficiency.layer.zPosition = 101;
@@ -313,7 +319,7 @@
     text_factoryEfficiency.font = [UIFont systemFontOfSize:25];
     [self.view addSubview:text_factoryEfficiency];
     
-    UILabel* text_score = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.825, 0.035, 0.15, 0.0375)]];
+    text_score = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.825, 0.035, 0.15, 0.0375)]];
     text_score.text = @"score";
     text_score.layer.zPosition = 102;
     text_score.textAlignment = NSTextAlignmentRight;
@@ -367,15 +373,19 @@
     [pauseView addSubview:pauseViewContinueText];
 }
 
--(void)animateInPauseButton{
+-(void)animateInExtraUI{
     [UIView animateWithDuration:0.5 animations:^void{
         pauseButton.frame = [self propToRect:CGRectMake(0.025, 0.0325, 0.1, 0.075)];
+        bar.frame = [self propToRect:CGRectMake(0.15, 0.0725, 0.4, 0.05)];
+        text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, 0.03, 0.4, 0.0375)];
     }];
 }
 
--(void)animateOutPauseButton{
+-(void)animateOutExtraUI{
     [UIView animateWithDuration:0.5 animations:^void{
         pauseButton.frame = [self propToRect:CGRectMake(-0.1, 0.0325, 0.1, 0.075)];
+        bar.frame = [self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.05)];
+        text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.0375)];
     }];
 }
 
@@ -906,50 +916,24 @@
 }
 
 -(void) gotPoint {
-    [difficultyCurve reduceTimeToGenerateSock];
+    [difficultyCurve tickDifficulty];
     score += 1;
+    [self setScoreImages:score];
 }
 
 -(void) animateScore:(int)times {
-    if(currentAnimatingScore != score){
-        for (int i = 0; i < times; i++) {
-            if(currentAnimatingScore != score){
-                currentAnimatingScore = currentAnimatingScore < score ? currentAnimatingScore+1 : currentAnimatingScore-1;
-                [self setScoreImages:currentAnimatingScore];
-            }
-        }
-    }
+//    if(currentAnimatingScore != score){
+//        for (int i = 0; i < times; i++) {
+//            if(currentAnimatingScore != score){
+//                currentAnimatingScore = currentAnimatingScore < score ? currentAnimatingScore+1 : currentAnimatingScore-1;
+//                [self setScoreImages:currentAnimatingScore];
+//            }
+//        }
+//    }
 }
 
 -(void) setScoreImages:(int) s {
     scoreLabel.text = [NSString stringWithFormat:@"%i", s];
-    
-//    NSString* scoreStr = [NSString stringWithFormat:@"%i", s];
-//    scoreStr = [scoreStr substringToIndex:MIN(6, scoreStr.length)];
-//
-//    if(scoreStr.length != scoreDigits.count){
-//        [self sizeDigits:(int)scoreStr.length > 6 ? 6 : (int)scoreStr.length];
-//    }
-//
-//    for(int i = 0; i < scoreDigits.count; i++){
-//        if(i < 6){
-//            UIImageView* digitView = [scoreDigits objectAtIndex:i];
-//            [digitView setImage: nil];
-//        }
-//    }
-//
-//    for (int i = 0; i < scoreStr.length; i++) {
-//        int stringIndex = (int)scoreStr.length-1-i;
-//        int imageViewIndex = i;
-//        unichar ch = [scoreStr characterAtIndex:stringIndex];
-//        NSString* digit = [NSString stringWithFormat:@"%c", ch];
-//        if(scoreDigits.count >= i){
-//            UIImageView* digitView = [scoreDigits objectAtIndex:imageViewIndex];
-//            UIImage* digitImage = [scoreDigitImages objectAtIndex:digit.intValue];
-//
-//            [digitView setImage: digitImage];
-//        }
-//    }
 }
 
 -(void)lostEfficiency:(CGFloat)efficiencyLost {
@@ -1291,10 +1275,10 @@
     s.allowMovement = false;
     
     [claw animateWithSpeed:0.5 withCompletion:^void {
-        if(point == true){
-            [self pointForSock:s];
-        }
-        
+//        if(point == true){
+//            [self pointForSock:s];
+//        }
+//
         [s removeFromSuperview];
         [socks removeObject:s];
         
@@ -1328,6 +1312,16 @@
     if(s.validSock == true){
         [self gotPoint];
     }
+}
+
+-(void)newSockType{
+    [self createInfoBanner:3 text:@"new sock type!"];
+}
+
+-(void)createInfoBanner:(int)times text:(NSString*)text{
+    InfoBanner* banner = [[InfoBanner alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.45, 1, 0.1)] repeatTime:times text:text];
+    banner.layer.zPosition = 120;
+    [self.view addSubview:banner];
 }
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{

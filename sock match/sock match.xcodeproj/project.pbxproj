@@ -10,6 +10,7 @@
 		40154E6D1F0D9177005AFFDD /* EfficiencyBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 40154E6C1F0D9177005AFFDD /* EfficiencyBar.m */; };
 		401DA09B1EF882CF00B7CF6E /* Claw.m in Sources */ = {isa = PBXBuildFile; fileRef = 401DA09A1EF882CF00B7CF6E /* Claw.m */; };
 		4028FEA31F023BF200E06D31 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4028FEA21F023BF200E06D31 /* GameKit.framework */; };
+		4031535A1F10D1B000203779 /* InfoBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 403153591F10D1B000203779 /* InfoBanner.m */; };
 		4037169D1F042AB40070C3A6 /* Forklift.m in Sources */ = {isa = PBXBuildFile; fileRef = 4037169C1F042AB40070C3A6 /* Forklift.m */; };
 		403A89281EF7B2D700C81DB4 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403A89271EF7B2D700C81DB4 /* ContainerViewController.m */; };
 		403A892C1EF7C56800C81DB4 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 403A892A1EF7C49000C81DB4 /* MenuViewController.m */; };
@@ -43,6 +44,8 @@
 		401DA0991EF882CF00B7CF6E /* Claw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Claw.h; sourceTree = "<group>"; };
 		401DA09A1EF882CF00B7CF6E /* Claw.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Claw.m; sourceTree = "<group>"; };
 		4028FEA21F023BF200E06D31 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		403153581F10D1B000203779 /* InfoBanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InfoBanner.h; sourceTree = "<group>"; };
+		403153591F10D1B000203779 /* InfoBanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoBanner.m; sourceTree = "<group>"; };
 		4037169B1F042AB40070C3A6 /* Forklift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Forklift.h; sourceTree = "<group>"; };
 		4037169C1F042AB40070C3A6 /* Forklift.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Forklift.m; sourceTree = "<group>"; };
 		403A89261EF7B2D700C81DB4 /* ContainerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContainerViewController.h; sourceTree = "<group>"; };
@@ -179,6 +182,8 @@
 				40D77E2C1F0E68CE004577D7 /* FocusOnRect.m */,
 				40D77E2E1F0ECF4D004577D7 /* TouchImage.h */,
 				40D77E2F1F0ECF4D004577D7 /* TouchImage.m */,
+				403153581F10D1B000203779 /* InfoBanner.h */,
+				403153591F10D1B000203779 /* InfoBanner.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -340,6 +345,7 @@
 				40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */,
 				40D77E301F0ECF4D004577D7 /* TouchImage.m in Sources */,
 				408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */,
+				4031535A1F10D1B000203779 /* InfoBanner.m in Sources */,
 				40D77E2D1F0E68CE004577D7 /* FocusOnRect.m in Sources */,
 				408E6B5A1EEF88180011C450 /* main.m in Sources */,
 				40728D371F099FB3008D2F36 /* GameData.m in Sources */,

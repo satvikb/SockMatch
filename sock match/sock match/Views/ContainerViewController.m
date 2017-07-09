@@ -130,7 +130,7 @@
         }
         
         [gameController startGame:loadingData == true ? false : true];
-        [gameController animateInPauseButton];
+        [gameController animateInExtraUI];
     }];
 }
 
@@ -141,7 +141,7 @@
     [gameOverController setScore:score];
     [self animateFromViewController:game toPoint:CGPointZero toViewController:gameOverController toPoint:CGPointZero animationFinished:^{
         currentAppState = GameOver;
-        [game animateOutPauseButton];
+        [game animateOutExtraUI];
         NSLog(@"Switched from game to game over %@ %@", NSStringFromCGRect(game.view.frame), gameOverController.view.backgroundColor);
     }];
 }
@@ -152,7 +152,7 @@
     [self animateFromViewController:gameOver toPoint:[self propToRect:CGRectMake(1, 0, 0, 0)].origin toViewController:menuController toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin animationFinished:^{
         currentAppState = MainMenu;
         [gameController updateBarForEfficiency:100.0];
-        NSLog(@"transitioned from game over to menu %@", NSStringFromCGRect(gameController.view.frame));
+        NSLog(@"transitioned: game over to menu %@", NSStringFromCGRect(gameController.view.frame));
     }];
 }
 
