@@ -11,6 +11,7 @@
 #import "Flurry.h"
 #import "Storage.h"
 
+#define PAUSE_VIEW_TAG (10)
 #define SOCK_HIGHEST_LAYER (50)
 
 @interface GameViewController () {
@@ -67,6 +68,11 @@
     DifficultyCurve* difficultyCurve;
     
     bool animatingInPauseView;
+    
+    CGFloat efficiencyTickTimer;
+    CGFloat timeToTickEfficiency;
+    
+    NSMutableArray <InfoBanner*>* infoBanners;
 }
 
 @end
@@ -112,7 +118,6 @@
         tutorialView = [[TutorialView alloc] initWithScreenFrame:self.view.frame andSockImage:[sockMainImages objectAtIndex:0]];
         tutorialView.layer.zPosition = 110;
         
-        
         __unsafe_unretained typeof(self) ws = self;
         
         [tutorialView setAnimateSockOneCompleteBlock:^(Sock* s){
@@ -125,7 +130,7 @@
             if(ws.tutorialView.tutorialState <= 3){
                 if(!onBelt){
                     timerPaused = false;
-                    [ws.tutorialView animateSockTwoToX:[ws propX:0.5] withBeltMoveSpeed:beltMoveSpeed/100.0];
+                    [ws.tutorialView animateSockTwoToX:[ws propX:0.5] withBeltMoveSpeed:[ws getFinalBeltMoveSpeed:ws.beltMoveSpeed]];
                     ws.tutorialView.sockOne.allowMovement = false;
                 }
             }
@@ -143,8 +148,8 @@
                 [ws madePairBetweenMainSock:ws.tutorialView.sockOne andOtherSock:ws.tutorialView.sockTwo];
                 [ws hideTutLabel];
                 
-                UILabel* efficiencyInfo = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.65, 0.25)]];
-                efficiencyInfo.text = @"this is the efficiency of the factory.\nletting socks pass or building up socks reduces the efficiency.\n when efficiency reaches 0, you lose.";
+                UILabel* efficiencyInfo = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.75, 0.25)]];
+                efficiencyInfo.text = @"this is the efficiency of the factory.\nletting socks through or building up socks reduces the efficiency.\n when efficiency reaches 0, you lose.";
                 efficiencyInfo.textAlignment = NSTextAlignmentCenter;
                 efficiencyInfo.numberOfLines = 0;
                 efficiencyInfo.layer.borderWidth = 2;
@@ -163,7 +168,7 @@
                     currentGameState = Playing;
                     [Flurry endTimedEvent:@"tutorial" withParameters:nil];
                     //TODO uncomment for final
-                    //                [Storage completeTutorial];
+                    [Storage completeTutorial];
                     [ws performSelector:@selector(hideTutLabel) withObject:nil afterDelay:5];
                 }];
             }
@@ -193,9 +198,9 @@
     boxAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_box"] withYRow:5 withXColumn:4 maxFrames:0];
     clawAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_claw"] withYRow:1 withXColumn:1 maxFrames:0];
     wheelFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_wheels"] withYRow:1 withXColumn:4 maxFrames:0];
-    sockPackages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockPackage"] withYRow:5 withXColumn:5 maxFrames:5];
+    sockPackages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockPackage"] withYRow:5 withXColumn:5 maxFrames:8];
     sockPackageSizes = [self getSplitImagesFromImage:[UIImage imageNamed:@"packageSizes"] withYRow:1 withXColumn:3 maxFrames:0];
-    sockMainImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockMain"] withYRow:5 withXColumn:5 maxFrames:5];
+    sockMainImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockMain"] withYRow:5 withXColumn:5 maxFrames:8];
     forkLiftAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"forklift"] withYRow:3 withXColumn:1 maxFrames:2];
     emissionAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"emissions"] withYRow:5 withXColumn:1 maxFrames:0];
     scoreDigitImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"numbers"] withYRow:1 withXColumn:10 maxFrames:0];
@@ -275,6 +280,9 @@
     
     animateBoxTimer = 0;
     animateBoxInterval = 0.005;
+    
+    efficiencyTickTimer = 0;
+    timeToTickEfficiency = 1;
 }
 
 -(void)setupArrays{
@@ -282,6 +290,7 @@
     claws = [[NSMutableArray alloc] init];
     forklifts = [[NSMutableArray alloc] init];
     socksBeingAnimatedIntoBox = [[NSMutableArray alloc] init];
+    infoBanners = [[NSMutableArray alloc] init];
 }
 
 -(void)createUI {
@@ -308,12 +317,14 @@
     
     bar = [[EfficiencyBar alloc] initWithFrame:[self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.05)] frameImage:efficiencyBarFrame innerImage:efficiencyBarInner];
     bar.layer.zPosition = 100;
+    bar.tag = 13;
     [self.view addSubview:bar];
     
     text_factoryEfficiency = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.0375)]];
 //    text_factoryEfficiency.layer.borderWidth = 2;
     text_factoryEfficiency.text = @"factory efficiency";
     text_factoryEfficiency.layer.zPosition = 101;
+    text_factoryEfficiency.tag = 12;
     text_factoryEfficiency.textColor = [UIColor whiteColor];
     text_factoryEfficiency.adjustsFontSizeToFitWidth = true;
     text_factoryEfficiency.font = [UIFont systemFontOfSize:25];
@@ -335,7 +346,8 @@
     __unsafe_unretained typeof(self) ws = self;
     pauseButton = [[TouchImage alloc] initWithFrame:[self propToRect:CGRectMake(-0.1, 0.0325, 0.1, 0.075)] image:[UIImage imageNamed:@"pause"]];
 //    pauseButton.layer.borderWidth = 2;
-    pauseButton.layer.zPosition = 105;
+    pauseButton.layer.zPosition = 150;
+    pauseButton.tag = 11;
     [pauseButton setBlock:^void{
         NSLog(@"pause");
         
@@ -351,7 +363,8 @@
     
     pauseView = [[UIView alloc] initWithFrame:self.view.frame];
     pauseView.layer.opacity = 0;
-    pauseView.layer.zPosition = 110;
+    pauseView.layer.zPosition = 500;
+    pauseView.tag = PAUSE_VIEW_TAG;
     pauseView.backgroundColor = [UIColor blackColor];
     
     UILabel* pauseViewPauseText = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.1)]];
@@ -371,6 +384,8 @@
     pauseViewContinueText.font = [UIFont systemFontOfSize:20];
     pauseViewContinueText.adjustsFontSizeToFitWidth = true;
     [pauseView addSubview:pauseViewContinueText];
+    
+//    [self createInfoBanner:0 text:@"test should pause"];
 }
 
 -(void)animateInExtraUI{
@@ -398,7 +413,7 @@
             pauseView.layer.opacity = 0.75;
         } completion:^(BOOL completed){
             animatingInPauseView = false;
-            
+            [self pauseAllSubviewAnimations];
         }];
         animatingInPauseView = true;
     }
@@ -410,12 +425,32 @@
             pauseView.layer.opacity = 0;
         } completion:^(BOOL completed){
             [pauseView removeFromSuperview];
+            [self disableSockMovement];
             [self createCountdown:^{
+                [self enableSockMovement];
                 currentGameState = Playing; //todo use function to switch
                 timerPaused = false;
                 animatingInPauseView = false;
+                [self resumeAllSubviewAnimations];
             }];
         }];
+    }
+}
+
+-(void)pauseAllSubviewAnimations{
+    for(UIView* view in self.view.subviews){
+        //todo
+        if(view.tag != PAUSE_VIEW_TAG && view.tag != 11 && view.tag != 12 && view.tag != 13){
+            [view pauseAnimations];
+        }
+    }
+}
+
+-(void)resumeAllSubviewAnimations{
+    for(UIView* view in self.view.subviews){
+        if(view.tag != PAUSE_VIEW_TAG && view.tag != 11 && view.tag != 12 && view.tag != 13){
+            [view resumeAnimations];
+        }
     }
 }
 
@@ -591,7 +626,7 @@
         [self handleClawAnimation: delta];
         [self handleForkliftAnimation:delta];
         [self animateAllSockBoxes:delta];
-        
+        [self handleTickEfficiency:delta];
         //TODO remove this system or make it more effiecent
         animateScoreValueTimer += tmr.duration;
         
@@ -623,7 +658,7 @@
                         if(doingTutorial){
                             if(tutorialView != nil){
                                 NSLog(@"animating tutorial");
-                                [tutorialView animateSockOneToX:[self propX:0.5] withBeltMoveSpeed:beltMoveSpeed/100.0];
+                                [tutorialView animateSockOneToX:[self propX:0.5] withBeltMoveSpeed:[self getFinalBeltMoveSpeed:beltMoveSpeed]];
                                 [self switchGameStateTo:Tutorial];
                             }
                         }
@@ -653,6 +688,10 @@
     }
 }
 
+-(CGFloat)getFinalBeltMoveSpeed:(CGFloat)baseSpeed{
+    return (baseSpeed/100.0)*difficultyCurve.beltMoveSpeedMultiplier;
+}
+
 -(void)handleSaveGameTimer:(CGFloat)delta{
     saveGameTimer += delta;
     if(saveGameTimer > saveGameInterval){
@@ -668,7 +707,9 @@
         [self switchGameStateTo:WarmingUp];
     }else{
         [self disableSockMovement];
+        [self pauseAllSubviewAnimations];
         [self createCountdown:^void{
+            [self resumeAllSubviewAnimations];
             [self enableSockMovement];
             [self switchGameStateTo:Playing];
         }];
@@ -694,6 +735,7 @@
     
     if([self canEndGame]){
         [self forceEndGame];
+        [self removeInfoBanners];
         [self cleanUpSocksWithClaws];
         [self transitionToGameOver];
         [self switchGameStateTo:NotPlaying];
@@ -706,6 +748,12 @@
     [Flurry endTimedEvent:@"game" withParameters:@{@"score":[NSNumber numberWithInt:score], @"numSocks":[self analyticsNumSocks]}];
     if([self.delegate respondsToSelector:@selector(gameEndScore:)]){
         [self.delegate gameEndScore:score];
+    }
+}
+
+-(void)removeInfoBanners{
+    for(InfoBanner* f in infoBanners){
+        [f stopAnimating];
     }
 }
 
@@ -736,21 +784,6 @@
     
     return [NSNumber numberWithInt:i];
 }
-//-(NSDictionary*)analyticsWithSocks{
-//
-//    NSMutableDictionary<NSNumber*, NSDictionary*>* analytics = [[NSMutableDictionary alloc] init];
-////    NSMutableDictionary<NSNumber*, NSDictionary*>
-//    int i = 0;
-//    for(Sock* sock in socks){
-//        if(!sock.inAPair){
-//            NSDictionary* data = @{[NSNumber numberWithInt:i] : @{@"sockId":[NSNumber numberWithInt:sock.sockId], @"size":[NSNumber numberWithInt:sock.sockSize], @"position":NSStringFromCGPoint([sock getCoreRect].origin)}};
-////            [analytics addObject:data];
-//            [analytics addEntriesFromDictionary:data];
-//        }
-//        i++;
-//    }
-//    return [analytics copy];
-//}
 
 -(void) transitionToGameOver {
     if([self.delegate respondsToSelector:@selector(switchFromGameToGameOver:withScore:)]){
@@ -846,7 +879,7 @@
 
 -(void)animateBeltWithSpeed:(CGFloat)speed delta:(CGFloat)delta {
     for (UIImageView* img in conveyorBeltTiles) {
-        CGFloat propMoveX = speed/100.0;
+        CGFloat propMoveX = [self getFinalBeltMoveSpeed:speed];
         CGFloat moveX = [self propX:propMoveX];
         CGFloat moveDelta = -moveX*delta;
         
@@ -881,7 +914,7 @@
         
         if(sock != nil){
             if(sock.onConvayorBelt == true){
-                CGFloat propMoveX = speed/100.0;
+                CGFloat propMoveX = [self getFinalBeltMoveSpeed:speed];
                 CGFloat moveX = [self propX:propMoveX];
                 
                 if([sock getCoreRect].origin.x < -[sock getCoreRect].size.width){
@@ -936,16 +969,82 @@
     scoreLabel.text = [NSString stringWithFormat:@"%i", s];
 }
 
+-(void)handleTickEfficiency:(CGFloat)delta{
+    efficiencyTickTimer += delta;
+    
+    if(efficiencyTickTimer >= timeToTickEfficiency){
+        [self tickEfficiency];
+        efficiencyTickTimer = 0;
+    }
+}
+
+-(void)tickEfficiency{
+    if([self getNumberOfSocksCanMove] > [self calculateTooManySockThreshold]){
+        [self lostEfficiency:1];
+        
+        if(![self alreadyHaveTooManySockBanner]){
+            InfoBanner* tooManySocksBanner = [self createInfoBanner:0 text:@"too many socks!"];
+            tooManySocksBanner.tag = 1;
+        }
+    }else{
+        [self gainEfficiency:1];
+        
+        for(InfoBanner* b in infoBanners){
+            if(b.tag == 1){
+                [b stopAnimating];
+            }
+        }
+    }
+}
+
+-(bool)alreadyHaveTooManySockBanner{
+    bool alreadyHave = false;
+    for(InfoBanner* b in infoBanners){
+        if(b.tag == 1){
+            alreadyHave = true;
+        }
+    }
+    return alreadyHave;
+}
+
+-(int)getNumberOfSocksCanMove{
+    int i = 0;
+    for(Sock* s in socks){
+        //TODO keep onConveyorBelt?
+        if(s.inAPair == false && s.validSock == true && s.allowMovement == true && s.onConvayorBelt == false){
+            i++;
+        }
+    }
+    return i;
+}
+
+-(int)calculateTooManySockThreshold{
+    return 5+((difficultyCurve.maxSockSize+1)*[self getNumberOfDifferentSockTypes]);
+}
+
+-(int)getNumberOfDifferentSockTypes{
+    return (int)difficultyCurve.numOfDifferentSocksToGenerate;
+}
+
 -(void)lostEfficiency:(CGFloat)efficiencyLost {
     efficiency -= efficiencyLost;
+    
+    if(efficiency > 100){
+        efficiency = 100;
+    }
     
     if(efficiency >= 0){
         [self updateBarForEfficiency:efficiency];
     }
     
     if(efficiency <= 0){
+        [self updateBarForEfficiency:0];
         [self switchGameStateTo:Stopping];
     }
+}
+
+-(void)gainEfficiency:(CGFloat)efficiencyGained{
+    [self lostEfficiency:-efficiencyGained];
 }
 
 -(void)forceSetEfficiency:(CGFloat)efficiency{
@@ -1314,14 +1413,45 @@
     }
 }
 
--(void)newSockType{
-    [self createInfoBanner:3 text:@"new sock type!"];
+-(void)newSockSize{
+    InfoBanner* b = [self createInfoBanner:3 text:@"new sock size!"];
+    b.tag = 2;
 }
 
--(void)createInfoBanner:(int)times text:(NSString*)text{
-    InfoBanner* banner = [[InfoBanner alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.45, 1, 0.1)] repeatTime:times text:text];
-    banner.layer.zPosition = 120;
+-(void)newSockType{
+    InfoBanner* b = [self createInfoBanner:3 text:@"new sock type!"];
+    b.tag = 0;
+}
+
+-(InfoBanner*)createInfoBanner:(int)times text:(NSString*)text{
+    CGFloat y = 0.55+(((int)infoBanners.count-1)*0.05);
+    InfoBanner* banner = [[InfoBanner alloc] initWithFrame:[self propToRect:CGRectMake(0, y, 1, 0.05)] repeatTime:times text:text];
+    
+    __unsafe_unretained typeof(InfoBanner*) wb = banner;
+    
+    [banner setBlock:^void{
+        [infoBanners removeObject:wb];
+        [self updateInfoBannerPositions];
+    }];
+    
+    banner.layer.zPosition = 120+(infoBanners.count);
+    
     [self.view addSubview:banner];
+    [infoBanners addObject:banner];
+    return banner;
+}
+
+-(void)updateInfoBannerPositions{
+    CGFloat current = 0.45;
+    for(int i = 0; i < infoBanners.count; i++){
+        InfoBanner* banner = [infoBanners objectAtIndex:i];
+        [UIView animateWithDuration:0.5 animations:^void{
+            CGRect f = banner.frame;
+            f.origin.y = [self propY:current];
+            banner.frame = f;
+        }];
+        current += (i*0.05);
+    }
 }
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{

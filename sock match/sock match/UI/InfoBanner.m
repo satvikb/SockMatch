@@ -14,6 +14,7 @@
     bool continuousAnimating;
 }
 
+@synthesize block;
 -(id)initWithFrame:(CGRect)frame repeatTime:(int)repeatTimes text:(NSString*)text{
     self = [super initWithFrame:frame];
     
@@ -40,22 +41,30 @@
 -(void)animate {
     
     if(repeatTimesLeft > 0 || continuousAnimating){
-        [UIView animateWithDuration:1 animations:^void{
+        [UIView animateWithDuration:0.4 animations:^void{
             self.layer.opacity = 0.5;// = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
         } completion:^(BOOL finished){
-            [UIView animateWithDuration:1 animations:^void{
+            [UIView animateWithDuration:0.4 animations:^void{
                 self.layer.opacity = 0;// = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
             } completion:^(BOOL finished){
                 repeatTimesLeft -= 1;
                 [self animate];
             }];
         }];
+    }else{
+        if(block != nil){
+            block();
+        }
     }
 }
 
 -(void)stopAnimating{
     continuousAnimating = false;
     repeatTimesLeft = 0;
+}
+
+-(BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    return NO;
 }
 
 @end

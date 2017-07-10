@@ -38,7 +38,7 @@
     currentGameData = [GameData sharedGameData];
     
     // Do any additional setup after loading the view.
-    gameController = [[GameViewController alloc] initWithTutorial:false];//!didCompleteTutorial];
+    gameController = [[GameViewController alloc] initWithTutorial: !didCompleteTutorial];
     gameController.view.layer.zPosition = -100;
     gameController.delegate = self;
     
@@ -52,9 +52,12 @@
     gameOverController.view.layer.zPosition = 150;
     gameOverController.delegate = self;
     
+    int highScore = [Storage getSavedHighScore];
+    
     menuController = [[MenuViewController alloc] initWithForkliftAnimation:gameController.forkLiftAnimationFrames andWheel:gameController.wheelFrames sockPackages:gameController.sockPackages boxImage:[gameController.boxAnimationFrames objectAtIndex:gameController.boxAnimationFrames.count-1]];
     menuController.view.layer.zPosition = 100;
     menuController.delegate = self;
+    menuController.highScoreLabel.text = [NSString stringWithFormat:@"high score: %i", highScore];
     
     [self displayContentController:gameController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
     [self displayContentController:gameOverController withFrame:[self propToRect:CGRectMake(1, 0, 1, 1)]];
@@ -210,7 +213,7 @@
     CGFloat delta = tmr.duration;
     
     if(currentAppState == TransitioningFromMainMenuToGame){
-        CGFloat propMoveX = gameController.animateBeltMoveSpeed/100.0;
+        CGFloat propMoveX = [gameController getFinalBeltMoveSpeed:gameController.animateBeltMoveSpeed];
         CGFloat moveX = [self propX:propMoveX];
         
         menuController.gameTitle.frame = CGRectOffset(menuController.gameTitle.frame, -moveX*delta, 0);

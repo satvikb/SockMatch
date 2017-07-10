@@ -23,6 +23,8 @@
 @property (nonatomic, strong) Button* playButton;
 @property (nonatomic, strong) UIImageView* gameCenterButton;
 
+@property (nonatomic, strong) UILabel* highScoreLabel;
+
 -(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages boxImage:(UIImage*)boxImage;
 -(void) gameFrame:(CADisplayLink*)tmr;
 -(void)handleForkliftAnimation:(CGFloat)delta;

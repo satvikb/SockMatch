@@ -14,8 +14,10 @@
 @interface DifficultyCurve : NSObject <NSCoding>
 
 @property (nonatomic, strong) id<DifficultyDelegate> delegate;
+@property (nonatomic, assign) CGFloat beltMoveSpeedMultiplier;
 @property (nonatomic, assign) CGFloat timeToGenerateSock;
 @property (nonatomic, assign) CGFloat numOfDifferentSocksToGenerate;
+@property (nonatomic, assign) int maxSockSize;
 
 -(void)tickDifficulty;
 -(void)reduceTimeToGenerateSock;
@@ -25,5 +27,6 @@
 @end
 
 @protocol DifficultyDelegate <NSObject>
+- (void) newSockSize;
 - (void) newSockType;
 @end

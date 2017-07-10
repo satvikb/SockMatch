@@ -37,7 +37,7 @@
 @synthesize titleFrame;
 @synthesize playButton;
 @synthesize gameCenterButton;
-
+@synthesize highScoreLabel;
 -(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages boxImage:(UIImage*)bxImage{
     self = [super init];
     
@@ -107,6 +107,17 @@
     [gameCenterButton addGestureRecognizer:gcTapRecognizer];
     
     [self.view addSubview:gameCenterButton];
+    
+    
+    
+    highScoreLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.3, 0.75, 0.4, 0.1)]];
+    highScoreLabel.textAlignment = NSTextAlignmentCenter;
+    highScoreLabel.font = [UIFont systemFontOfSize:40];
+    highScoreLabel.numberOfLines = 0;
+//    highScoreLabel.lineBreakMode = NSLineBreak
+    highScoreLabel.adjustsFontSizeToFitWidth = true;
+//    highScoreLabel.layer.borderWidth = 2;
+    [self.view addSubview:highScoreLabel];
 }
 
 - (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor{

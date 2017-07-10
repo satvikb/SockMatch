@@ -16,8 +16,8 @@ extern const CGFloat MediumSockPropSize;
 extern const CGFloat LargeSockPropSize;
 
 typedef enum SockSize {
-    Small = 0,
-    Medium = 1,
+    Small = 1,
+    Medium = 0,
     Large = 2
 } SockSize;
 
@@ -49,8 +49,43 @@ typedef enum TutorialState {
     Completed = 5
 } TutorialState;
 
+//typedef enum InfoBannerType {
+//    AutoStop = 0,
+//    Repeating = 1
+//} InfoBannerType;
+
 + (int)randomNumberBetween:(int)min maxNumber:(int)max;
 + (CGFloat) randFromMin:(CGFloat)min toMax:(CGFloat)max;
 + (CGFloat) propSizeFromSockSize:(SockSize) size;
 
 @end
+
+
+
+@interface UIView (AnimationsHandler)
+
+- (void)pauseAnimations;
+- (void)resumeAnimations;
+
+@end
+
+@implementation UIView (AnimationsHandler)
+- (void)pauseAnimations
+{
+    CFTimeInterval paused_time = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil];
+    self.layer.speed = 0.0;
+    self.layer.timeOffset = paused_time;
+}
+
+- (void)resumeAnimations
+{
+    CFTimeInterval paused_time = [self.layer timeOffset];
+    self.layer.speed = 1.0f;
+    self.layer.timeOffset = 0.0f;
+    self.layer.beginTime = 0.0f;
+    CFTimeInterval time_since_pause = [self.layer convertTime:CACurrentMediaTime() fromLayer:nil] - paused_time;
+    self.layer.beginTime = time_since_pause;
+}
+
+@end
+

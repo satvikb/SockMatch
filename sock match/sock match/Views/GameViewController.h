@@ -62,6 +62,8 @@
 -(void)switchGameStateTo:(GameState)newGameState;
 -(void)setScoreImages:(int)s;
 
+-(CGFloat)getFinalBeltMoveSpeed:(CGFloat)baseSpeed;
+
 -(void)updateUIBasedOnCurrentGame:(GameData*)game;
 -(bool)loadGame:(GameData*)game;
 -(void)saveGame;

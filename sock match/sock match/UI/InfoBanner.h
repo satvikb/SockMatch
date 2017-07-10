@@ -8,7 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void (^AnimatingFinished)(void);
+
 @interface InfoBanner : UIView
+
+//@property (nonatomic, assign) int tag;
+@property (nonatomic, copy) AnimatingFinished block;
 
 -(id)initWithFrame:(CGRect)frame repeatTime:(int)repeatTimes text:(NSString*)text;
 -(void)animate;
