@@ -74,6 +74,9 @@
 
 -(void)animateInExtraUI;
 -(void)animateOutExtraUI;
+
+-(void)removeAllSocks;
+-(void)animateAllSocksOneScreenLeft:(CGFloat)duration;
 @end
 
 @protocol GameDelegate <NSObject>

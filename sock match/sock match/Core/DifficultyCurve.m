@@ -87,14 +87,22 @@ static NSString* const difficultyCurveSockSizeUnlockIncrementKey = @"sockSizeUnl
     }
 }
 
--(SockSize)getNextSockSize {
-    return [Functions randomNumberBetween:0 maxNumber:_maxSockSize];
-}
+//-(SockSize)getNextSockSize {
+//    return [Functions randomNumberBetween:0 maxNumber:_maxSockSize];
+//}
+//
+////TODO use a #define to cap the sock limit
+//-(int)getNextSockType{
+//    int max = (int)_numOfDifferentSocksToGenerate;
+//    return [Functions randomNumberBetween:0 maxNumber: max > MAX_SOCK_TYPES-1 ? MAX_SOCK_TYPES-1 : max];
+//}
 
-//TODO use a #define to cap the sock limit
--(int)getNextSockType{
+-(NSArray*)getNextSock:(NSMutableArray<Sock*>*)socks{
     int max = (int)_numOfDifferentSocksToGenerate;
-    return [Functions randomNumberBetween:0 maxNumber: max > MAX_SOCK_TYPES-1 ? MAX_SOCK_TYPES-1 : max];
+    int type = [Functions randomNumberBetween:0 maxNumber: max > MAX_SOCK_TYPES-1 ? MAX_SOCK_TYPES-1 : max];
+    int size = [Functions randomNumberBetween:0 maxNumber:_maxSockSize];
+    
+    return @[@(type), @(size)];
 }
 
 -(instancetype)initWithCoder:(NSCoder *)decoder{

@@ -12,6 +12,8 @@
 @interface ContainerViewController () {
     CADisplayLink* gameTimer;
     GameData* currentGameData;
+    
+    UIView* content;
 }
 
 @end
@@ -30,6 +32,8 @@
     [self authenticateLocalPlayer];
     
 //    [self testFile];
+    content = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 2, 1)]];
+    [self.view addSubview:content];
     
     didCompleteTutorial = [Storage didCompleteTutorial];
     
@@ -92,23 +96,22 @@
 }
 
 
-- (void) displayContentController: (UIViewController*) content withFrame:(CGRect) frame{
-    [self addChildViewController:content];
-    content.view.frame = frame;//[self frameForContentController];
-    [self.view addSubview: content.view];
-    
-    [content didMoveToParentViewController:self];
+- (void) displayContentController: (UIViewController*) contentController withFrame:(CGRect) frame{
+    [self addChildViewController:contentController];
+    contentController.view.frame = frame;//[self frameForContentController];
+    [content addSubview: contentController.view];
+    [contentController didMoveToParentViewController:self];
 }
 
 -(void)switchFromMenuToGame:(MenuViewController*) menu{
     currentAppState = TransitioningFromMainMenuToGame;
     
     [menuController.gameTitle removeFromSuperview];
-    [self.view addSubview:menuController.gameTitle];
+    [content addSubview:menuController.gameTitle];
     
-    for(Forklift* f in menuController.forklifts){
+    for(Forklift* f in [menuController.forklifts copy]){
         [f removeFromSuperview];
-        [self.view addSubview:f];
+        [content addSubview:f];
     }
     
     [Flurry logEvent:@"Switch_MenuToGame"];
@@ -124,16 +127,18 @@
         }
     }
     
+    didCompleteTutorial = [Storage didCompleteTutorial];
+    if(!didCompleteTutorial){
+        [gameController.tutorialView animateTutorialLabelIn];
+    }
+    
+    [gameController startGame:loadingData == true ? false : true];
+    [gameController animateInExtraUI];
+    
     [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointZero animationFinished:^{
         NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
         
-        didCompleteTutorial = [Storage didCompleteTutorial];
-        if(!didCompleteTutorial){
-            [gameController.tutorialView animateTutorialLabelIn];
-        }
         
-        [gameController startGame:loadingData == true ? false : true];
-        [gameController animateInExtraUI];
     }];
 }
 
@@ -142,26 +147,51 @@
     [Flurry logEvent:@"Switch_GameToGameOver"];
     
     [gameOverController setScore:score];
-    [self animateFromViewController:game toPoint:CGPointZero toViewController:gameOverController toPoint:CGPointZero animationFinished:^{
+    
+    [UIView animateWithDuration:1 animations:^void{
+        CGRect f = content.frame;
+        f.origin.x -= [self propX:1];
+        content.frame = f;
+    } completion:^(BOOL finished){
         currentAppState = GameOver;
-        [game animateOutExtraUI];
-        NSLog(@"Switched from game to game over %@ %@", NSStringFromCGRect(game.view.frame), gameOverController.view.backgroundColor);
+        [gameOverController didMoveToParentViewController:self];
+//        [game animateOutExtraUI];
     }];
+    
+//    [gameController animateAllSocksOneScreenLeft:1];
+//    [self animateFromViewController:game toPoint:CGPointZero toViewController:gameOverController toPoint:CGPointZero animationFinished:^{
+//        currentAppState = GameOver;
+//        [game animateOutExtraUI];
+//        NSLog(@"Switched from game to game over %@ %@", NSStringFromCGRect(game.view.frame), gameOverController.view.backgroundColor);
+//    }];
 }
 
 - (void) switchFromGameOverToMenu:(GameOverViewController *)gameOver {
     currentAppState = TransitioningFromGameOverToMainMenu;
     [Flurry logEvent:@"Switch_GameOverToMenu"];
-    [self animateFromViewController:gameOver toPoint:[self propToRect:CGRectMake(1, 0, 0, 0)].origin toViewController:menuController toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin animationFinished:^{
+    
+    menuController.view.frame = [self propToRect:CGRectMake(0, 0, 1, 1)];
+    [gameController animateOutExtraUI]; ///todo immediate
+    [gameController removeAllSocks];
+    
+    [UIView animateWithDuration:1 animations:^void{
+        CGRect f = content.frame;
+        f.origin.x += [self propX:1];
+        content.frame = f;
+    } completion:^(BOOL finished){
         currentAppState = MainMenu;
-        [gameController updateBarForEfficiency:100.0];
-        NSLog(@"transitioned: game over to menu %@", NSStringFromCGRect(gameController.view.frame));
+        [menuController didMoveToParentViewController:self];
     }];
+//    [self animateFromViewController:gameOver toPoint:[self propToRect:CGRectMake(1, 0, 0, 0)].origin toViewController:menuController toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin animationFinished:^{
+//        currentAppState = MainMenu;
+//        [gameController updateBarForEfficiency:100.0];
+//        NSLog(@"transitioned: game over to menu %@", NSStringFromCGRect(gameController.view.frame));
+//    }];
 }
 
 -(void)animateFromViewController:(UIViewController*)vc toPoint:(CGPoint)point toViewController:(UIViewController*)otherVc toPoint:(CGPoint)otherPoint animationFinished:(void (^)(void)) completion{
 
-    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
+    [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
         otherVc.view.frame = CGRectMake(otherPoint.x, otherPoint.y, otherVc.view.frame.size.width, otherVc.view.frame.size.height);
         vc.view.frame = CGRectMake(point.x, point.y, vc.view.frame.size.width, vc.view.frame.size.height);
     } completion:^(BOOL finished){

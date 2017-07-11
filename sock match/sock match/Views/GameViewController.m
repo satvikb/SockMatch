@@ -208,28 +208,26 @@
     countdownNumbers = [self getSplitImagesFromImage:[UIImage imageNamed:@"countdownNumbers"] withYRow:1 withXColumn:3 maxFrames:0];
     countdownDetails = [self getSplitImagesFromImage:[UIImage imageNamed:@"countdownDetails"] withYRow:2 withXColumn:2 maxFrames:0];
     
-    
-    
     clawMiddleImage = [UIImage imageNamed:@"clawMiddle"];
     clawTopImage = [UIImage imageNamed:@"clawTop"];
     clawBottomImage = [UIImage imageNamed:@"clawBottom"];
 }
 
--(void)removeAllSocks{
-    for (Sock* sock in socks) {
-        [sock removeFromSuperview];
-    }
-}
+//-(void)removeAllSocks{
+//    for (Sock* sock in [socks copy]) {
+//        [sock removeFromSuperview];
+//    }
+//}
 
 -(void)disableSockMovement {
-    for (Sock* sock in socks) {
+    for (Sock* sock in [socks copy]) {
         sock.allowMovement = false;
         //        sock.validSock = false;
     }
 }
 
 -(void)enableSockMovement {
-    for (Sock* sock in socks) {
+    for (Sock* sock in [socks copy]) {
         sock.allowMovement = true;
         //        sock.validSock = false;
     }
@@ -297,10 +295,17 @@
     
     conveyorBeltRect = [self propToRect:CGRectMake(-0.25, 0.15, 1.5, 0.3)];
     
-    UIView* topBackground = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 1, 0.15)]];
+    UIView* topBackground = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 2, 0.15)]];
     topBackground.backgroundColor = [UIColor colorWithRed:(140.0/255.0) green:(174.0/255.0) blue:(0.0/255.0) alpha:1];
     topBackground.layer.zPosition = -5;
     [self.view addSubview:topBackground];
+    
+    UIView* factoryFloor = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 2, 1)]];
+    factoryFloor.backgroundColor = [UIColor whiteColor];
+    factoryFloor.layer.zPosition = -10;
+    [self.view addSubview:factoryFloor];
+    
+    
     
 //    scoreDigits = [[NSMutableArray alloc] init];
 //    [self sizeDigits:4];
@@ -353,6 +358,11 @@
         
         //TODO  maybe just do currentGameState == Playing;
         if(currentGameState == Playing){//!= WarmingUp && currentGameState != Tutorial && currentGameState != Paused){
+            for(Sock* s in [ws->socks copy]){
+                [s animateDecreaseCoreScale];
+                s.touchEndedBlock(s, CGPointZero);
+            }
+            [ws disableSockMovement];
             [ws showPauseView];
         }
     }];
@@ -434,6 +444,7 @@
                 [self resumeAllSubviewAnimations];
             }];
         }];
+        animatingInPauseView = true;
     }
 }
 
@@ -521,7 +532,7 @@
     CGFloat aspectRatio = frame.size.height / beltTileImage.size.height;
     CGFloat imageWidth = beltTileImage.size.width*aspectRatio;
     
-    int numOfBeltTiles = (frame.size.width / imageWidth)*2;
+    int numOfBeltTiles = ((frame.size.width / imageWidth)*2)+5;
     
     _beltImagesSideExtra = (numOfBeltTiles*imageWidth);;
     
@@ -545,7 +556,7 @@
     CGFloat aspectRatio = frame.size.height / beltWheelImage.size.height;
     CGFloat imageWidth = beltWheelImage.size.width*aspectRatio;
     
-    int numOfWheelTiles = (frame.size.width / imageWidth)+2;
+    int numOfWheelTiles = ((frame.size.width / imageWidth)*2)+5;
     
     for (NSInteger i = 0; i < numOfWheelTiles; ++i){
         [framesArray addObject:[NSNumber numberWithInt:0]];
@@ -736,7 +747,7 @@
     if([self canEndGame]){
         [self forceEndGame];
         [self removeInfoBanners];
-        [self cleanUpSocksWithClaws];
+//        [self cleanUpSocksWithClaws];
         [self transitionToGameOver];
         [self switchGameStateTo:NotPlaying];
     }
@@ -752,7 +763,7 @@
 }
 
 -(void)removeInfoBanners{
-    for(InfoBanner* f in infoBanners){
+    for(InfoBanner* f in [infoBanners copy]){
         [f stopAnimating];
     }
 }
@@ -760,7 +771,7 @@
 -(NSMutableArray<SockData*>*)getSockDataToSaveGame{
     NSMutableArray<SockData*>* sockData = [[NSMutableArray alloc] init];
     
-    for(Sock* s in socks){
+    for(Sock* s in [socks copy]){
         //TODO confirm conditions for saving sock
         if(s.inAPair == false && s.validSock){
             SockData* data = [[SockData alloc] initWithOrigin:[s getCoreRect].origin id:s.sockId size:s.sockSize onConveyorBelt:s.onConvayorBelt];
@@ -776,7 +787,7 @@
 -(NSNumber*)analyticsNumSocks{
     int i = 0;
     
-    for(Sock* s in socks){
+    for(Sock* s in [socks copy]){
         if(!s.inAPair){
             i++;
         }
@@ -789,6 +800,16 @@
     if([self.delegate respondsToSelector:@selector(switchFromGameToGameOver:withScore:)]){
         [self.delegate switchFromGameToGameOver:self withScore:score];
     }
+}
+
+-(void)animateAllSocksOneScreenLeft:(CGFloat)duration{
+//    for(Sock* s in [socks copy]){
+//        CGRect f = s.frame;
+//        f.origin.x -= [self propX:1];
+//        [UIView animateWithDuration:duration animations:^void{
+//            s.frame = f;
+//        }];
+//    }
 }
 
 -(bool)canEndGame{
@@ -1047,13 +1068,13 @@
     [self lostEfficiency:-efficiencyGained];
 }
 
--(void)forceSetEfficiency:(CGFloat)efficiency{
-    self.efficiency = efficiency;
+-(void)forceSetEfficiency:(CGFloat)efficienc{
+    self.efficiency = efficienc;
     [self updateBarForEfficiency:self.efficiency];
 }
 
--(void)updateBarForEfficiency:(CGFloat)efficiency{
-    [bar setInnerBarPercentage:efficiency/100.0];
+-(void)updateBarForEfficiency:(CGFloat)efficienc{
+    [bar setInnerBarPercentage:efficienc/100.0];
 }
 
 -(void)removeFromView:(UIView*)view {
@@ -1063,12 +1084,13 @@
 -(void) generateSock{
     CGFloat y = [Functions randFromMin:0.15 toMax:0.3];
     
-    int sockId = [difficultyCurve getNextSockType];
-    SockSize size = [difficultyCurve getNextSockSize];
+    NSArray* sockInfo = [difficultyCurve getNextSock:socks];
+    NSNumber* sockId = sockInfo[0];
+    NSNumber* size = sockInfo[1];
     
     CGPoint newSockPos = [self propToRect:CGRectMake(1.0, y, 0, 0)].origin;
     //imageName:[NSString stringWithFormat:@"sock%i", sockId]
-    [self createSockAtPos:newSockPos sockSize:size sockId:sockId onBelt:true];
+    [self createSockAtPos:newSockPos sockSize:size.intValue sockId:sockId.intValue onBelt:true];
     
 }
 
@@ -1293,7 +1315,7 @@
     animateBoxTimer += delta;
     
     if(animateBoxTimer >= animateBoxInterval){
-        for (Sock* s in socksBeingAnimatedIntoBox) {
+        for (Sock* s in [socksBeingAnimatedIntoBox copy]) {
             [self animateSock:s];
         }
         animateBoxTimer = 0;
@@ -1301,13 +1323,13 @@
 }
 
 -(void) animateAllClaws {
-    for (Claw* c in claws) {
+    for (Claw* c in [claws copy]) {
         [c animateAnimation];
     }
 }
 
 -(void) animateAllForklifts {
-    for (Forklift* f in forklifts) {
+    for (Forklift* f in [forklifts copy]) {
         [f animateAnimation];
         
         switch (f.currentState) {
@@ -1359,7 +1381,7 @@
 }
 
 -(void)cleanUpSocksWithClaws {
-    for (Sock* s in socks) {
+    for (Sock* s in [socks copy]) {
         [self createClaw:s givePoint:false];
     }
 }
@@ -1384,6 +1406,15 @@
         [claw removeFromSuperview];
         [claws removeObject:claw];
     }];
+}
+
+-(void)removeAllSocks{
+    NSMutableIndexSet *discardedItems = [NSMutableIndexSet indexSet];
+    for(int i = 0; i < socks.count; i++){
+        [discardedItems addIndex:i];
+        [[socks objectAtIndex:i] removeFromSuperview];
+    }
+    [socks removeObjectsAtIndexes:discardedItems];
 }
 
 -(void)createForklift:(Sock*)s givePoint:(BOOL)point{

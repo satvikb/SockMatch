@@ -38,6 +38,7 @@
     againButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)] withText:@"home" withBlock:^void{
         [self pressMenuButton];
     }];
+    againButton.layer.zPosition = 151;
     [self.view addSubview:againButton];
 }
 
@@ -94,12 +95,12 @@
     return coloredImage;
 }
 
--(void)setScore:(int)score{
+-(void)setScore:(int)s{
 //    testLabel.text = [NSString stringWithFormat:@"game over %i", score];
     NSLog(@"reporting score");
-    self->score = score;
+    self->score = s;
     if([self.delegate respondsToSelector:@selector(gameEndScore:)]){
-        [self.delegate gameEndScore:score];
+        [self.delegate gameEndScore:s];
     }
 }
 

@@ -20,9 +20,9 @@
 
 @implementation GCLeaderboardViewController
 
--(id)initWithScores:(NSArray*)scores{
+-(id)initWithScores:(NSArray*)scs{
     self = [super init];
-    self->scores = scores;
+    self->scores = scs;
     
     background = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(-1, 0, 1, 1)]];
     background.backgroundColor = [UIColor blackColor];

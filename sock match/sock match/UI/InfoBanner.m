@@ -17,7 +17,7 @@
 @synthesize block;
 -(id)initWithFrame:(CGRect)frame repeatTime:(int)repeatTimes text:(NSString*)text{
     self = [super initWithFrame:frame];
-    
+    self.userInteractionEnabled = false;
     if(repeatTimes == 0){
         continuousAnimating = true;
     }
