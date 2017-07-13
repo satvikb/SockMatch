@@ -29,6 +29,9 @@ static NSString* const difficultyCurveDifferentSocksKey = @"differentSocks";
 static NSString* const difficultyCurveBeltMoveSpeedMultiplierKey = @"beltSpeedMultiplier";
 static NSString* const difficultyCurveMaxSockSizeKey = @"maxSockSize";
 static NSString* const difficultyCurveSockSizeUnlockIncrementKey = @"sockSizeUnlockIncrement";
+static NSString* const difficultyCurveThresholdToUnlockNextSockSizeKey = @"thresholdToUnlockNextSockSize";
+static NSString* const difficultyCurveProbGenNewTypeKey = @"probGenNewType";
+static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenExistTypeExistSize";
 
 -(id)init{
     self = [super init];
@@ -198,6 +201,9 @@ static NSString* const difficultyCurveSockSizeUnlockIncrementKey = @"sockSizeUnl
         _beltMoveSpeedMultiplier = [decoder decodeFloatForKey:difficultyCurveBeltMoveSpeedMultiplierKey];
         _maxSockSize = [decoder decodeIntForKey:difficultyCurveMaxSockSizeKey];
         incrementToUnlockSockSize = [decoder decodeFloatForKey:difficultyCurveSockSizeUnlockIncrementKey];
+        thresholdToUnlockNextSockSize = [decoder decodeFloatForKey:difficultyCurveThresholdToUnlockNextSockSizeKey];
+        probGenNewType = [decoder decodeFloatForKey:difficultyCurveProbGenNewTypeKey];
+        probGenExistTypeExistSize = [decoder decodeFloatForKey:difficultyCurveProbGenExistTypeExistSizeKey];
     }
     return self;
 }
@@ -208,6 +214,9 @@ static NSString* const difficultyCurveSockSizeUnlockIncrementKey = @"sockSizeUnl
     [encoder encodeFloat:self.beltMoveSpeedMultiplier forKey:difficultyCurveBeltMoveSpeedMultiplierKey];
     [encoder encodeInt:self.maxSockSize forKey:difficultyCurveMaxSockSizeKey];
     [encoder encodeFloat:incrementToUnlockSockSize forKey:difficultyCurveSockSizeUnlockIncrementKey];
+    [encoder encodeFloat:thresholdToUnlockNextSockSize forKey:difficultyCurveThresholdToUnlockNextSockSizeKey];
+    [encoder encodeFloat:probGenNewType forKey:difficultyCurveProbGenNewTypeKey];
+    [encoder encodeFloat:probGenExistTypeExistSize forKey:difficultyCurveProbGenExistTypeExistSizeKey];
 }
 
 @end

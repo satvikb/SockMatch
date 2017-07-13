@@ -5,8 +5,6 @@ gameplay
 	-improve difficulty values
 	-combos
 		-extra score (+1 or +x based on combo's in a row) when multiple socks are packaged at once
-	-gameover
-		-instead of stopping belt slowly maybe keep it going while showing game over.
 
 graphics
 	-conveyor belt overhead frame to the left
@@ -19,12 +17,9 @@ collisions
 	-prevent moving to top
 	-prevent moving sock back on belt once removed?
 
-
-clearing socks on game over
-	-maybe don't remove socks and allow use on next round? (socks on belt are animated out on belt while slowing down, prevent movement)
-
 ui
-	-switch view
+	-menu button on pause view
+	-switch view?
 		-shown while switching views, allows for game view to load and remove socks for game over
 		-or just for loading, for game over the 'camera' can move to the right to the game over screen
 	-improve custom Game Center leaderboard
@@ -32,7 +27,7 @@ ui
 		-users with no image use initials
 	-improve game over screen
 		-replay (main button)
-		-replay (smaller to the left)
+		-home (smaller to the left)
 		-share (smaller to the right)
 
 sounds
@@ -47,18 +42,11 @@ saving
 		-handle file load errors (corrupt file or modified)
 
 fonts
-	-4 variants (made for different uses)
-		-titles/large text
-		-one for buttons and
+	-2 variants (made for different uses)
 		-medium for normal text
 		-small for detail text
-	-game center leaderboard
-		-title font (variant 0)
-		-back button (variant 1)
-		-name font (variant 2)
-		-score font (variant 3)
 	-tutorial text
-	-possibly for score and buttons
+	-score and maybe buttons
 
 gamecenter
 	-prevent cheating (maybe use score context with saved high score to filter cheaters)
