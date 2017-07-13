@@ -2,8 +2,7 @@ all thats left
 
 gameplay
 	-improve tutorial (make more interactive)
-	-harder gameplay over time
-		-increase variability of generated socks (less likely to create socks already on screen)
+	-improve difficulty values
 	-combos
 		-extra score (+1 or +x based on combo's in a row) when multiple socks are packaged at once
 	-gameover
@@ -70,6 +69,8 @@ meta
 	-splash screen
 
 bugs
+	-clicking play on menu while forklift is moving through screen changed speed of forklifts to a constant value
+	-sock package tutorial screen over black overlay
 	-matching socks while stopping game is buggy
 	-matching socks near belt overlap conveyor belt/wheels
 	-prevent forklift overlapping (maybe have four sections with one in each section)

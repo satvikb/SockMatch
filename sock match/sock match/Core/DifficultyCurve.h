@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Functions.h"
-#import "Sock.h"
+#import "SockData.h"
 
 @protocol DifficultyDelegate;
 
@@ -24,7 +24,7 @@
 -(void)reduceTimeToGenerateSock;
 //-(SockSize)getNextSockSize;
 //-(int)getNextSockType;
--(NSArray*)getNextSock:(NSMutableArray<Sock*>*)socks;
+-(NSArray*)getNextSock:(NSMutableArray<SockData*>*)sockData;
 
 @end
 

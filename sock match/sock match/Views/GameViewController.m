@@ -1084,7 +1084,7 @@
 -(void) generateSock{
     CGFloat y = [Functions randFromMin:0.15 toMax:0.3];
     
-    NSArray* sockInfo = [difficultyCurve getNextSock:socks];
+    NSArray* sockInfo = [difficultyCurve getNextSock:[self getMovableSocks]];
     NSNumber* sockId = sockInfo[0];
     NSNumber* size = sockInfo[1];
     
@@ -1094,6 +1094,19 @@
     
 }
 
+-(NSMutableArray<SockData*>*)getMovableSocks{
+    NSMutableArray<SockData*>* sockData = [[NSMutableArray alloc] init];
+    
+    for(Sock* s in [socks copy]){
+        //TODO confirm conditions for saving sock
+        if(s.inAPair == false && s.validSock && s.allowMovement == true){
+            SockData* data = [[SockData alloc] initWithOrigin:[s getCoreRect].origin id:s.sockId size:s.sockSize onConveyorBelt:s.onConvayorBelt];
+            [sockData addObject:data];
+        }
+    }
+    
+    return sockData;
+}
 -(void) decreaseSockLayerPositions {
     for (Sock* s in socks) {
         s.layer.zPosition = s.layer.zPosition > 0 ? s.layer.zPosition-1 : 0;
