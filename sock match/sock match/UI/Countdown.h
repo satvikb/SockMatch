@@ -13,7 +13,7 @@ typedef void (^AnimationComplete)(BOOL success);
 //@class AnimationCompletion;
 @interface Countdown : UIView
 
--(id)initWithFrame:(CGRect)frame numberImages:(NSMutableArray<UIImage*>*)numImgs detailAnimationImages:(NSMutableArray<UIImage*>*)detailImgs;
+-(id)initWithFrame:(CGRect)frame numberImages:(NSMutableArray<UIImage*>*)numImgs;
 -(void)animateOut;
 
 @property (nonatomic, copy) AnimationComplete animationCompleteBlock;

@@ -43,13 +43,6 @@
     CGFloat timeToAnimateWheels;
     CGFloat animateWheelTimer;
     
-    CGFloat timeForClawAnimation;
-    CGFloat clawAnimationTimer;
-    NSMutableArray <Claw*>* claws;
-    UIImage* clawMiddleImage;
-    UIImage* clawTopImage;
-    UIImage* clawBottomImage;
-    
     CGFloat timeForForkliftAnimation;
     CGFloat forkliftAnimationTimer;
     NSMutableArray <Forklift*>* forklifts;
@@ -92,12 +85,10 @@
 
 @synthesize boxAnimationFrames;
 @synthesize wheelFrames;
-@synthesize clawAnimationFrames;
 @synthesize forkLiftAnimationFrames;
 @synthesize emissionAnimationFrames;
 
 @synthesize countdownNumbers;
-@synthesize countdownDetails;
 
 @synthesize beltMoveSpeed;
 @synthesize animateBeltMoveSpeed;
@@ -200,22 +191,16 @@
 }
 
 -(void)loadBufferImages {
-    boxAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_box"] withYRow:5 withXColumn:4 maxFrames:0];
-    clawAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_claw"] withYRow:1 withXColumn:1 maxFrames:0];
-    wheelFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"anim_wheels"] withYRow:1 withXColumn:4 maxFrames:0];
+    boxAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"animBox"] withYRow:5 withXColumn:4 maxFrames:0];
+    wheelFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"wheelAnimation"] withYRow:1 withXColumn:4 maxFrames:0];
     sockPackages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockPackage"] withYRow:5 withXColumn:5 maxFrames:8];
     sockPackageSizes = [self getSplitImagesFromImage:[UIImage imageNamed:@"packageSizes"] withYRow:1 withXColumn:3 maxFrames:0];
-    sockMainImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockMain"] withYRow:5 withXColumn:5 maxFrames:8];
+    sockMainImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockMain.png"] withYRow:5 withXColumn:5 maxFrames:8];
     forkLiftAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"forklift"] withYRow:3 withXColumn:1 maxFrames:2];
     emissionAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"emissions"] withYRow:5 withXColumn:1 maxFrames:0];
     scoreDigitImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"numbers"] withYRow:1 withXColumn:10 maxFrames:0];
     
     countdownNumbers = [self getSplitImagesFromImage:[UIImage imageNamed:@"countdownNumbers"] withYRow:1 withXColumn:3 maxFrames:0];
-    countdownDetails = [self getSplitImagesFromImage:[UIImage imageNamed:@"countdownDetails"] withYRow:2 withXColumn:2 maxFrames:0];
-    
-    clawMiddleImage = [UIImage imageNamed:@"clawMiddle"];
-    clawTopImage = [UIImage imageNamed:@"clawTop"];
-    clawBottomImage = [UIImage imageNamed:@"clawBottom"];
 }
 
 //-(void)removeAllSocks{
@@ -269,9 +254,6 @@
     
     difficultyCurve.delegate = self;
 
-    timeForClawAnimation = 0.05;
-    clawAnimationTimer = 0;
-    
     timeForForkliftAnimation = 0.25;
     forkliftAnimationTimer = 0;
     
@@ -290,7 +272,6 @@
 
 -(void)setupArrays{
     socks = [[NSMutableArray alloc] init];
-    claws = [[NSMutableArray alloc] init];
     forklifts = [[NSMutableArray alloc] init];
     socksBeingAnimatedIntoBox = [[NSMutableArray alloc] init];
     infoBanners = [[NSMutableArray alloc] init];
@@ -322,8 +303,8 @@
     scoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:25];
     [self.view addSubview:scoreLabel];
     
-    efficiencyBarFrame = [UIImage imageNamed:@"efficiencybar_frame"];
-    efficiencyBarInner = [UIImage imageNamed:@"efficiencybar_inner"];
+    efficiencyBarFrame = [UIImage imageNamed:@"UIFrame"];
+    efficiencyBarInner = [UIImage imageNamed:@"UIInnerUp"];
     
     bar = [[EfficiencyBar alloc] initWithFrame:[self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.05)] frameImage:efficiencyBarFrame innerImage:efficiencyBarInner];
     bar.layer.zPosition = 100;
@@ -504,7 +485,7 @@
 }
 
 -(void)createCountdown:(void (^)(void)) completion{
-    Countdown* testCD = [[Countdown alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.475, 1, 0.1)] numberImages:countdownNumbers detailAnimationImages:countdownDetails];
+    Countdown* testCD = [[Countdown alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.475, 1, 0.1)] numberImages:countdownNumbers];
     
     __unsafe_unretained typeof(Countdown*) weak = testCD;
     
@@ -672,7 +653,6 @@
         [self animateBeltWithSpeed:animateBeltMoveSpeed delta:delta];
         [self updateSocksOnBeltWithSpeed:animateBeltMoveSpeed delta:delta];
         [self handleAnimateWheel:delta];
-        [self handleClawAnimation: delta];
         [self handleForkliftAnimation:delta];
         [self animateAllSockBoxes:delta];
         [self handleTickEfficiency:delta];
@@ -785,7 +765,6 @@
     if([self canEndGame]){
         [self forceEndGame];
         [self removeInfoBanners];
-//        [self cleanUpSocksWithClaws];
         [self transitionToGameOver];
         [self switchGameStateTo:NotPlaying];
     }
@@ -859,9 +838,9 @@
         }
     }
     
-    if([self anyClawsAnimating] == true){
-        gameDone = false;
-    }
+//    if([self anyClawsAnimating] == true){
+//        gameDone = false;
+//    }
     return gameDone;
 }
 
@@ -884,15 +863,6 @@
         [self animateWheels:topConveyorBeltWheels withFrames:topConveyorBeltWheelsFrames];
         
         animateWheelTimer = 0;
-    }
-}
-
--(void)handleClawAnimation:(CGFloat)delta {
-    clawAnimationTimer += delta;
-    
-    if(clawAnimationTimer >= timeForClawAnimation){
-        [self animateAllClaws];
-        clawAnimationTimer = 0;
     }
 }
 
@@ -924,16 +894,6 @@
 
 -(bool)_sockRectOnBelt:(Sock*)s{
     return CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX([s getCoreRect]), CGRectGetMidY([s getCoreRect])));
-}
-
--(bool) anyClawsAnimating {
-    bool anyClawsAnimating = false;
-    for (Claw* claw in claws) {
-        if(claw.currentlyAnimating == true){
-            anyClawsAnimating = true;
-        }
-    }
-    return anyClawsAnimating;
 }
 
 -(void)animateBeltWithSpeed:(CGFloat)speed delta:(CGFloat)delta {
@@ -1387,12 +1347,6 @@
     }
 }
 
--(void) animateAllClaws {
-    for (Claw* c in [claws copy]) {
-        [c animateAnimation];
-    }
-}
-
 -(void) animateAllForklifts {
     for (Forklift* f in [forklifts copy]) {
         [f animateAnimation];
@@ -1430,7 +1384,6 @@
         [socksBeingAnimatedIntoBox removeObject:s];
         
         if(!s.onConvayorBelt){
-            //            [self createClaw:s givePoint:true];
             [self createForklift:s givePoint:true];
         }
     }else{
@@ -1443,34 +1396,6 @@
         [s.veryTopImageView setImage:[sockPackages objectAtIndex:s.sockId]];
         [s.veryTopImageView2 setImage:[sockPackageSizes objectAtIndex:s.sockSize]];
     }
-}
-
--(void)cleanUpSocksWithClaws {
-    for (Sock* s in [socks copy]) {
-        [self createClaw:s givePoint:false];
-    }
-}
-
--(void)createClaw:(Sock*)s givePoint:(BOOL)point{
-    //    Claw* claw = [[Claw alloc] initClawWithSock:s animationFrames: clawAnimationFrames];
-    Claw* claw = [[Claw alloc] initClawWithSock:s animationFrames:clawAnimationFrames middleImage:clawMiddleImage topImage:clawTopImage bottomImage:clawBottomImage];
-    claw.layer.zPosition = 100;//SOCK_HIGHEST_LAYER+1;
-    [claws addObject:claw];
-    [self.view addSubview:claw];
-    
-    s.allowMovement = false;
-    
-    [claw animateWithSpeed:0.5 withCompletion:^void {
-//        if(point == true){
-//            [self pointForSock:s];
-//        }
-//
-        [s removeFromSuperview];
-        [socks removeObject:s];
-        
-        [claw removeFromSuperview];
-        [claws removeObject:claw];
-    }];
 }
 
 -(void)removeAllSocks{

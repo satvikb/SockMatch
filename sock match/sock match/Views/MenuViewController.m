@@ -67,14 +67,14 @@
     gameTitle = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.2, 0.5, 0.195)]];
 //    testLabel.layer.borderWidth = 1;
 //    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
-    [gameTitle setImage:[UIImage imageNamed:@"title"]];
+    [gameTitle setImage:[UIImage imageNamed:@"gameTitle"]];
     gameTitle.layer.magnificationFilter = kCAFilterNearest;
     gameTitle.contentMode = UIViewContentModeScaleAspectFit;
     [self.view addSubview:gameTitle];
     
     titleFrame = gameTitle.frame;
     
-    UIImage* playImage = [UIImage imageNamed:@"efficiencybar_frame"];
+    UIImage* playImage = [UIImage imageNamed:@"UIFrame"];
     UIImage* playImageDown = [UIImage imageNamed:@"playPressed"];
     playImage = [self image:playImage WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
     playImageDown = [self image:playImageDown WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
@@ -92,7 +92,7 @@
     //    testLabel.layer.borderWidth = 1;
     //    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
     
-    UIImage* gcImage = [UIImage imageNamed:@"gamecenter"];
+    UIImage* gcImage = [UIImage imageNamed:@"UIGC"];
 //    gcImage = [gcImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 //    gcImage = [self image:playImage WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
     //    playButton.tintColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1];

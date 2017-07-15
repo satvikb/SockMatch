@@ -11,19 +11,16 @@
 
 @implementation Countdown{
     NSMutableArray<UIImage*>* numberImages;
-    NSMutableArray<UIImage*>* detailAnimateImages;
     
     UIImageView* currentNumberImage;
-    UIImageView* currentDetailImage;
 }
 
 @synthesize animationCompleteBlock;
 
--(id)initWithFrame:(CGRect)frame numberImages:(NSMutableArray<UIImage*>*)numImgs detailAnimationImages:(NSMutableArray<UIImage*>*)detailImgs{
+-(id)initWithFrame:(CGRect)frame numberImages:(NSMutableArray<UIImage*>*)numImgs{
     self = [super initWithFrame:frame];
     numberImages = numImgs;
-    detailAnimateImages = detailImgs;
-    
+
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.35];
     
     UIImage* firstNumber = [numberImages objectAtIndex:0];
@@ -31,15 +28,6 @@
     CGFloat aspect = height / firstNumber.size.height;
     CGFloat imageWidth = firstNumber.size.width*aspect;
     
-    currentDetailImage = [[UIImageView alloc] initWithFrame:CGRectMake((frame.size.width/2)-(imageWidth), -imageWidth/2, imageWidth*2, imageWidth*2)];
-    currentDetailImage.layer.magnificationFilter = kCAFilterNearest;
-    currentDetailImage.contentMode = UIViewContentModeScaleAspectFit;
-    currentDetailImage.animationImages = detailImgs;
-    currentDetailImage.animationDuration = 0.3;
-    currentDetailImage.layer.borderColor = [UIColor brownColor].CGColor;
-    currentDetailImage.layer.borderWidth = 2;
-    [currentDetailImage startAnimating];
-//    [self addSubview:currentDetailImage];
     
     currentNumberImage = [[UIImageView alloc] initWithFrame:CGRectMake((frame.size.width/2)-(imageWidth/2), (frame.size.height-height)/2, imageWidth, height)];
     currentNumberImage.layer.magnificationFilter = kCAFilterNearest;

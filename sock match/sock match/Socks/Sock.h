@@ -43,7 +43,7 @@ typedef void (^TouchEnded)(Sock* s, CGPoint p);
 
 @property (nonatomic, assign) bool allowMovement;
 
-@property (nonatomic, assign) bool validSock; // to make sure that sock is from the current game (if the claw animates slow and a new game is started, a point is awarded)
+@property (nonatomic, assign) bool validSock; // to make sure that sock is from the current game (if the forklift animates slow and a new game is started, a point is awarded)
 
 @property (nonatomic, assign) bool animatingIntoBox;
 @property (nonatomic, assign) bool animatingSize;

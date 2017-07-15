@@ -25,9 +25,9 @@
 const CGFloat innerBar3DOffset = 0.1111111111;
 
 -(id)initBoxButtonWithFrame:(CGRect)frame withText:(NSString*)text withBlock:(ButtonPressDown)btnPressDown{
-    imageFrame = [UIImage imageNamed:@"buttonFrame"];//frameImg;
-    innerImageUp = [UIImage imageNamed:@"buttonInnerUp"];//innerImgUp;
-    innerImageDown = [UIImage imageNamed:@"buttonInnerDown"];//innerImgDown;
+    imageFrame = [UIImage imageNamed:@"UIFrame"];//frameImg;
+    innerImageUp = [UIImage imageNamed:@"UIInnerUp"];//innerImgUp;
+    innerImageDown = [UIImage imageNamed:@"UIInnerDown"];//innerImgDown;
     block = btnPressDown;
     
     CGFloat aspect = frame.size.width / imageFrame.size.width;

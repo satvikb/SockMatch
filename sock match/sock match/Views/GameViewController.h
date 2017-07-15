@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "Sock.h"
-#import "Claw.h"
 #import "Forklift.h"
 #import "Functions.h"
 #import "TutorialView.h"
@@ -46,12 +45,10 @@
 
 @property (strong, nonatomic) NSMutableArray<UIImage*>* boxAnimationFrames;
 @property (strong, nonatomic) NSMutableArray<UIImage*>* wheelFrames;
-@property (strong, nonatomic) NSMutableArray<UIImage*>* clawAnimationFrames;
 @property (strong, nonatomic) NSMutableArray<UIImage*>* forkLiftAnimationFrames;
 @property (strong, nonatomic) NSMutableArray<UIImage*>* emissionAnimationFrames;
 
 @property (strong, nonatomic) NSMutableArray<UIImage*>* countdownNumbers;
-@property (strong, nonatomic) NSMutableArray<UIImage*>* countdownDetails;
 
 @property (nonatomic, assign) bool timerPaused;
 @property (nonatomic, assign) bool doingTutorial;
