@@ -29,6 +29,8 @@
     NSMutableArray <UIImageView*>* topConveyorBeltWheels;
     NSMutableArray <NSNumber*>* topConveyorBeltWheelsFrames;
     
+    NSMutableArray <UIImageView*>* floorViewss;
+    
     NSMutableArray <UIImageView*>* scoreDigits;
     UILabel* scoreLabel;
     
@@ -343,6 +345,38 @@
     text_score.font = [UIFont systemFontOfSize:20];
     
     [self.view addSubview:text_score];
+    
+    UIView* floorImages = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 2, 1)]];
+    floorImages.layer.zPosition = -10;
+    [self.view addSubview:floorImages];
+    
+    UIImage* floorImg = [UIImage imageNamed:@"floor"];
+    CGFloat curX = 0;
+    CGFloat curY = 0;
+    
+    CGFloat pw = 0.1;
+    CGFloat width = [self propX:pw];
+    CGFloat propHeight = width/[self propY:1];
+    //todo make it exact
+    for(int y = 0; y < 100; y++){
+        for(int x = 0; x < 30; x++){
+            CGFloat x = [self propX:curX];
+            CGFloat y = [self propY:curY];
+            UIImageView* floor = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, width, width)];
+            floor.layer.magnificationFilter = kCAFilterNearest;
+            floor.contentMode = UIViewContentModeScaleAspectFit;
+            floor.transform = CGAffineTransformMakeRotation(0.7853981634);
+//            floor.layer.borderWidth = 2;
+            floor.layer.zPosition = -10;
+            [floor setImage: floorImg];
+            [floorImages addSubview:floor];
+            
+            curX += pw;
+        }
+        curY += propHeight;
+        curX = 0;
+    }
+    
     
 //    pauseButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.8, 0.4, 0.1)] withText:@"p" withBlock:^void{
 //        NSLog(@"fasdffsdfadf");
