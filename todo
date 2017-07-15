@@ -9,6 +9,7 @@ gameplay
 graphics
 	-conveyor belt overhead frame to the left
 	-sock and package designs
+	-forklift tire trail
 
 collisions
 	-IMPROVE COLLISIONS.
@@ -61,6 +62,7 @@ bugs
 	-matching socks near belt overlap conveyor belt/wheels
 	-prevent forklift overlapping (maybe have four sections with one in each section)
 	-if the play button is above forklift pressing play changes it to be below
+	-pause button not working if did tutorial
 
 crashes
 	-

@@ -114,7 +114,7 @@
     [self addSubview:sockTwo];
     
     tutorialText = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.05, 1, .9, 0.1)]];
-    tutorialText.font = [UIFont fontWithName:@"Helvetica" size:26];
+    tutorialText.font = [UIFont fontWithName:@"Pixel_3" size:26];
     tutorialText.text = @"welcome to sock shop!";
     tutorialText.textAlignment = NSTextAlignmentCenter;
     tutorialText.adjustsFontSizeToFitWidth = true;

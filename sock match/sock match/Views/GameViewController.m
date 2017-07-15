@@ -155,11 +155,14 @@
                 efficiencyInfo.textAlignment = NSTextAlignmentCenter;
                 efficiencyInfo.numberOfLines = 0;
                 efficiencyInfo.layer.borderWidth = 2;
+                efficiencyInfo.font = [UIFont fontWithName:@"Pixel_3" size:20];
+//                efficiencyInfo.adjustsFontSizeToFitWidth = true;
                 efficiencyInfo.textColor = [UIColor whiteColor];
                 
                 
                 UILabel* tapToContinue = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.25, 0.5, 0.5, 0.1)]];
                 tapToContinue.text = @"tap to continue.";
+                tapToContinue.font = [UIFont fontWithName:@"Pixel_3" size:20];
                 tapToContinue.textAlignment = NSTextAlignmentCenter;
                 tapToContinue.textColor = [UIColor whiteColor];
                 

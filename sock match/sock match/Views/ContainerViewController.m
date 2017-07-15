@@ -82,8 +82,8 @@
     }];
     
     NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"gamedata"];
-    NSString *content = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
-    NSLog(@"CONTENT:%@", content);
+    NSString *fcontent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
+    NSLog(@"CONTENT:%@", fcontent);
     
 //    unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
     
