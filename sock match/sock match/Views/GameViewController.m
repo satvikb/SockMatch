@@ -372,9 +372,9 @@
                 [floor setImage: floorImg];
                 [floorImages addSubview:floor];
             }
-            curX += pw+0.02;
+            curX += pw+0.01;
         }
-        curY += propHeight+0.02;
+        curY += propHeight+0.01;
         curX = 0;
     }
     
@@ -1347,7 +1347,7 @@
     otherSock.layer.zPosition = 150;
     [otherSock animateDecreaseCoreScale];
     
-    if(otherSock.onConvayorBelt == false){
+    if(otherSock.onConvayorBelt == false && sock.onConvayorBelt == false){
         otherSock.theoreticalFrame = otherSock.frame;
         [UIView animateWithDuration:0.25 animations:^void{
             CGRect f = CGRectOffset(otherSock.frame, (sock.frame.origin.x-otherSock.frame.origin.x)/2, (sock.frame.origin.y-otherSock.frame.origin.y)/2);

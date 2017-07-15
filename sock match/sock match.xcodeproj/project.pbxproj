@@ -31,7 +31,7 @@
 		408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B671EEFCA1B0011C450 /* GameViewController.m */; };
 		408E6B6F1EEFF2530011C450 /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B6E1EEFF2530011C450 /* Functions.m */; };
 		4093A0A11EF1D400008FA288 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */; };
-		40B4B73A1F1A1DA900979F33 /* Pixel_3.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40B4B7391F1A1DA200979F33 /* Pixel_3.ttf */; };
+		40B4B7401F1A226B00979F33 /* Pixel_3.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40B4B73F1F1A226900979F33 /* Pixel_3.ttf */; };
 		40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D501F0833060051D180 /* GCLeaderboardViewController.m */; };
 		40D12D541F084C690051D180 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D531F084C690051D180 /* Button.m */; };
 		40D77E2A1F0DAFAD004577D7 /* DifficultyCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D77E291F0DAFAD004577D7 /* DifficultyCurve.m */; };
@@ -85,7 +85,7 @@
 		408E6B6D1EEFF1920011C450 /* Functions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Functions.h; sourceTree = "<group>"; };
 		408E6B6E1EEFF2530011C450 /* Functions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Functions.m; sourceTree = "<group>"; };
 		4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		40B4B7391F1A1DA200979F33 /* Pixel_3.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Pixel_3.ttf; sourceTree = "<group>"; };
+		40B4B73F1F1A226900979F33 /* Pixel_3.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Pixel_3.ttf; sourceTree = "<group>"; };
 		40D12D4F1F0833060051D180 /* GCLeaderboardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCLeaderboardViewController.h; sourceTree = "<group>"; };
 		40D12D501F0833060051D180 /* GCLeaderboardViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCLeaderboardViewController.m; sourceTree = "<group>"; };
 		40D12D521F084C690051D180 /* Button.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
@@ -247,7 +247,7 @@
 		40B4B7321F1A159800979F33 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				40B4B7391F1A1DA200979F33 /* Pixel_3.ttf */,
+				40B4B73F1F1A226900979F33 /* Pixel_3.ttf */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -334,7 +334,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				408E6B541EEF88180011C450 /* Assets.xcassets in Resources */,
-				40B4B73A1F1A1DA900979F33 /* Pixel_3.ttf in Resources */,
+				40B4B7401F1A226B00979F33 /* Pixel_3.ttf in Resources */,
 				4093A0A11EF1D400008FA288 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

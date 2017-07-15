@@ -25,10 +25,10 @@ typedef enum AppState {
     MainMenu = 0,
     TransitioningFromMainMenuToGame = 1,
     Game = 2,
-    TransitioningFromGameToGameOver = 4,
+    TransitioningFromGameToGameOver = 3,
     GameOver = 4,
-    TransitioningFromGameOverToMainMenu = 3,
-    TransitioningFromGameOverToGame = 3
+    TransitioningFromGameOverToMainMenu = 5,
+    TransitioningFromGameOverToGame = 6
 } AppState;
 
 typedef enum GameState {
