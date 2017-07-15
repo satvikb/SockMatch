@@ -60,7 +60,7 @@ const CGFloat innerBar3DOffset = 0.1111111111;
     textLabel.textColor = [UIColor whiteColor];
     textLabel.adjustsFontSizeToFitWidth = true;
     textLabel.text = text;
-    textLabel.font = [UIFont systemFontOfSize:40];
+    textLabel.font = [UIFont fontWithName:@"Pixel_3" size:40];
     [self addSubview:textLabel];
     
     return self;

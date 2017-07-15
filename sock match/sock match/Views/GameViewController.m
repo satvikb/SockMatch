@@ -316,7 +316,7 @@
     scoreLabel.text = @"0";
     scoreLabel.textAlignment = NSTextAlignmentRight;
     scoreLabel.textColor = [UIColor whiteColor];
-    scoreLabel.font = [UIFont systemFontOfSize:25];
+    scoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:25];
     [self.view addSubview:scoreLabel];
     
     efficiencyBarFrame = [UIImage imageNamed:@"efficiencybar_frame"];
@@ -327,14 +327,14 @@
     bar.tag = 13;
     [self.view addSubview:bar];
     
-    text_factoryEfficiency = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.0375)]];
+    text_factoryEfficiency = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.04)]];
 //    text_factoryEfficiency.layer.borderWidth = 2;
-    text_factoryEfficiency.text = @"factory efficiency";
+    text_factoryEfficiency.text = @"Factory Efficiency";
     text_factoryEfficiency.layer.zPosition = 101;
     text_factoryEfficiency.tag = 12;
     text_factoryEfficiency.textColor = [UIColor whiteColor];
     text_factoryEfficiency.adjustsFontSizeToFitWidth = true;
-    text_factoryEfficiency.font = [UIFont systemFontOfSize:25];
+    text_factoryEfficiency.font = [UIFont fontWithName:@"Pixel_3" size:45];
     [self.view addSubview:text_factoryEfficiency];
     
     text_score = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.825, 0.035, 0.15, 0.0375)]];
@@ -342,7 +342,7 @@
     text_score.layer.zPosition = 102;
     text_score.textAlignment = NSTextAlignmentRight;
     text_score.textColor = [UIColor whiteColor];
-    text_score.font = [UIFont systemFontOfSize:20];
+    text_score.font = [UIFont fontWithName:@"Pixel_3" size:20];
     
     [self.view addSubview:text_score];
     
@@ -351,29 +351,30 @@
     [self.view addSubview:floorImages];
     
     UIImage* floorImg = [UIImage imageNamed:@"floor"];
-    CGFloat curX = 0;
-    CGFloat curY = 0;
+    CGFloat curX = -0.025;
+    CGFloat curY = -0.05;
     
     CGFloat pw = 0.1;
     CGFloat width = [self propX:pw];
     CGFloat propHeight = width/[self propY:1];
-    //todo make it exact
-    for(int y = 0; y < 100; y++){
-        for(int x = 0; x < 30; x++){
-            CGFloat x = [self propX:curX];
-            CGFloat y = [self propY:curY];
-            UIImageView* floor = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, width, width)];
-            floor.layer.magnificationFilter = kCAFilterNearest;
-            floor.contentMode = UIViewContentModeScaleAspectFit;
-            floor.transform = CGAffineTransformMakeRotation(0.7853981634);
-//            floor.layer.borderWidth = 2;
-            floor.layer.zPosition = -10;
-            [floor setImage: floorImg];
-            [floorImages addSubview:floor];
-            
-            curX += pw;
+    
+    for(int y = 0; y < (floorImages.frame.size.height/width); y++){
+        for(int x = 0; x < (floorImages.frame.size.width/width); x++){
+            if(x % 1 == 0 && y % 1 == 0){
+                CGFloat x = [self propX:curX];
+                CGFloat y = [self propY:curY];
+                UIImageView* floor = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, width, width)];
+                floor.layer.magnificationFilter = kCAFilterNearest;
+                floor.contentMode = UIViewContentModeScaleAspectFit;
+                floor.transform = CGAffineTransformMakeRotation(0.7853981634);
+                //            floor.layer.borderWidth = 2;
+                floor.layer.zPosition = -10;
+                [floor setImage: floorImg];
+                [floorImages addSubview:floor];
+            }
+            curX += pw+0.02;
         }
-        curY += propHeight;
+        curY += propHeight+0.02;
         curX = 0;
     }
     
@@ -416,7 +417,7 @@
     pauseViewPauseText.textColor = [UIColor whiteColor];
     pauseViewPauseText.layer.zPosition = 111;
     pauseViewPauseText.textAlignment = NSTextAlignmentCenter;
-    pauseViewPauseText.font = [UIFont systemFontOfSize:40];
+    pauseViewPauseText.font = [UIFont fontWithName:@"Pixel_3" size:40];
     pauseViewPauseText.adjustsFontSizeToFitWidth = true;
     [pauseView addSubview:pauseViewPauseText];
     
@@ -425,7 +426,7 @@
     pauseViewContinueText.textColor = [UIColor whiteColor];
     pauseViewContinueText.layer.zPosition = 112;
     pauseViewContinueText.textAlignment = NSTextAlignmentCenter;
-    pauseViewContinueText.font = [UIFont systemFontOfSize:20];
+    pauseViewContinueText.font = [UIFont fontWithName:@"Pixel_3" size:20];
     pauseViewContinueText.adjustsFontSizeToFitWidth = true;
     [pauseView addSubview:pauseViewContinueText];
     
@@ -434,9 +435,9 @@
 
 -(void)animateInExtraUI{
     [UIView animateWithDuration:0.5 animations:^void{
-        pauseButton.frame = [self propToRect:CGRectMake(0.025, 0.0325, 0.1, 0.075)];
+        pauseButton.frame = [self propToRect:CGRectMake(0.025, 0.035, 0.1, 0.075)];
         bar.frame = [self propToRect:CGRectMake(0.15, 0.0725, 0.4, 0.05)];
-        text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, 0.03, 0.4, 0.0375)];
+        text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, 0.025, 0.4, 0.04)];
     }];
 }
 
@@ -1336,25 +1337,39 @@
 }
 
 -(void) madePairBetweenMainSock:(Sock*)sock andOtherSock:(Sock*)otherSock {
-    [sock removeFromSuperview];
-    [socks removeObject:sock];
-    
-    
-    otherSock.frame = CGRectOffset(otherSock.frame, (sock.frame.origin.x-otherSock.frame.origin.x)/2, (sock.frame.origin.y-otherSock.frame.origin.y)/2);
-    otherSock.theoreticalFrame = otherSock.frame;
-    
     otherSock.inAPair = sock.inAPair = true;
     otherSock.mainSockInPair = true;
     
     otherSock.otherSockInPair = sock;
     sock.otherSockInPair = otherSock;
     
-    [otherSock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
-    
     otherSock.allowMovement = false;
     otherSock.layer.zPosition = 150;
     [otherSock animateDecreaseCoreScale];
-    [socksBeingAnimatedIntoBox addObject:otherSock];
+    
+    if(otherSock.onConvayorBelt == false){
+        otherSock.theoreticalFrame = otherSock.frame;
+        [UIView animateWithDuration:0.25 animations:^void{
+            CGRect f = CGRectOffset(otherSock.frame, (sock.frame.origin.x-otherSock.frame.origin.x)/2, (sock.frame.origin.y-otherSock.frame.origin.y)/2);
+            otherSock.frame = f;
+            sock.frame = f;
+        } completion:^(BOOL completed){
+            [sock removeFromSuperview];
+            [socks removeObject:sock];
+            
+            [otherSock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
+            [socksBeingAnimatedIntoBox addObject:otherSock];
+        }];
+    }else{
+        [sock removeFromSuperview];
+        [socks removeObject:sock];
+        
+        CGRect f = CGRectOffset(otherSock.frame, (sock.frame.origin.x-otherSock.frame.origin.x)/2, (sock.frame.origin.y-otherSock.frame.origin.y)/2);
+        otherSock.frame = f;
+        
+        [otherSock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
+        [socksBeingAnimatedIntoBox addObject:otherSock];
+    }
 }
 
 -(void) animateAllSockBoxes:(CGFloat)delta {

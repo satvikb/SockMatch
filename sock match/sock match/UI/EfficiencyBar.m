@@ -43,9 +43,14 @@
     innerImageView.layer.zPosition = 5;
     [innerImageView setImage:innerImage];
     
-    percentLabel = [[UILabel alloc] initWithFrame:CGRectMake(innerImageView.frame.size.width*0.05, 0, innerImageView.frame.size.width, innerImageView.frame.size.height)];
+    CGFloat percentLabelX = innerImageView.frame.size.width*0.05;
+    CGFloat percentLabelY = innerImageView.frame.size.height*0.1;
+    percentLabel = [[UILabel alloc] initWithFrame:CGRectMake(percentLabelX, percentLabelY, innerImageView.frame.size.width-percentLabelX, innerImageView.frame.size.height-percentLabelY)];
     percentLabel.textAlignment = NSTextAlignmentLeft;
     percentLabel.text = @"100%";
+    percentLabel.font = [UIFont fontWithName:@"Pixel_3" size:20];
+    percentLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+//    percentLabel.layer.borderWidth = 2;
     percentLabel.textColor = [UIColor whiteColor];
     
     [self addSubview:frameImageView];

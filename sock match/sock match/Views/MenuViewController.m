@@ -82,6 +82,7 @@
         [self pressPlayButton:playButton];
     }];
 //    playButton.layer.borderWidth = 3;
+    playButton.layer.zPosition = 103;
     [self.view addSubview:playButton];
     
     CGFloat gcBtnWidth = [self propX: 0.15];
@@ -112,11 +113,13 @@
     
     highScoreLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.3, 0.75, 0.4, 0.1)]];
     highScoreLabel.textAlignment = NSTextAlignmentCenter;
-    highScoreLabel.font = [UIFont systemFontOfSize:40];
+//    [UIFont fontWithName:@"Pixel_3" size:
+    highScoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:40];
     highScoreLabel.numberOfLines = 0;
 //    highScoreLabel.lineBreakMode = NSLineBreak
     highScoreLabel.adjustsFontSizeToFitWidth = true;
 //    highScoreLabel.layer.borderWidth = 2;
+//    highScoreLabel.layer.zPosition = 103;
     [self.view addSubview:highScoreLabel];
 }
 

@@ -94,7 +94,9 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
 -(void)tickNewSock{
     int oldNum = floor(_numOfDifferentSocksToGenerate);
     //todo change the max dynamically to make it harder
-    _numOfDifferentSocksToGenerate += [Functions randFromMin:0 toMax:0.025];
+    CGFloat t = floor(_numOfDifferentSocksToGenerate)/(CGFloat)[Functions randFromMin:40 toMax:50];
+    CGFloat m = 0.1;
+    _numOfDifferentSocksToGenerate += [Functions randFromMin:0 toMax:m-(t >= m ? m : t)];
     
     if(floor(_numOfDifferentSocksToGenerate) == oldNum+1){
         if(oldNum+1 <= MAX_SOCK_TYPES-1){

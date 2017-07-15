@@ -8,7 +8,6 @@ gameplay
 
 graphics
 	-conveyor belt overhead frame to the left
-	-design factory floor
 	-sock and package designs
 
 collisions
@@ -18,10 +17,8 @@ collisions
 	-prevent moving sock back on belt once removed?
 
 ui
-	-menu button on pause view
-	-switch view?
-		-shown while switching views, allows for game view to load and remove socks for game over
-		-or just for loading, for game over the 'camera' can move to the right to the game over screen
+	-pressing play button menu above forklifts?
+	-menu button on pause view?
 	-improve custom Game Center leaderboard
 		-maybe wood textures
 		-users with no image use initials
@@ -42,6 +39,7 @@ saving
 		-handle file load errors (corrupt file or modified)
 
 fonts
+	-fix i's and t's
 	-2 variants (made for different uses)
 		-medium for normal text
 		-small for detail text
@@ -58,10 +56,11 @@ meta
 
 bugs
 	-clicking play on menu while forklift is moving through screen changed speed of forklifts to a constant value
-	-sock package tutorial screen over black overlay
+	-sock package on tutorial screen over black overlay
 	-matching socks while stopping game is buggy
 	-matching socks near belt overlap conveyor belt/wheels
 	-prevent forklift overlapping (maybe have four sections with one in each section)
+	-if the play button is above forklift pressing play changes it to be below
 
 crashes
 	-
@@ -73,3 +72,4 @@ other code stuff
 	-improve containerviewcontroller (actually remove and create view controllers?)
 		-when changing views, use the parameter or the global variable?
 	-anonymize code
+	-check zPosition for child objects (under each view controller), if the base zPosition is required

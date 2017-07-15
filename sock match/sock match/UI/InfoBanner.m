@@ -29,7 +29,7 @@
     label.text = text;
     label.textColor = [UIColor whiteColor];
     label.textAlignment = NSTextAlignmentCenter;
-    label.font = [UIFont systemFontOfSize:20];
+    label.font = [UIFont fontWithName:@"Pixel_3" size:20];
     [self addSubview:label];
     
     self.layer.opacity = 0;
