@@ -6,10 +6,14 @@
 //  Copyright © 2017 sborra. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface Sounds : NSObject
 
-+(void)loadSounds;
++ (instancetype)sharedInstance;
+-(void)loadSounds;
+
+@property AVAudioPlayer* beltSound;
+
 
 @end

@@ -1,14 +1,9 @@
 all thats left
-
--when checking too many socks check if sock is out of screen (cuz of collision)
 -powerup socks
 	-increase efficiency
 	-slow dow belt for time (put timer between score and efficiency bar)
 
-
-collisions same type do not overlap either
-collision if theoretical frame out of view go to start of belt
-new high score text
+collision if theoretical frame out of view go to start of belt?
 
 
 gameplay
@@ -40,10 +35,12 @@ settings
 	-credits
 
 sounds
+	-make sounds less annoying
 	-forklift moving
 	-light turning on
 	-sock package
 	-point
+	-countdown
 
 saving
 	-load
@@ -66,7 +63,7 @@ bugs
 	-if the play button is above forklift pressing play changes it to be below
 	-facing left forklifts while animating to game over
 	-pause button after doing tutorial not working
--reset score label after going from game over to menu
+	-reset score label after going from game over to menu
 
 crashes
 	-

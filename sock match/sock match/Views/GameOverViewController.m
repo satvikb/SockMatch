@@ -10,6 +10,7 @@
 #import "Storage.h"
 
 @interface GameOverViewController (){
+    UILabel* highScoreLabel;
     UIImageView* gameOverText;
     Button* againButton;
     int score;
@@ -40,6 +41,12 @@
     }];
     againButton.layer.zPosition = 151;
     [self.view addSubview:againButton];
+    
+    highScoreLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.475, 1, 0.125)]];
+    highScoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:30];
+    highScoreLabel.textAlignment = NSTextAlignmentCenter;
+    highScoreLabel.text = @"";
+    [self.view addSubview:highScoreLabel];
 }
 
 -(void)shareSheet {
@@ -99,8 +106,16 @@
 //    testLabel.text = [NSString stringWithFormat:@"game over %i", score];
     NSLog(@"reporting score");
     self->score = s;
+    
     if([self.delegate respondsToSelector:@selector(gameEndScore:)]){
         [self.delegate gameEndScore:s];
+    }
+    
+    if([Storage getSavedHighScore] < score){
+        NSLog(@"New high score!");
+        highScoreLabel.text = @"new high score!";
+    }else{
+        highScoreLabel.text = @"";
     }
 }
 

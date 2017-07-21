@@ -11,7 +11,7 @@
 
 @interface Storage : NSObject
 
-+(void)saveHighScore:(int)score;
++(bool)saveHighScore:(int)score;
 +(int)getSavedHighScore;
 +(bool)didCompleteTutorial;
 +(void)completeTutorial;

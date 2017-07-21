@@ -19,6 +19,7 @@
 #import "InfoBanner.h"
 #import "GameAlertView.h"
 #import "Button.h"
+#import "Sounds.h"
 
 @protocol GameDelegate;
 

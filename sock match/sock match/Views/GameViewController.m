@@ -349,6 +349,15 @@
     
     [self.view addSubview:text_score];
     
+    
+//    CGRect screen = [self propToRect:CGRectMake(0, 0, 1, 1)];
+//    CGFloat beltAndTopSize = conveyorBeltRect.origin.y+conveyorBeltRect.size.height;
+//    UIView* test = [[UIView alloc] initWithFrame: CGRectMake(screen.origin.x, screen.origin.y+beltAndTopSize, screen.size.width, screen.size.height-beltAndTopSize)];
+//    test.layer.borderWidth = 3;
+//    test.layer.zPosition = 1000;
+//    test.layer.borderColor = UIColor.blueColor.CGColor;
+//    [self.view addSubview:test];
+    
     UIView* floorImages = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 2, 1)]];
     floorImages.layer.zPosition = -10;
     [self.view addSubview:floorImages];
@@ -716,7 +725,7 @@
     CGFloat delta = tmr.duration;
     
     if (currentGameState != NotPlaying && timerPaused == false) {
-        
+        [self updateSoundSpeed]; //TODO handle pause sounds
         [self animateBeltWithSpeed:animateBeltMoveSpeed delta:delta];
         [self updateSocksOnBeltWithSpeed:animateBeltMoveSpeed delta:delta];
         [self handleAnimateWheel:delta];
@@ -777,11 +786,17 @@
                 
                 if(animateBeltMoveSpeed <= 0){
                     animateBeltMoveSpeed = 0;
+                    [[Sounds sharedInstance].beltSound stop];
                     [self endGameIfPossible];
                 }
                 break;
         }
     }
+}
+
+-(void)updateSoundSpeed{
+//    CGFloat r = [self getFinalBeltMoveSpeed:animateBeltMoveSpeed];
+//    [Sounds sharedInstance].beltSound.rate = r;
 }
 
 -(CGFloat)getFinalBeltMoveSpeed:(CGFloat)baseSpeed{
@@ -839,7 +854,6 @@
 
 -(void)forceEndGame {
     [[GameData sharedGameData] clearSave];
-//    [self updateBarForEfficiency:<#(CGFloat)#>]
     [Flurry endTimedEvent:@"game" withParameters:@{@"score":[NSNumber numberWithInt:score], @"numSocks":[self analyticsNumSocks]}];
     if([self.delegate respondsToSelector:@selector(gameEndScore:)]){
         [self.delegate gameEndScore:score];
@@ -961,6 +975,12 @@
 
 -(bool)_sockRectOnBelt:(Sock*)s{
     return CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX([s getCoreRect]), CGRectGetMidY([s getCoreRect])));
+}
+
+-(bool)_sockInGameView:(Sock*)s{
+    CGRect screen = [self propToRect:CGRectMake(0, 0, 1, 1)];
+    CGFloat beltAndTopSize = conveyorBeltRect.origin.y+conveyorBeltRect.size.height;
+    return CGRectIntersectsRect([s getCoreRect], CGRectMake(screen.origin.x, screen.origin.y+beltAndTopSize, screen.size.width, screen.size.height-beltAndTopSize));
 }
 
 -(void)animateBeltWithSpeed:(CGFloat)speed delta:(CGFloat)delta {
@@ -1097,7 +1117,7 @@
     int i = 0;
     for(Sock* s in socks){
         //TODO keep onConveyorBelt?
-        if(s.inAPair == false && s.validSock == true && s.allowMovement == true && s.onConvayorBelt == false){
+        if(s.inAPair == false && s.validSock == true && s.allowMovement == true && s.onConvayorBelt == false && [self _sockInGameView:s]){
             i++;
         }
     }
@@ -1262,7 +1282,7 @@
             if(!ss.inAPair){
                 CGRect f = [s getCoreTheoreticalRect];//s.theoreticalFrame;
                 CGRect r = [ss getCoreRect];//ss.frame;
-                if(CGRectIntersectsRect(r, f) && !(ss.sockId == s.sockId)){
+                if(CGRectIntersectsRect(r, f)){// && !(ss.sockId == s.sockId)){
                     overlap = true;
                     
                     CGRect resolveRect = CGRectIntersection(f, r);

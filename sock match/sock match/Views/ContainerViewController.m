@@ -134,6 +134,7 @@
     
     [gameController startGame:loadingData == true ? false : true];
     [gameController animateInExtraUI];
+    [[Sounds sharedInstance].beltSound play];
     
     [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointZero animationFinished:^{
         NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
@@ -218,7 +219,9 @@
 
 - (void) gameEndScore:(int)score{
     [self reportGCScore:score];
-    [Storage saveHighScore:score];
+    if([Storage saveHighScore:score]){
+        menuController.highScoreLabel.text = [NSString stringWithFormat:@"high score: %i", score];
+    }
 }
 
 -(void)reportGCScore:(int)currentScore {

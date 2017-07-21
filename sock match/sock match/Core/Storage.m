@@ -12,13 +12,15 @@
     
 }
 
-+(void)saveHighScore:(int)score{
++(bool)saveHighScore:(int)score{
 //    NSInteger* s = [NSInteger numberWithInt:score];
     int currentHighScore = [self getSavedHighScore];
     if(currentHighScore < score){
         NSNumber* s = [NSNumber numberWithInt:score];
         [Lockbox archiveObject:s forKey:@"highscore"];
+        return true;
     }
+    return false;
 }
 
 +(int)getSavedHighScore {
