@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "Functions.h"
 @interface EfficiencyBar : UIView
 
 -(id)initWithFrame:(CGRect)frame frameImage:(UIImage*)frameImage innerImage:(UIImage*)innerImage;

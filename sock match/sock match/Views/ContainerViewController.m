@@ -142,6 +142,12 @@
     }];
 }
 
+-(void) switchFromGameToMenu:(GameViewController *)game{
+    currentAppState = TransitioningFromGameToMenu;
+    [Flurry logEvent:@"Switch_GameToMenu"];
+    
+}
+
 - (void) switchFromGameToGameOver:(GameViewController *)game withScore:(int)score {
     currentAppState = TransitioningFromGameOverToGame;
     [Flurry logEvent:@"Switch_GameToGameOver"];

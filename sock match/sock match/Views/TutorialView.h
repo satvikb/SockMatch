@@ -16,6 +16,7 @@
 typedef void (^AnimateSockOneComplete)(Sock* s);
 typedef void (^AnimateSockTwoComplete)(Sock* s);
 typedef void (^SockOneTouchEnd)(Sock* s);
+typedef void (^SockOneTouchMove)(Sock* s);
 typedef void (^SockTwoTouchMove)(Sock* s);
 
 @property (nonatomic, assign) TutorialState tutorialState;
@@ -34,6 +35,7 @@ typedef void (^SockTwoTouchMove)(Sock* s);
 @property (nonatomic, copy) AnimateSockOneComplete animateSockOneCompleteBlock;
 @property (nonatomic, copy) AnimateSockTwoComplete animateSockTwoCompleteBlock;
 @property (nonatomic, copy) SockOneTouchEnd sockOneTouchEndBlock;
+@property (nonatomic, copy) SockOneTouchMove sockOneTouchMoveBlock;
 @property (nonatomic, copy) SockTwoTouchMove sockTwoTouchMoveBlock;
 
 @end

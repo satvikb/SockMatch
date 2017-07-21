@@ -1,5 +1,16 @@
 all thats left
 
+-when checking too many socks check if sock is out of screen (cuz of collision)
+-powerup socks
+	-increase efficiency
+	-slow dow belt for time (put timer between score and efficiency bar)
+
+
+collisions same type do not overlap either
+collision if theoretical frame out of view go to start of belt
+new high score text
+
+
 gameplay
 	-improve tutorial (make more interactive)
 	-improve difficulty values
@@ -7,7 +18,6 @@ gameplay
 		-extra score (+1 or +x based on combo's in a row) when multiple socks are packaged at once
 
 graphics
-	-conveyor belt overhead frame to the left
 	-sock and package designs
 	-forklift tire trail
 
@@ -18,18 +28,18 @@ collisions
 	-prevent moving sock back on belt once removed?
 
 ui
-	-pressing play button menu above forklifts?
-	-menu button on pause view?
-	-improve custom Game Center leaderboard
-		-maybe wood textures
-		-users with no image use initials
 	-improve game over screen
 		-replay (main button)
 		-home (smaller to the left)
 		-share (smaller to the right)
 
+settings
+	-settings view to the left
+	-settings title
+	-sfx
+	-credits
+
 sounds
-	-belt moving
 	-forklift moving
 	-light turning on
 	-sock package
@@ -38,14 +48,6 @@ sounds
 saving
 	-load
 		-handle file load errors (corrupt file or modified)
-
-fonts
-	-fix i's and t's
-	-2 variants (made for different uses)
-		-medium for normal text
-		-small for detail text
-	-tutorial text
-	-score and maybe buttons
 
 gamecenter
 	-prevent cheating (maybe use score context with saved high score to filter cheaters)
@@ -58,11 +60,13 @@ meta
 bugs
 	-clicking play on menu while forklift is moving through screen changed speed of forklifts to a constant value
 	-sock package on tutorial screen over black overlay
-	-matching socks while stopping game is buggy
+	-matching socks while stopping game is buggy ([self canEndGame])
 	-matching socks near belt overlap conveyor belt/wheels
 	-prevent forklift overlapping (maybe have four sections with one in each section)
 	-if the play button is above forklift pressing play changes it to be below
-	-pause button not working if did tutorial
+	-facing left forklifts while animating to game over
+	-pause button after doing tutorial not working
+-reset score label after going from game over to menu
 
 crashes
 	-

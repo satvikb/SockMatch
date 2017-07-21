@@ -117,6 +117,10 @@
             timerPaused = true;
         }];
         
+        [tutorialView setSockOneTouchMoveBlock:^void(Sock* s){
+            [ws tutorialViewSockMove:ws.tutorialView];
+        }];
+            
         [tutorialView setSockOneTouchEndBlock:^(Sock* s){
             bool onBelt = CGRectContainsPoint(ws->conveyorBeltRect, CGPointMake(CGRectGetMidX([ws.tutorialView.sockOne getCoreRect]), CGRectGetMidY([ws.tutorialView.sockOne getCoreRect])));
             
@@ -135,39 +139,7 @@
         }];
         
         [tutorialView setSockTwoTouchMoveBlock:^(Sock* s){
-            if([self socksFormPairWith:tutorialView.sockOne andOther:tutorialView.sockTwo] == true){
-                timerPaused = false;
-                
-                [ws madePairBetweenMainSock:ws.tutorialView.sockOne andOtherSock:ws.tutorialView.sockTwo];
-                [ws hideTutLabel];
-                
-                UILabel* efficiencyInfo = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.75, 0.25)]];
-                efficiencyInfo.text = @"this is the efficiency of the factory.\nletting socks through or building up socks reduces the efficiency.\n when efficiency reaches 0, you lose.";
-                efficiencyInfo.textAlignment = NSTextAlignmentCenter;
-                efficiencyInfo.numberOfLines = 0;
-                efficiencyInfo.layer.borderWidth = 2;
-                efficiencyInfo.font = [UIFont fontWithName:@"Pixel_3" size:20];
-//                efficiencyInfo.adjustsFontSizeToFitWidth = true;
-                efficiencyInfo.textColor = [UIColor whiteColor];
-                
-                
-                UILabel* tapToContinue = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.25, 0.5, 0.5, 0.1)]];
-                tapToContinue.text = @"tap to continue.";
-                tapToContinue.font = [UIFont fontWithName:@"Pixel_3" size:20];
-                tapToContinue.textAlignment = NSTextAlignmentCenter;
-                tapToContinue.textColor = [UIColor whiteColor];
-                
-                [ws.tutorialView focusOnRect:[ws propToRect:CGRectMake(0.125, 0.03, 0.45, 0.1)] withLabels:@[efficiencyInfo, tapToContinue] touchBlock:^void{
-                    timerPaused = false;
-                    ws.tutorialView.tutorialState = Completed;
-                    ws.tutorialView.tutorialText.text = @"you can also match socks directly on the belt";
-                    currentGameState = Playing;
-                    [Flurry endTimedEvent:@"tutorial" withParameters:nil];
-                    //TODO uncomment for final
-                    [Storage completeTutorial];
-                    [ws performSelector:@selector(hideTutLabel) withObject:nil afterDelay:5];
-                }];
-            }
+            [ws tutorialViewSockMove:ws.tutorialView];
         }];
         
         [self.view addSubview:tutorialView];
@@ -176,6 +148,45 @@
     }
     
     return self;
+}
+
+-(void)tutorialViewSockMove:(TutorialView*)tutorialView{
+    __unsafe_unretained typeof(self) ws = self;
+
+    if([self socksFormPairWith:tutorialView.sockOne andOther:tutorialView.sockTwo] == true){
+        timerPaused = false;
+        [socks addObject:ws.tutorialView.sockTwo];
+        [ws madePairBetweenMainSock:ws.tutorialView.sockOne andOtherSock:ws.tutorialView.sockTwo];
+        [ws hideTutLabel];
+        
+        UILabel* efficiencyInfo = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.75, 0.25)]];
+        efficiencyInfo.text = @"this is the efficiency of the factory.\nletting socks through or building up socks reduces the efficiency.\n when efficiency reaches 0, you lose.";
+        efficiencyInfo.textAlignment = NSTextAlignmentCenter;
+        efficiencyInfo.numberOfLines = 0;
+        efficiencyInfo.layer.borderWidth = 2;
+        efficiencyInfo.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:15]];
+        //                efficiencyInfo.adjustsFontSizeToFitWidth = true;
+        efficiencyInfo.textColor = [UIColor whiteColor];
+        
+        
+        UILabel* tapToContinue = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.25, 0.5, 0.5, 0.1)]];
+        tapToContinue.text = @"tap to continue.";
+        tapToContinue.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:20]];
+        tapToContinue.textAlignment = NSTextAlignmentCenter;
+        tapToContinue.textColor = [UIColor whiteColor];
+        
+        [ws.tutorialView focusOnRect:[ws propToRect:CGRectMake(0.125, 0.02, 0.45, 0.1)] withLabels:@[efficiencyInfo, tapToContinue] touchBlock:^void{
+            timerPaused = false;
+            ws.tutorialView.tutorialState = Completed;
+            ws.tutorialView.tutorialText.text = @"you can also match socks directly on the belt";
+            currentGameState = Playing;
+            [Flurry endTimedEvent:@"tutorial" withParameters:nil];
+            //TODO uncomment for final
+            [Storage completeTutorial];
+            doingTutorial = false;
+            [ws performSelector:@selector(hideTutLabel) withObject:nil afterDelay:5];
+        }];
+    }
 }
 
 -(void)hideTutLabel{[tutorialView animateTutorialLabelOut];}
@@ -261,7 +272,7 @@
     animateScoreValueTimer = 0;
     
     saveGameTimer = 0;
-    saveGameInterval = 20;
+    saveGameInterval = 5;
     
     animateBoxTimer = 0;
     animateBoxInterval = 0.005;
@@ -300,7 +311,7 @@
     scoreLabel.text = @"0";
     scoreLabel.textAlignment = NSTextAlignmentRight;
     scoreLabel.textColor = [UIColor whiteColor];
-    scoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:25];
+    scoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:[Functions fontSize:25]]];
     [self.view addSubview:scoreLabel];
     
     efficiencyBarFrame = [UIImage imageNamed:@"UIFrame"];
@@ -313,20 +324,28 @@
     
     text_factoryEfficiency = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.04)]];
 //    text_factoryEfficiency.layer.borderWidth = 2;
+    [text_factoryEfficiency setFrame:CGRectIntegral(text_factoryEfficiency.frame)];
+
     text_factoryEfficiency.text = @"Factory Efficiency";
     text_factoryEfficiency.layer.zPosition = 101;
+//    text_factoryEfficiency.layer.borderWidth = 1;
     text_factoryEfficiency.tag = 12;
+//    text_factoryEfficiency.layer.shouldRasterize = true;
+//    text_factoryEfficiency.layer.rasterizationScale = [[UIScreen mainScreen] scale];
     text_factoryEfficiency.textColor = [UIColor whiteColor];
+//    text_factoryEfficiency.minimumScaleFactor = 0.5;
+    text_factoryEfficiency.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:20]];
     text_factoryEfficiency.adjustsFontSizeToFitWidth = true;
-    text_factoryEfficiency.font = [UIFont fontWithName:@"Pixel_3" size:45];
+
     [self.view addSubview:text_factoryEfficiency];
     
     text_score = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.825, 0.035, 0.15, 0.0375)]];
     text_score.text = @"score";
     text_score.layer.zPosition = 102;
+//    text_score.layer.borderWidth = 1;
     text_score.textAlignment = NSTextAlignmentRight;
     text_score.textColor = [UIColor whiteColor];
-    text_score.font = [UIFont fontWithName:@"Pixel_3" size:20];
+    text_score.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:23]];
     
     [self.view addSubview:text_score];
     
@@ -401,7 +420,7 @@
     pauseViewPauseText.textColor = [UIColor whiteColor];
     pauseViewPauseText.layer.zPosition = 111;
     pauseViewPauseText.textAlignment = NSTextAlignmentCenter;
-    pauseViewPauseText.font = [UIFont fontWithName:@"Pixel_3" size:40];
+    pauseViewPauseText.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:40]];
     pauseViewPauseText.adjustsFontSizeToFitWidth = true;
     [pauseView addSubview:pauseViewPauseText];
     
@@ -410,11 +429,59 @@
     pauseViewContinueText.textColor = [UIColor whiteColor];
     pauseViewContinueText.layer.zPosition = 112;
     pauseViewContinueText.textAlignment = NSTextAlignmentCenter;
-    pauseViewContinueText.font = [UIFont fontWithName:@"Pixel_3" size:20];
+    pauseViewContinueText.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:20]];
     pauseViewContinueText.adjustsFontSizeToFitWidth = true;
     [pauseView addSubview:pauseViewContinueText];
     
+//    UIImage* playImage = [UIImage imageNamed:@"UIFrame"];
+//    UIImage* playImageDown = [UIImage imageNamed:@"playPressed"];
+//    playImage = [self image:playImage WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
+//    playImageDown = [self image:playImageDown WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
+//    Button* playButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)] withText:@"play" withBlock:^void{
+////        [self pressPlayButton:playButton];
+//    }];
+//    //    playButton.layer.borderWidth = 3;
+//    playButton.layer.zPosition = 103;
+//    [self.view addSubview:playButton];
+    
+    
 //    [self createInfoBanner:0 text:@"test should pause"];
+}
+
+- (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor{
+    UIGraphicsBeginImageContextWithOptions (image.size, NO, image.scale); // for correct resolution on retina, thanks @MobileVet
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextTranslateCTM(context, 0, image.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    
+    CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
+    
+    // image drawing code here
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+    CGContextDrawImage(context, rect, image.CGImage);
+    
+    // tint image (loosing alpha) - the luminosity of the original image is preserved
+    CGContextSetBlendMode(context, kCGBlendModeMultiply);
+    [tintColor setFill];
+    CGContextFillRect(context, rect);
+    
+    // mask by alpha values of original image
+    CGContextSetBlendMode(context, kCGBlendModeDestinationIn);
+    CGContextDrawImage(context, rect, image.CGImage);
+    
+    UIImage *coloredImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return coloredImage;
+}
+
+-(void)pressPlayButton:(id)sender{
+    //    id<MenuTransition> strongDelegate = self.delegate;
+    
+    if([self.delegate respondsToSelector:@selector(switchFromGameToMenu:)]){
+        [self.delegate switchFromGameToMenu:self];
+    }
 }
 
 -(void)animateInExtraUI{
@@ -1310,6 +1377,19 @@
     otherSock.layer.zPosition = 150;
     [otherSock animateDecreaseCoreScale];
     
+//    otherSock.theoreticalFrame = otherSock.frame;
+//    [UIView animateWithDuration:0.25 animations:^void{
+//        CGRect f = CGRectOffset(otherSock.frame, (sock.frame.origin.x-otherSock.frame.origin.x)/2, (sock.frame.origin.y-otherSock.frame.origin.y)/2);
+//        otherSock.frame = f;
+//        sock.frame = f;
+//    } completion:^(BOOL completed){
+//        [sock removeFromSuperview];
+//        [socks removeObject:sock];
+//
+//        [otherSock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
+//        [socksBeingAnimatedIntoBox addObject:otherSock];
+//    }];
+    
     if(otherSock.onConvayorBelt == false && sock.onConvayorBelt == false){
         otherSock.theoreticalFrame = otherSock.frame;
         [UIView animateWithDuration:0.25 animations:^void{
@@ -1319,17 +1399,18 @@
         } completion:^(BOOL completed){
             [sock removeFromSuperview];
             [socks removeObject:sock];
-            
+
             [otherSock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
             [socksBeingAnimatedIntoBox addObject:otherSock];
         }];
     }else{
+        //TODO animating here is wierd cuz it is also moving on the belt
         [sock removeFromSuperview];
         [socks removeObject:sock];
-        
+
         CGRect f = CGRectOffset(otherSock.frame, (sock.frame.origin.x-otherSock.frame.origin.x)/2, (sock.frame.origin.y-otherSock.frame.origin.y)/2);
         otherSock.frame = f;
-        
+
         [otherSock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
         [socksBeingAnimatedIntoBox addObject:otherSock];
     }
@@ -1410,21 +1491,65 @@
 -(void)createForklift:(Sock*)s givePoint:(BOOL)point{
     Forklift* lift = [[Forklift alloc] initWithSock:s forkliftAnimationFrames:forkLiftAnimationFrames wheelAnimationFrames:wheelFrames];
     lift.layer.zPosition = 102;
-    [forklifts addObject:lift];
     [self.view addSubview:lift];
+    [forklifts addObject:lift];
+
+    bool animatingForklift = false;
     
-    [lift animateWithSpeed:1 withCompletion:^void{
-        if(point == true){
-            [self pointForSock:s];
+    for(Forklift* f in forklifts){
+        if(!animatingForklift && f != lift){
+            if(((lift.frame.origin.y > f.frame.origin.y && lift.frame.origin.y < f.frame.origin.y+f.frame.size.height) || (lift.frame.origin.y < f.frame.origin.y+f.frame.size.height && lift.frame.origin.y > f.frame.origin.y)) && f.currentState != Finished){
+                if(f.forkliftFacesRight == lift.forkliftFacesRight){
+//                    __unsafe_unretained typeof(Forklift*) wf = f;
+                    
+                    if(f.extraAnimationCompleteBlock != nil){
+                        
+                    }
+                    
+                    //TODO USE A VARIABLE INSTEAD OF BLOCKS
+                    [f setExtraAnimationCompleteBlock:^void{
+//                        if(f.extraAnimationCompleteBlock != nil){
+//                            wf.extraAnimationCompleteBlock();
+//                        }
+                        
+                        [lift animateWithSpeed:1 withCompletion:^void{
+                            if(point == true){
+                                [self pointForSock:s];
+                            }
+                            
+                            [s removeFromSuperview];
+                            [socks removeObject:s];
+                            
+                            [lift removeFromSuperview];
+                            [forklifts removeObject:lift]; //TODO remove out of loop?
+                            
+//                            wf.extraAnimationCompleteBlock = nil;
+//                            lift.extraAnimationCompleteBlock = nil;
+//                            wf.extraAnimationCompleteBlock = ^void{
+//
+//                            };
+                        }];
+                    }];
+                    
+                    animatingForklift = true;
+                }
+            }
         }
-        
-        [s removeFromSuperview];
-        [socks removeObject:s];
-        
-        [lift removeFromSuperview];
-        [forklifts removeObject:lift];
-    }];
+    }
     
+    if(forklifts.count == 0 || animatingForklift == false){
+        [lift animateWithSpeed:1 withCompletion:^void{
+            if(point == true){
+                [self pointForSock:s];
+            }
+            
+            [s removeFromSuperview];
+            [socks removeObject:s];
+            
+            [lift removeFromSuperview];
+            [forklifts removeObject:lift];
+        }];
+    }
 }
 
 -(void) pointForSock:(Sock*)s{
@@ -1437,11 +1562,29 @@
 -(void)newSockSize{
     InfoBanner* b = [self createInfoBanner:3 text:@"new sock size!"];
     b.tag = 2;
+   // TODO use a alert view
 }
 
 -(void)newSockType{
-    InfoBanner* b = [self createInfoBanner:3 text:@"new sock type!"];
-    b.tag = 0;
+//    InfoBanner* b = [self createInfoBanner:3 text:@"new sock type!"];
+//    b.tag = 0;
+    
+    UIImage* sockAlertImage = nil;
+    
+    if(floor(difficultyCurve.numOfDifferentSocksToGenerate) < sockMainImages.count){
+        sockAlertImage = [sockMainImages objectAtIndex:floor(difficultyCurve.numOfDifferentSocksToGenerate)];
+    }
+    
+    GameAlertView* gav = [[GameAlertView alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.5)] screenFrame:self.view.frame title:@"new sock type!" text:@"there is a new sock to match!" image: sockAlertImage];
+    gav.layer.zPosition = 151;
+    timerPaused = true;
+    __unsafe_unretained typeof(GameAlertView*) weak = gav;
+    
+    [gav setButtonPressBlock:^void{
+        timerPaused = false;
+        [weak hideAndRemove];
+    }];
+    [self.view addSubview:gav];
 }
 
 -(InfoBanner*)createInfoBanner:(int)times text:(NSString*)text{

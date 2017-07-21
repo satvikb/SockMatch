@@ -17,6 +17,7 @@
 @synthesize animateSockOneCompleteBlock;
 @synthesize animateSockTwoCompleteBlock;
 @synthesize sockOneTouchEndBlock;
+@synthesize sockOneTouchMoveBlock;
 @synthesize sockTwoTouchMoveBlock;
 
 @synthesize tutorialText;
@@ -43,6 +44,7 @@
     [s1 setTouchMovedBlock:^void (Sock* s, CGPoint p, CGPoint oldPos) {
         if(s.allowMovement){
             s.onConvayorBelt = false;
+            sockOneTouchMoveBlock(s);
             
             CGPoint delta = CGPointMake(p.x-oldPos.x, p.y-oldPos.y);
             
@@ -114,7 +116,7 @@
     [self addSubview:sockTwo];
     
     tutorialText = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.05, 1, .9, 0.1)]];
-    tutorialText.font = [UIFont fontWithName:@"Pixel_3" size:26];
+    tutorialText.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:26]];
     tutorialText.text = @"welcome to sock shop!";
     tutorialText.textAlignment = NSTextAlignmentCenter;
     tutorialText.adjustsFontSizeToFitWidth = true;
@@ -181,7 +183,9 @@
     
     [focus setTouchBlock:^void{
         touched();
-        [weak removeFromSuperview];
+        [weak hide:0 withDuration:0.5 withCompletion:^(BOOL completed){
+            [weak removeFromSuperview];
+        }];
     }];
     
     [focus show:0.3 withDuration:0.5 withCompletion:^(BOOL completed){

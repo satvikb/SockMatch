@@ -10,6 +10,8 @@
 #import "Sock.h"
 #import "Flurry.h"
 
+#import "GameAlertView.h"
+
 @interface MenuViewController () {
     NSMutableArray<UIImage*>* sockPackages;
     NSMutableArray<UIImage*>* forkliftAnimation;
@@ -114,7 +116,7 @@
     highScoreLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.3, 0.75, 0.4, 0.1)]];
     highScoreLabel.textAlignment = NSTextAlignmentCenter;
 //    [UIFont fontWithName:@"Pixel_3" size:
-    highScoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:40];
+    highScoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:40]];
     highScoreLabel.numberOfLines = 0;
 //    highScoreLabel.lineBreakMode = NSLineBreak
     highScoreLabel.adjustsFontSizeToFitWidth = true;

@@ -34,6 +34,7 @@
 
 @synthesize forkliftFacesRight;
 @synthesize currentState;
+@synthesize extraAnimationCompleteBlock;
 
 -(id)initWithSock:(Sock*)s forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation{
     screenSize = UIScreen.mainScreen.bounds.size;
@@ -243,6 +244,9 @@
                 currentlyAnimating = false;
                 currentState = Finished;
                 completion();
+                if(extraAnimationCompleteBlock != nil){
+                    extraAnimationCompleteBlock();
+                }
             }];
         }];
     }];
@@ -255,6 +259,9 @@
     } completion:^(BOOL completed){
         currentState = Finished;
         completion();
+        if(extraAnimationCompleteBlock != nil){
+            extraAnimationCompleteBlock();
+        }
     }];
 }
 

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "Functions.h"
 typedef void (^ButtonPressDown)(void);
 
 @interface Button : UIImageView{

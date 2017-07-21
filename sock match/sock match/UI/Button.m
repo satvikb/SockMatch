@@ -54,13 +54,14 @@ const CGFloat innerBar3DOffset = 0.1111111111;
     [self addSubview:innerImageView];
 //    self = [super initWithImage:image highlightedImage:highlightedImage];
     
-    
-    textLabel = [[UILabel alloc] initWithFrame:CGRectMake(innerImageView.frame.origin.x, innerImageView.frame.origin.y, innerImageView.frame.size.width, innerImageView.frame.size.height-(innerImageView.frame.size.height*innerBar3DOffset))];
+    CGFloat ox = innerImageView.frame.size.width*0.05;
+    textLabel = [[UILabel alloc] initWithFrame:CGRectMake(innerImageView.frame.origin.x+ox, innerImageView.frame.origin.y, innerImageView.frame.size.width-(ox*2), innerImageView.frame.size.height-(innerImageView.frame.size.height*innerBar3DOffset))];
     textLabel.textAlignment = NSTextAlignmentCenter;
     textLabel.textColor = [UIColor whiteColor];
     textLabel.adjustsFontSizeToFitWidth = true;
+//    textLabel.layer.borderWidth = 2;
     textLabel.text = text;
-    textLabel.font = [UIFont fontWithName:@"Pixel_3" size:40];
+    textLabel.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:40]];
     [self addSubview:textLabel];
     
     return self;

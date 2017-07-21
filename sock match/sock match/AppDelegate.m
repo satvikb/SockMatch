@@ -10,6 +10,7 @@
 #import "ContainerViewController.h"
 #import "GameViewController.h"
 #import "MenuViewController.h"
+#import "Sounds.h"
 
 @interface AppDelegate ()
 
@@ -20,7 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    
+    [Sounds loadSounds];
     FlurrySessionBuilder* builder = [[[[[FlurrySessionBuilder new]
                                         withLogLevel:FlurryLogLevelNone]
                                        withCrashReporting:YES]

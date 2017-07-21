@@ -48,7 +48,7 @@
     percentLabel = [[UILabel alloc] initWithFrame:CGRectMake(percentLabelX, percentLabelY, innerImageView.frame.size.width-percentLabelX, innerImageView.frame.size.height-percentLabelY)];
     percentLabel.textAlignment = NSTextAlignmentLeft;
     percentLabel.text = @"100%";
-    percentLabel.font = [UIFont fontWithName:@"Pixel_3" size:20];
+    percentLabel.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:15]];
     percentLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 //    percentLabel.layer.borderWidth = 2;
     percentLabel.textColor = [UIColor whiteColor];

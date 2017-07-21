@@ -17,6 +17,8 @@
 #import "DifficultyCurve.h"
 #import "TouchImage.h"
 #import "InfoBanner.h"
+#import "GameAlertView.h"
+#import "Button.h"
 
 @protocol GameDelegate;
 
@@ -77,6 +79,7 @@
 @end
 
 @protocol GameDelegate <NSObject>
+- (void) switchFromGameToMenu:(GameViewController *)game;
 - (void) switchFromGameToGameOver:(GameViewController *)game withScore:(int)score;
 - (void) gameEndScore:(int)score;
 @end

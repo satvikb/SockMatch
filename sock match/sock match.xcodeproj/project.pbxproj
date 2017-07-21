@@ -23,14 +23,17 @@
 		40728D3A1F09A5E8008D2F36 /* SockData.m in Sources */ = {isa = PBXBuildFile; fileRef = 40728D391F09A5E8008D2F36 /* SockData.m */; };
 		40728D3D1F0ABD2F008D2F36 /* Countdown.m in Sources */ = {isa = PBXBuildFile; fileRef = 40728D3C1F0ABD2F008D2F36 /* Countdown.m */; };
 		40849FAB1F066B2700953616 /* TutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40849FAA1F066B2700953616 /* TutorialView.m */; };
+		4088BD291F1C329B00A89B90 /* Pixel_3.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4088BD281F1C329000A89B90 /* Pixel_3.ttf */; };
 		408E6B4C1EEF88180011C450 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B4B1EEF88180011C450 /* AppDelegate.m */; };
 		408E6B541EEF88180011C450 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 408E6B531EEF88180011C450 /* Assets.xcassets */; };
 		408E6B5A1EEF88180011C450 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B591EEF88180011C450 /* main.m */; };
 		408E6B651EEFA5EA0011C450 /* Sock.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B641EEFA5EA0011C450 /* Sock.m */; };
 		408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B671EEFCA1B0011C450 /* GameViewController.m */; };
 		408E6B6F1EEFF2530011C450 /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B6E1EEFF2530011C450 /* Functions.m */; };
+		408FAA111F21E51600248513 /* GameAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 408FAA101F21E51600248513 /* GameAlertView.m */; };
 		4093A0A11EF1D400008FA288 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */; };
-		40B4B7401F1A226B00979F33 /* Pixel_3.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40B4B73F1F1A226900979F33 /* Pixel_3.ttf */; };
+		40C8B25A1F1FDA6F00B25BC3 /* beltNoise.wav in Resources */ = {isa = PBXBuildFile; fileRef = 40C8B2591F1FDA6F00B25BC3 /* beltNoise.wav */; };
+		40C8B25D1F1FDAA500B25BC3 /* Sounds.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8B25C1F1FDAA500B25BC3 /* Sounds.m */; };
 		40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D501F0833060051D180 /* GCLeaderboardViewController.m */; };
 		40D12D541F084C690051D180 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D531F084C690051D180 /* Button.m */; };
 		40D77E2A1F0DAFAD004577D7 /* DifficultyCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D77E291F0DAFAD004577D7 /* DifficultyCurve.m */; };
@@ -87,6 +90,7 @@
 		40728D3C1F0ABD2F008D2F36 /* Countdown.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Countdown.m; sourceTree = "<group>"; };
 		40849FA91F066B2700953616 /* TutorialView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TutorialView.h; sourceTree = "<group>"; };
 		40849FAA1F066B2700953616 /* TutorialView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TutorialView.m; sourceTree = "<group>"; };
+		4088BD281F1C329000A89B90 /* Pixel_3.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Pixel_3.ttf; sourceTree = "<group>"; };
 		408E6B471EEF88180011C450 /* sock match.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "sock match.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		408E6B4A1EEF88180011C450 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		408E6B4B1EEF88180011C450 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -99,8 +103,12 @@
 		408E6B671EEFCA1B0011C450 /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
 		408E6B6D1EEFF1920011C450 /* Functions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Functions.h; sourceTree = "<group>"; };
 		408E6B6E1EEFF2530011C450 /* Functions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Functions.m; sourceTree = "<group>"; };
+		408FAA0F1F21E51600248513 /* GameAlertView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameAlertView.h; sourceTree = "<group>"; };
+		408FAA101F21E51600248513 /* GameAlertView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameAlertView.m; sourceTree = "<group>"; };
 		4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		40B4B73F1F1A226900979F33 /* Pixel_3.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Pixel_3.ttf; sourceTree = "<group>"; };
+		40C8B2591F1FDA6F00B25BC3 /* beltNoise.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = beltNoise.wav; path = ../../../../../beltNoise.wav; sourceTree = "<group>"; };
+		40C8B25B1F1FDAA500B25BC3 /* Sounds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sounds.h; sourceTree = "<group>"; };
+		40C8B25C1F1FDAA500B25BC3 /* Sounds.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sounds.m; sourceTree = "<group>"; };
 		40D12D4F1F0833060051D180 /* GCLeaderboardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCLeaderboardViewController.h; sourceTree = "<group>"; };
 		40D12D501F0833060051D180 /* GCLeaderboardViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCLeaderboardViewController.m; sourceTree = "<group>"; };
 		40D12D521F084C690051D180 /* Button.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
@@ -186,6 +194,8 @@
 				40728D391F09A5E8008D2F36 /* SockData.m */,
 				40D77E281F0DAFAD004577D7 /* DifficultyCurve.h */,
 				40D77E291F0DAFAD004577D7 /* DifficultyCurve.m */,
+				40C8B25B1F1FDAA500B25BC3 /* Sounds.h */,
+				40C8B25C1F1FDAA500B25BC3 /* Sounds.m */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -217,6 +227,8 @@
 				40D77E2F1F0ECF4D004577D7 /* TouchImage.m */,
 				403153581F10D1B000203779 /* InfoBanner.h */,
 				403153591F10D1B000203779 /* InfoBanner.m */,
+				408FAA0F1F21E51600248513 /* GameAlertView.h */,
+				408FAA101F21E51600248513 /* GameAlertView.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -278,10 +290,19 @@
 		40B4B7321F1A159800979F33 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				40C8B2581F1FD9B100B25BC3 /* Sounds */,
+				4088BD281F1C329000A89B90 /* Pixel_3.ttf */,
 				40FF79A61F1A2EFE00FFF03B /* Images */,
-				40B4B73F1F1A226900979F33 /* Pixel_3.ttf */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		40C8B2581F1FD9B100B25BC3 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				40C8B2591F1FDA6F00B25BC3 /* beltNoise.wav */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 		40C9F19B1EFC635A0057971F /* Views */ = {
@@ -390,6 +411,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40C8B25A1F1FDA6F00B25BC3 /* beltNoise.wav in Resources */,
 				40FF79BA1F1A373400FFF03B /* animBox.png in Resources */,
 				40FF79BB1F1A373400FFF03B /* belt.png in Resources */,
 				40FF79BC1F1A373400FFF03B /* countdownNumbers.png in Resources */,
@@ -408,8 +430,8 @@
 				40FF79C91F1A373400FFF03B /* UIInnerDown.png in Resources */,
 				40FF79CA1F1A373400FFF03B /* UIInnerUp.png in Resources */,
 				40FF79CB1F1A373400FFF03B /* wheelAnimation.png in Resources */,
+				4088BD291F1C329B00A89B90 /* Pixel_3.ttf in Resources */,
 				408E6B541EEF88180011C450 /* Assets.xcassets in Resources */,
-				40B4B7401F1A226B00979F33 /* Pixel_3.ttf in Resources */,
 				4093A0A11EF1D400008FA288 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -432,9 +454,11 @@
 				40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */,
 				40D77E301F0ECF4D004577D7 /* TouchImage.m in Sources */,
 				408E6B681EEFCA1B0011C450 /* GameViewController.m in Sources */,
+				40C8B25D1F1FDAA500B25BC3 /* Sounds.m in Sources */,
 				4031535A1F10D1B000203779 /* InfoBanner.m in Sources */,
 				40D77E2D1F0E68CE004577D7 /* FocusOnRect.m in Sources */,
 				408E6B5A1EEF88180011C450 /* main.m in Sources */,
+				408FAA111F21E51600248513 /* GameAlertView.m in Sources */,
 				40728D371F099FB3008D2F36 /* GameData.m in Sources */,
 				40154E6D1F0D9177005AFFDD /* EfficiencyBar.m in Sources */,
 				403A89281EF7B2D700C81DB4 /* ContainerViewController.m in Sources */,

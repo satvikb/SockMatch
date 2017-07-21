@@ -25,10 +25,11 @@ typedef enum AppState {
     MainMenu = 0,
     TransitioningFromMainMenuToGame = 1,
     Game = 2,
-    TransitioningFromGameToGameOver = 3,
-    GameOver = 4,
-    TransitioningFromGameOverToMainMenu = 5,
-    TransitioningFromGameOverToGame = 6
+    TransitioningFromGameToMenu = 3,
+    TransitioningFromGameToGameOver = 4,
+    GameOver = 5,
+    TransitioningFromGameOverToMainMenu = 6,
+    TransitioningFromGameOverToGame = 7
 } AppState;
 
 typedef enum GameState {
@@ -54,6 +55,7 @@ typedef enum TutorialState {
 //    Repeating = 1
 //} InfoBannerType;
 
++(CGFloat) fontSize:(CGFloat)fontSize;
 + (int)randomNumberBetween:(int)min maxNumber:(int)max;
 + (CGFloat) randFromMin:(CGFloat)min toMax:(CGFloat)max;
 + (CGFloat) propSizeFromSockSize:(SockSize) size;

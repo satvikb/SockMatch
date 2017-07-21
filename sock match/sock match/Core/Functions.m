@@ -7,6 +7,7 @@
 //
 
 #import "Functions.h"
+#define DEFAULT_WIDTH 375
 
 @implementation Functions
 
@@ -32,6 +33,13 @@ const CGFloat LargeSockPropSize = 0.15;
             return LargeSockPropSize;
     }
 }
+
++(CGFloat) fontSize:(CGFloat)fontSize{
+    return fontSize*(UIScreen.mainScreen.bounds.size.width/DEFAULT_WIDTH);
+}
+//static func fontSize(fontSize : CGFloat) -> CGFloat{
+//    return fontSize*(w/defaultWidth)
+//}
 @end
 
 

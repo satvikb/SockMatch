@@ -11,6 +11,8 @@
 
 @interface Forklift : UIImageView
 
+typedef void (^ForkliftAnimationComplete)(void);
+
 typedef enum ForkliftState {
     None = 0,
     GoingToSock = 1,
@@ -29,5 +31,6 @@ typedef enum ForkliftState {
 
 @property (nonatomic, assign) ForkliftState currentState;
 @property (nonatomic, assign) bool forkliftFacesRight;
+@property (nonatomic, copy) ForkliftAnimationComplete extraAnimationCompleteBlock;
 
 @end
