@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Sock.h"
+#import "Sounds.h"
 
 @interface Forklift : UIImageView
 

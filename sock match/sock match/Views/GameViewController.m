@@ -405,6 +405,8 @@
         
         //TODO  maybe just do currentGameState == Playing;
         if(currentGameState == Playing){//!= WarmingUp && currentGameState != Tutorial && currentGameState != Paused){
+            [[Sounds sharedInstance] playSoundEffect:PauseUnpause loops:0];
+            
             for(Sock* s in [ws->socks copy]){
                 [s animateDecreaseCoreScale];
                 s.touchEndedBlock(s, CGPointZero);
@@ -526,6 +528,7 @@
 
 -(void)hidePauseView{
     if(!animatingInPauseView){
+        [[Sounds sharedInstance] playSoundEffect:PauseUnpause loops:0];
         [UIView animateWithDuration:0.5 animations:^void{
             pauseView.layer.opacity = 0;
         } completion:^(BOOL completed){
@@ -568,6 +571,10 @@
     [testCD setAnimationCompleteBlock:^(BOOL success){
         completion();
         [weak animateOut];
+    }];
+    
+    [testCD setDigitCompleteBlock:^void{
+        [[Sounds sharedInstance] playSoundEffect:ResumeCountdown loops: 0];
     }];
     [self.view addSubview:testCD];
 }
@@ -1051,6 +1058,7 @@
 }
 
 -(void)sockGotPastBelt {
+    [[Sounds sharedInstance] playSoundEffect:SockPassed loops:0];
     [self lostEfficiency:20.0];
 }
 
@@ -1409,6 +1417,8 @@
 //        [otherSock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
 //        [socksBeingAnimatedIntoBox addObject:otherSock];
 //    }];
+    
+    [[Sounds sharedInstance] playSoundEffect:BoxPackaging loops: 0];
     
     if(otherSock.onConvayorBelt == false && sock.onConvayorBelt == false){
         otherSock.theoreticalFrame = otherSock.frame;

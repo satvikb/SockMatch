@@ -219,6 +219,8 @@
     currentlyAnimating = true;
     currentState = GoingToSock;
     
+    AVAudioPlayer* s = [[Sounds sharedInstance] playSoundEffect:ForkliftMoving loops:-1];
+    
     [UIView animateWithDuration:animateSpeed animations:^{
         self.frame = CGRectMake(forkliftFacesRight == true ? [sock getCoreRect].origin.x-((1-forkliftForkLength+pickupPadding)*self.frame.size.width) : [sock getCoreRect].origin.x+((forkliftForkLength+pickupPadding)*self.frame.size.width)-(self.frame.size.width*forkliftForkLength), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
     } completion:^(BOOL finished){
@@ -230,6 +232,9 @@
         
         currentState = PickingUpSock;
         
+        [s stop];
+        //TODO forklift picking up sock sound here
+        
         //increase sock package size
         [UIView animateWithDuration:animateSpeed/2 animations:^void{
             CGAffineTransform t = CGAffineTransformMakeScale(1+pickupScaleExtra, 1+pickupScaleExtra);
@@ -237,6 +242,7 @@
         } completion:^(BOOL completed){
             currentState = GoingBack;
             CGRect transformedBounds = CGRectApplyAffineTransform(sock.bounds, sock.transform);
+            [s play];
             [UIView animateWithDuration:animateSpeed animations:^{
                 CGRect newRect = CGRectMake(forkliftFacesRight == true ? -(self.frame.size.width+(transformedBounds.size.width-sock.bounds.size.width)) : screenSize.width+(transformedBounds.size.width-sock.bounds.size.width), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
                 self.frame = newRect;

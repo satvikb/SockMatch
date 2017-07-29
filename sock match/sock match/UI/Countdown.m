@@ -16,6 +16,7 @@
 }
 
 @synthesize animationCompleteBlock;
+@synthesize digitCompleteBlock;
 
 -(id)initWithFrame:(CGRect)frame numberImages:(NSMutableArray<UIImage*>*)numImgs{
     self = [super initWithFrame:frame];
@@ -37,6 +38,8 @@
     currentNumberImage.animationRepeatCount = 1;
     [currentNumberImage startAnimatingWithCompletionBlock:^(BOOL success){
         animationCompleteBlock(success);
+    } KeyBlock: ^void{
+        digitCompleteBlock();
     }];
 //
     [self addSubview:currentNumberImage];
@@ -58,8 +61,11 @@
 @end
 
 #define BLOCK_KEY @"BLOCK_KEY"
+#define KEY_BLOCK @"KEY_BLOCK"
+
 #define CONTENTS  @"contents"
 typedef void (^Block)(BOOL success);
+typedef void (^KeyBlock)(void);
 @implementation UIImageView (AnimationCompletion)
     
 -(void)setblock:(Block)block
@@ -70,12 +76,25 @@ typedef void (^Block)(BOOL success);
 {
     return objc_getAssociatedObject(self, (__bridge const void *)(BLOCK_KEY));
 }
--(void)startAnimatingWithCompletionBlock:(Block)block
-{
-    [self startAnimatingWithCGImages:getCGImagesArray(self.animationImages) CompletionBlock:block];
+
+-(void)setkeyblock:(KeyBlock)block{
+    objc_setAssociatedObject(self, (__bridge const void *)(KEY_BLOCK), block, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
--(void)startAnimatingWithCGImages:(NSArray*)cgImages CompletionBlock:(Block)block{
+
+-(KeyBlock)keyblock
+{
+    return objc_getAssociatedObject(self, (__bridge const void *)(KEY_BLOCK));
+}
+
+
+-(void)startAnimatingWithCompletionBlock:(Block)block KeyBlock:(KeyBlock)keyBlock{
+    [self startAnimatingWithCGImages:getCGImagesArray(self.animationImages) CompletionBlock:block KeyBlock:keyBlock];
+}
+
+-(void)startAnimatingWithCGImages:(NSArray*)cgImages CompletionBlock:(Block)block KeyBlock:(KeyBlock)keyBlock{
     [self setblock:block];
+    [self setkeyblock:keyBlock];
+    
     CAKeyframeAnimation *anim = [CAKeyframeAnimation animation];
     [anim setKeyPath:CONTENTS];
     [anim setValues:cgImages];
@@ -87,16 +106,29 @@ typedef void (^Block)(BOOL success);
     CGFloat currentTime = 0.0;
     for(int i = 0; i < cgImages.count; i++){
         [keyTimes addObject:[NSNumber numberWithFloat:currentTime]];
+        
+        NSTimeInterval delay = currentTime;//*self.animationDuration;
+        [self performSelector:@selector(doKeyCompleteBlock) withObject: nil afterDelay:delay];
+        
         currentTime += (CGFloat)cgImages.count / self.animationDuration;
+        
     }
     
     anim.delegate = self;
     
+    //TODO do digit complete block
+    
     CALayer *ImageLayer = self.layer;
     [ImageLayer addAnimation:anim forKey:nil];
 }
-NSArray* getCGImagesArray(NSArray* UIImagesArray)
-{
+
+-(void)doKeyCompleteBlock{
+    KeyBlock block_ = [self keyblock];
+    if (block_)block_();
+    
+}
+
+NSArray* getCGImagesArray(NSArray* UIImagesArray){
     NSMutableArray* cgImages;
     @autoreleasepool {
         cgImages = [[NSMutableArray alloc] init];
@@ -109,4 +141,5 @@ NSArray* getCGImagesArray(NSArray* UIImagesArray)
     Block block_ = [self block];
     if (block_)block_(flag);
 }
+
 @end

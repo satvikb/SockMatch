@@ -31,7 +31,7 @@ ui
 settings
 	-settings view to the left
 	-settings title
-	-sfx
+	-change sfx
 	-credits
 
 sounds
@@ -64,6 +64,10 @@ bugs
 	-facing left forklifts while animating to game over
 	-pause button after doing tutorial not working
 	-reset score label after going from game over to menu
+	-boxes in dead center
+	-socks can be moved in game alert
+	-as belt speeds up socks are hard to touch
+	-invalidate timers in bg
 
 crashes
 	-

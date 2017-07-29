@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void (^DigitComplete)(void);
 typedef void (^AnimationComplete)(BOOL success);
 
 //@class AnimationCompletion;
@@ -17,10 +18,12 @@ typedef void (^AnimationComplete)(BOOL success);
 -(void)animateOut;
 
 @property (nonatomic, copy) AnimationComplete animationCompleteBlock;
+@property (nonatomic, copy) DigitComplete digitCompleteBlock;
 @end
 
 typedef void (^Block)(BOOL success);
+typedef void (^KeyBlock)(void);
 @interface UIImageView (AnimationCompletion) <CAAnimationDelegate>
--(void)startAnimatingWithCompletionBlock:(Block)block;
+-(void)startAnimatingWithCompletionBlock:(Block)block KeyBlock:(KeyBlock)keyBlock;
 
 @end

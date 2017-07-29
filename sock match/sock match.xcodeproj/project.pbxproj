@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		40154E6D1F0D9177005AFFDD /* EfficiencyBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 40154E6C1F0D9177005AFFDD /* EfficiencyBar.m */; };
+		401EB8561F2D266A00E7EA21 /* beltNoise.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB8521F2D24DD00E7EA21 /* beltNoise.wav */; };
+		401EB8571F2D266A00E7EA21 /* boxPackaging.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB8501F2D24DD00E7EA21 /* boxPackaging.wav */; };
+		401EB8581F2D266A00E7EA21 /* countdown.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB8541F2D24DD00E7EA21 /* countdown.wav */; };
+		401EB8591F2D266A00E7EA21 /* forkliftMoving.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB8511F2D24DD00E7EA21 /* forkliftMoving.wav */; };
+		401EB85A1F2D266A00E7EA21 /* pauseunpause.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB8531F2D24DD00E7EA21 /* pauseunpause.wav */; };
+		401EB85B1F2D266A00E7EA21 /* sockPassedFinal.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB84F1F2D24DD00E7EA21 /* sockPassedFinal.wav */; };
+		401EB85C1F2D266A00E7EA21 /* mainMenu.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB8551F2D25F400E7EA21 /* mainMenu.wav */; };
 		4028FEA31F023BF200E06D31 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4028FEA21F023BF200E06D31 /* GameKit.framework */; };
 		4031535A1F10D1B000203779 /* InfoBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 403153591F10D1B000203779 /* InfoBanner.m */; };
 		4037169D1F042AB40070C3A6 /* Forklift.m in Sources */ = {isa = PBXBuildFile; fileRef = 4037169C1F042AB40070C3A6 /* Forklift.m */; };
@@ -32,7 +39,6 @@
 		408E6B6F1EEFF2530011C450 /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B6E1EEFF2530011C450 /* Functions.m */; };
 		408FAA111F21E51600248513 /* GameAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 408FAA101F21E51600248513 /* GameAlertView.m */; };
 		4093A0A11EF1D400008FA288 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */; };
-		40C8B25A1F1FDA6F00B25BC3 /* beltNoise.wav in Resources */ = {isa = PBXBuildFile; fileRef = 40C8B2591F1FDA6F00B25BC3 /* beltNoise.wav */; };
 		40C8B25D1F1FDAA500B25BC3 /* Sounds.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C8B25C1F1FDAA500B25BC3 /* Sounds.m */; };
 		40D12D511F0833060051D180 /* GCLeaderboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D501F0833060051D180 /* GCLeaderboardViewController.m */; };
 		40D12D541F084C690051D180 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D12D531F084C690051D180 /* Button.m */; };
@@ -62,6 +68,13 @@
 /* Begin PBXFileReference section */
 		40154E6B1F0D9177005AFFDD /* EfficiencyBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EfficiencyBar.h; sourceTree = "<group>"; };
 		40154E6C1F0D9177005AFFDD /* EfficiencyBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EfficiencyBar.m; sourceTree = "<group>"; };
+		401EB84F1F2D24DD00E7EA21 /* sockPassedFinal.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sockPassedFinal.wav; sourceTree = "<group>"; };
+		401EB8501F2D24DD00E7EA21 /* boxPackaging.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = boxPackaging.wav; sourceTree = "<group>"; };
+		401EB8511F2D24DD00E7EA21 /* forkliftMoving.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = forkliftMoving.wav; sourceTree = "<group>"; };
+		401EB8521F2D24DD00E7EA21 /* beltNoise.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beltNoise.wav; sourceTree = "<group>"; };
+		401EB8531F2D24DD00E7EA21 /* pauseunpause.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = pauseunpause.wav; sourceTree = "<group>"; };
+		401EB8541F2D24DD00E7EA21 /* countdown.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = countdown.wav; sourceTree = "<group>"; };
+		401EB8551F2D25F400E7EA21 /* mainMenu.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = mainMenu.wav; sourceTree = "<group>"; };
 		4028FEA21F023BF200E06D31 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		403153581F10D1B000203779 /* InfoBanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InfoBanner.h; sourceTree = "<group>"; };
 		403153591F10D1B000203779 /* InfoBanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoBanner.m; sourceTree = "<group>"; };
@@ -106,7 +119,6 @@
 		408FAA0F1F21E51600248513 /* GameAlertView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameAlertView.h; sourceTree = "<group>"; };
 		408FAA101F21E51600248513 /* GameAlertView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameAlertView.m; sourceTree = "<group>"; };
 		4093A0A01EF1D400008FA288 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		40C8B2591F1FDA6F00B25BC3 /* beltNoise.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = beltNoise.wav; path = ../../../../../beltNoise.wav; sourceTree = "<group>"; };
 		40C8B25B1F1FDAA500B25BC3 /* Sounds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sounds.h; sourceTree = "<group>"; };
 		40C8B25C1F1FDAA500B25BC3 /* Sounds.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sounds.m; sourceTree = "<group>"; };
 		40D12D4F1F0833060051D180 /* GCLeaderboardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCLeaderboardViewController.h; sourceTree = "<group>"; };
@@ -300,7 +312,13 @@
 		40C8B2581F1FD9B100B25BC3 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				40C8B2591F1FDA6F00B25BC3 /* beltNoise.wav */,
+				401EB8521F2D24DD00E7EA21 /* beltNoise.wav */,
+				401EB8501F2D24DD00E7EA21 /* boxPackaging.wav */,
+				401EB8541F2D24DD00E7EA21 /* countdown.wav */,
+				401EB8511F2D24DD00E7EA21 /* forkliftMoving.wav */,
+				401EB8531F2D24DD00E7EA21 /* pauseunpause.wav */,
+				401EB84F1F2D24DD00E7EA21 /* sockPassedFinal.wav */,
+				401EB8551F2D25F400E7EA21 /* mainMenu.wav */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -411,7 +429,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40C8B25A1F1FDA6F00B25BC3 /* beltNoise.wav in Resources */,
+				401EB8561F2D266A00E7EA21 /* beltNoise.wav in Resources */,
+				401EB8571F2D266A00E7EA21 /* boxPackaging.wav in Resources */,
+				401EB8581F2D266A00E7EA21 /* countdown.wav in Resources */,
+				401EB8591F2D266A00E7EA21 /* forkliftMoving.wav in Resources */,
+				401EB85A1F2D266A00E7EA21 /* pauseunpause.wav in Resources */,
+				401EB85B1F2D266A00E7EA21 /* sockPassedFinal.wav in Resources */,
+				401EB85C1F2D266A00E7EA21 /* mainMenu.wav in Resources */,
 				40FF79BA1F1A373400FFF03B /* animBox.png in Resources */,
 				40FF79BB1F1A373400FFF03B /* belt.png in Resources */,
 				40FF79BC1F1A373400FFF03B /* countdownNumbers.png in Resources */,

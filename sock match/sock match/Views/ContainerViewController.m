@@ -68,6 +68,8 @@
     [self displayContentController:menuController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
     
     [self startGameLoop];
+    
+    [[Sounds sharedInstance].mainMenuBackgroundMusic play];
 }
 
 -(void)testFile{
@@ -113,6 +115,8 @@
         [f removeFromSuperview];
         [content addSubview:f];
     }
+    
+    [[Sounds sharedInstance].mainMenuBackgroundMusic stop];
     
     [Flurry logEvent:@"Switch_MenuToGame"];
     
@@ -188,6 +192,7 @@
     } completion:^(BOOL finished){
         currentAppState = MainMenu;
         [menuController didMoveToParentViewController:self];
+        [[Sounds sharedInstance].mainMenuBackgroundMusic play];
     }];
 //    [self animateFromViewController:gameOver toPoint:[self propToRect:CGRectMake(1, 0, 0, 0)].origin toViewController:menuController toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin animationFinished:^{
 //        currentAppState = MainMenu;
