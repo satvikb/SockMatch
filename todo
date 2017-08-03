@@ -11,36 +11,28 @@ gameplay
 	-improve difficulty values
 	-combos
 		-extra score (+1 or +x based on combo's in a row) when multiple socks are packaged at once
+	-too many socks - remove efficiency with acceleration
 
 graphics
 	-sock and package designs
-	-forklift tire trail
+	-forklift tire trail?
 
 collisions
 	-IMPROVE COLLISIONS.
 	-back on belt when no space
-	-prevent moving to top
+	**prevent moving to top
 	-prevent moving sock back on belt once removed?
 
 ui
-	-improve game over screen
-		-replay (main button)
-		-home (smaller to the left)
-		-share (smaller to the right)
+	-improve pause button
+	-too many socks alert
 
 settings
-	-settings view to the left
-	-settings title
-	-change sfx
 	-credits
 
 sounds
-	-make sounds less annoying
-	-forklift moving
-	-light turning on
-	-sock package
-	-point
-	-countdown
+	-improve sock package
+	-add point.wav
 
 saving
 	-load
@@ -56,18 +48,15 @@ meta
 
 bugs
 	-clicking play on menu while forklift is moving through screen changed speed of forklifts to a constant value
-	-sock package on tutorial screen over black overlay
-	-matching socks while stopping game is buggy ([self canEndGame])
-	-matching socks near belt overlap conveyor belt/wheels
-	-prevent forklift overlapping (maybe have four sections with one in each section)
+	-matching socks near belt overlap conveyor belt/wheels (put forklift below belt)
 	-if the play button is above forklift pressing play changes it to be below
 	-facing left forklifts while animating to game over
-	-pause button after doing tutorial not working
-	-reset score label after going from game over to menu
-	-boxes in dead center
-	-socks can be moved in game alert
+	-boxes in dead center don't get picked up?
 	-as belt speeds up socks are hard to touch
 	-invalidate timers in bg
+	-collision - socks that auto move out can cost efficiency if moved out on belt
+	-phone music stops when playing
+	-random forklifts while transitioning scenes
 
 crashes
 	-
@@ -78,5 +67,6 @@ other code stuff
 	-improve code, refactoring
 	-improve containerviewcontroller (actually remove and create view controllers?)
 		-when changing views, use the parameter or the global variable?
+		-random forklifts generation
 	-anonymize code
 	-check zPosition for child objects (under each view controller), if the base zPosition is required

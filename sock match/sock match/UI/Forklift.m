@@ -64,7 +64,7 @@
     height = sockHeight;
     width = finalWidth;
     
-    forkliftFacesRight = [sock getCoreRect].origin.x+([sock getCoreRect].size.width/2) < screenSize.width/2;
+    forkliftFacesRight = [sock getCoreRect].origin.x+([sock getCoreRect].size.width/2) <= screenSize.width/2;
     
     firstForklift = forkliftFacesRight ? [UIImage imageWithCGImage:firstForklift.CGImage scale:firstForklift.scale orientation:UIImageOrientationUpMirrored] : firstForklift;
     
@@ -269,6 +269,10 @@
             extraAnimationCompleteBlock();
         }
     }];
+}
+
+-(Sock*)getSock {
+    return sock;
 }
 
 @end

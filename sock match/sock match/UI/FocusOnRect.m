@@ -15,6 +15,8 @@
     UIView* bottom;
     
     bool visible;
+    
+    NSArray<UILabel*>* subLabels;
 }
 
 @synthesize touchBlock;
@@ -47,12 +49,17 @@
         [self addSubview:l];
     }
     
+    subLabels = labels;
+    
     return self;
 }
 
 -(void)hide:(CGFloat)opacity withDuration:(NSTimeInterval)duration withCompletion:(void (^)(BOOL completed))completion{
     [UIView animateWithDuration:duration animations:^void{
         top.layer.opacity = left.layer.opacity = right.layer.opacity = bottom.layer.opacity = opacity;
+        for(UILabel* l in subLabels){
+            l.layer.opacity = opacity;
+        }
     } completion:^(BOOL finished){
         visible = false;
         completion(finished);
@@ -62,6 +69,9 @@
 -(void)show:(CGFloat)opacity withDuration:(NSTimeInterval)duration withCompletion:(void (^)(BOOL completed))completion{
     [UIView animateWithDuration:duration animations:^void{
         top.layer.opacity = left.layer.opacity = right.layer.opacity = bottom.layer.opacity = opacity;
+//        for(UILabel* l in subLabels){
+//            l.layer.opacity = opacity;
+//        }
     } completion:^(BOOL finished){
         visible = true;
         completion(finished);

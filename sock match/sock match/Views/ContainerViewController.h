@@ -10,17 +10,19 @@
 #import <GameKit/GameKit.h>
 #import "Flurry.h"
 #import "MenuViewController.h"
+#import "SettingsViewController.h"
 #import "GameViewController.h"
 #import "GameOverViewController.h"
 #import "GCLeaderboardViewController.h"
 #import <MessageUI/MessageUI.h>
 
-@interface ContainerViewController : UIViewController <MenuDelegate, GameDelegate, GameOverDelegate, LeaderboardDelegate, GKGameCenterControllerDelegate, MFMailComposeViewControllerDelegate>{
+@interface ContainerViewController : UIViewController <MenuDelegate, SettingsDelegate, GameDelegate, GameOverDelegate, LeaderboardDelegate, GKGameCenterControllerDelegate, MFMailComposeViewControllerDelegate>{
     
 }
 
 @property (nonatomic, assign) AppState currentAppState;
 @property (strong, nonatomic) MenuViewController *menuController;
+@property (strong, nonatomic) SettingsViewController *settingsController;
 @property (strong, nonatomic) GameViewController *gameController;
 @property (strong, nonatomic) GameOverViewController *gameOverController;
 

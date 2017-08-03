@@ -32,7 +32,6 @@
     NSMutableArray <UIImageView*>* floorViewss;
     
     NSMutableArray <UIImageView*>* scoreDigits;
-    UILabel* scoreLabel;
     
     CGFloat timeToAnimateScoreValue;
     CGFloat animateScoreValueTimer;
@@ -89,6 +88,7 @@
 @synthesize emissionAnimationFrames;
 
 @synthesize countdownNumbers;
+@synthesize scoreLabel;
 
 @synthesize beltMoveSpeed;
 @synthesize animateBeltMoveSpeed;
@@ -150,21 +150,20 @@
     return self;
 }
 
--(void)tutorialViewSockMove:(TutorialView*)tutorialView{
+-(void)tutorialViewSockMove:(TutorialView*)tutView{
     __unsafe_unretained typeof(self) ws = self;
 
-    if([self socksFormPairWith:tutorialView.sockOne andOther:tutorialView.sockTwo] == true){
+    if([self socksFormPairWith:tutView.sockOne andOther:tutView.sockTwo] == true){
         timerPaused = false;
         [socks addObject:ws.tutorialView.sockTwo];
         [ws madePairBetweenMainSock:ws.tutorialView.sockOne andOtherSock:ws.tutorialView.sockTwo];
-        [ws hideTutLabel];
         
-        UILabel* efficiencyInfo = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.75, 0.25)]];
+        UILabel* efficiencyInfo = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.98, 0.3)]];
         efficiencyInfo.text = @"this is the efficiency of the factory.\nletting socks through or building up socks reduces the efficiency.\n when efficiency reaches 0, you lose.";
         efficiencyInfo.textAlignment = NSTextAlignmentCenter;
         efficiencyInfo.numberOfLines = 0;
-        efficiencyInfo.layer.borderWidth = 2;
-        efficiencyInfo.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:15]];
+//        efficiencyInfo.layer.borderWidth = 2;
+        efficiencyInfo.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:25]];
         //                efficiencyInfo.adjustsFontSizeToFitWidth = true;
         efficiencyInfo.textColor = [UIColor whiteColor];
         
@@ -175,7 +174,7 @@
         tapToContinue.textAlignment = NSTextAlignmentCenter;
         tapToContinue.textColor = [UIColor whiteColor];
         
-        [ws.tutorialView focusOnRect:[ws propToRect:CGRectMake(0.125, 0.02, 0.45, 0.1)] withLabels:@[efficiencyInfo, tapToContinue] touchBlock:^void{
+        [ws.tutorialView focusOnRect:[ws propToRect:CGRectMake(0.13, 0.0225, 0.45, 0.125)] withLabels:@[efficiencyInfo, tapToContinue] touchBlock:^void{
             timerPaused = false;
             ws.tutorialView.tutorialState = Completed;
             ws.tutorialView.tutorialText.text = @"you can also match socks directly on the belt";
@@ -189,7 +188,7 @@
     }
 }
 
--(void)hideTutLabel{[tutorialView animateTutorialLabelOut];}
+-(void)hideTutLabel{[tutorialView animateTutorialLabelOut];[tutorialView removeFromSuperview];}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -297,7 +296,7 @@
     topBackground.layer.zPosition = -5;
     [self.view addSubview:topBackground];
     
-    UIView* factoryFloor = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 2, 1)]];
+    UIView* factoryFloor = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(-1, 0, 3, 1)]];
     factoryFloor.backgroundColor = [UIColor whiteColor];
     factoryFloor.layer.zPosition = -10;
     [self.view addSubview:factoryFloor];
@@ -311,7 +310,7 @@
     scoreLabel.text = @"0";
     scoreLabel.textAlignment = NSTextAlignmentRight;
     scoreLabel.textColor = [UIColor whiteColor];
-    scoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:[Functions fontSize:25]]];
+    scoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:25]];
     [self.view addSubview:scoreLabel];
     
     efficiencyBarFrame = [UIImage imageNamed:@"UIFrame"];
@@ -358,7 +357,7 @@
 //    test.layer.borderColor = UIColor.blueColor.CGColor;
 //    [self.view addSubview:test];
     
-    UIView* floorImages = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 2, 1)]];
+    UIView* floorImages = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(-1, 0, 3, 1)]];
     floorImages.layer.zPosition = -10;
     [self.view addSubview:floorImages];
     
@@ -396,7 +395,7 @@
 //    }];
     
     __unsafe_unretained typeof(self) ws = self;
-    pauseButton = [[TouchImage alloc] initWithFrame:[self propToRect:CGRectMake(-0.1, 0.0325, 0.1, 0.075)] image:[UIImage imageNamed:@"pause"]];
+    pauseButton = [[TouchImage alloc] initWithFrame:[self propToRect:CGRectMake(0.025, -0.075, 0.1, 0.075)] image:[UIImage imageNamed:@"pause"]];
 //    pauseButton.layer.borderWidth = 2;
     pauseButton.layer.zPosition = 150;
     pauseButton.tag = 11;
@@ -406,6 +405,7 @@
         //TODO  maybe just do currentGameState == Playing;
         if(currentGameState == Playing){//!= WarmingUp && currentGameState != Tutorial && currentGameState != Paused){
             [[Sounds sharedInstance] playSoundEffect:PauseUnpause loops:0];
+            [ws saveGame];
             
             for(Sock* s in [ws->socks copy]){
                 [s animateDecreaseCoreScale];
@@ -505,7 +505,7 @@
 
 -(void)animateOutExtraUI{
     [UIView animateWithDuration:0.5 animations:^void{
-        pauseButton.frame = [self propToRect:CGRectMake(-0.1, 0.0325, 0.1, 0.075)];
+        pauseButton.frame = [self propToRect:CGRectMake(0.025, -0.075, 0.1, 0.075)];
         bar.frame = [self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.05)];
         text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.0375)];
     }];
@@ -571,6 +571,7 @@
     [testCD setAnimationCompleteBlock:^(BOOL success){
         completion();
         [weak animateOut];
+        [[Sounds sharedInstance] playSoundEffect:ResumeCountdown loops: 0];
     }];
     
     [testCD setDigitCompleteBlock:^void{
@@ -634,13 +635,13 @@
     CGFloat aspectRatio = frame.size.height / beltTileImage.size.height;
     CGFloat imageWidth = beltTileImage.size.width*aspectRatio;
     
-    int numOfBeltTiles = ((frame.size.width / imageWidth)*2)+5;
+    int numOfBeltTiles = [self propX:3]/imageWidth;//((frame.size.width / imageWidth)*2)+5;
     
     _beltImagesSideExtra = (numOfBeltTiles*imageWidth);;
     
     for(int i = 0; i < numOfBeltTiles; i++){
         UIImageView* beltTile = [[UIImageView alloc] initWithImage:beltTileImage];
-        beltTile.frame = CGRectMake(frame.origin.x+(i*imageWidth), frame.origin.y, imageWidth, frame.size.height);
+        beltTile.frame = CGRectMake([self propX:-1]+(i*imageWidth), frame.origin.y, imageWidth, frame.size.height);
         beltTile.layer.magnificationFilter = kCAFilterNearest;
         beltTile.tag = i;
         [self.view addSubview:beltTile];
@@ -658,7 +659,7 @@
     CGFloat aspectRatio = frame.size.height / beltWheelImage.size.height;
     CGFloat imageWidth = beltWheelImage.size.width*aspectRatio;
     
-    int numOfWheelTiles = ((frame.size.width / imageWidth)*2)+5;
+    int numOfWheelTiles = [self propX:3]/imageWidth;//((frame.size.width / imageWidth)*2)+5;
     
     for (NSInteger i = 0; i < numOfWheelTiles; ++i){
         [framesArray addObject:[NSNumber numberWithInt:0]];
@@ -666,7 +667,7 @@
     
     for(int i = 0; i < numOfWheelTiles; i++){
         UIImageView* beltWheel = [[UIImageView alloc] initWithImage:beltWheelImage];
-        beltWheel.frame = CGRectMake(frame.origin.x+(i*imageWidth), frame.origin.y, imageWidth, frame.size.height);
+        beltWheel.frame = CGRectMake([self propX:-1]+(i*imageWidth), frame.origin.y, imageWidth, frame.size.height);
         
         beltWheel.layer.magnificationFilter = kCAFilterNearest;
         beltWheel.tag = i;
@@ -881,9 +882,10 @@
         if(s.inAPair == false && s.validSock){
             SockData* data = [[SockData alloc] initWithOrigin:[s getCoreRect].origin id:s.sockId size:s.sockSize onConveyorBelt:s.onConvayorBelt];
             [sockData addObject:data];
-        }else if(s.inAPair){
-            [self pointForSock:s];
         }
+//        else if(s.inAPair){
+//            [self pointForSock:s];
+//        }
     }
     
     return sockData;
@@ -1033,9 +1035,10 @@
                 if([sock getCoreRect].origin.x < -[sock getCoreRect].size.width){
                     if(!sock.inAPair){
                         [self sockGotPastBelt];
-                    }else{
-                        [self pointForSock:sock];
                     }
+//                    else{
+//                        [self pointForSock:sock];
+//                    }
                     
                     sock.onConvayorBelt = false;
                     [discardedItems addIndex:index];
@@ -1209,7 +1212,7 @@
 -(void) createSockAtPos:(CGPoint)pos sockSize:(SockSize)size sockId:(int) sockId onBelt:(bool) onBelt {
     CGFloat width = [self propX: [Functions propSizeFromSockSize:size]];
     UIImage* sockImage = [sockMainImages objectAtIndex:sockId];
-    Sock* newSock = [[Sock alloc] initWithFrame:pos width: width sockSize: size sockId: sockId image: sockImage onBelt:true extraPropTouchSpace:0.75];
+    Sock* newSock = [[Sock alloc] initWithFrame:pos width: width sockSize: size sockId: sockId image: sockImage onBelt:true extraPropTouchSpace:0.9];
     //    newSock.layer.borderWidth = 2;
     //    newSock.layer.borderColor = [UIColor grayColor].CGColor;
     
@@ -1420,6 +1423,8 @@
     
     [[Sounds sharedInstance] playSoundEffect:BoxPackaging loops: 0];
     
+    [self pointForSock:otherSock];
+    
     if(otherSock.onConvayorBelt == false && sock.onConvayorBelt == false){
         otherSock.theoreticalFrame = otherSock.frame;
         [UIView animateWithDuration:0.25 animations:^void{
@@ -1455,6 +1460,12 @@
             [self animateSock:s];
         }
         animateBoxTimer = 0;
+    }
+}
+
+-(void)makeAllForkliftsAnimateToTheLeft {
+    for(Forklift* f in [forklifts copy]){
+        //change to move left
     }
 }
 
@@ -1520,66 +1531,48 @@
 
 -(void)createForklift:(Sock*)s givePoint:(BOOL)point{
     Forklift* lift = [[Forklift alloc] initWithSock:s forkliftAnimationFrames:forkLiftAnimationFrames wheelAnimationFrames:wheelFrames];
+    lift.givePoint = point;
     lift.layer.zPosition = 102;
     [self.view addSubview:lift];
     [forklifts addObject:lift];
-
-    bool animatingForklift = false;
     
+    [self handleForkliftNoOverlapAnimationsForLift:lift];
+}
+
+-(void)handleForkliftNoOverlapAnimationsForLift:(Forklift*)lift{
+    bool clear = true;
     for(Forklift* f in forklifts){
-        if(!animatingForklift && f != lift){
-            if(((lift.frame.origin.y > f.frame.origin.y && lift.frame.origin.y < f.frame.origin.y+f.frame.size.height) || (lift.frame.origin.y < f.frame.origin.y+f.frame.size.height && lift.frame.origin.y > f.frame.origin.y)) && f.currentState != Finished){
-                if(f.forkliftFacesRight == lift.forkliftFacesRight){
-//                    __unsafe_unretained typeof(Forklift*) wf = f;
-                    
-                    if(f.extraAnimationCompleteBlock != nil){
-                        
-                    }
-                    
-                    //TODO USE A VARIABLE INSTEAD OF BLOCKS
-                    [f setExtraAnimationCompleteBlock:^void{
-//                        if(f.extraAnimationCompleteBlock != nil){
-//                            wf.extraAnimationCompleteBlock();
-//                        }
-                        
-                        [lift animateWithSpeed:1 withCompletion:^void{
-                            if(point == true){
-                                [self pointForSock:s];
-                            }
-                            
-                            [s removeFromSuperview];
-                            [socks removeObject:s];
-                            
-                            [lift removeFromSuperview];
-                            [forklifts removeObject:lift]; //TODO remove out of loop?
-                            
-//                            wf.extraAnimationCompleteBlock = nil;
-//                            lift.extraAnimationCompleteBlock = nil;
-//                            wf.extraAnimationCompleteBlock = ^void{
-//
-//                            };
-                        }];
-                    }];
-                    
-                    animatingForklift = true;
+        if(f != lift){
+            if(lift.currentState == None && lift.forkliftFacesRight == f.forkliftFacesRight){
+                
+                if(CGRectIntersectsRect(lift.frame, CGRectMake(-1, f.frame.origin.y, [self propX:3], lift.frame.size.height))){
+                    clear = false;
                 }
             }
         }
     }
     
-    if(forklifts.count == 0 || animatingForklift == false){
+    if(clear == true && lift.currentState == None){
         [lift animateWithSpeed:1 withCompletion:^void{
-            if(point == true){
-                [self pointForSock:s];
+            [self forkliftAnimationComplete:lift.givePoint sock:[lift getSock] lift:lift];
+            for(Forklift* t in forklifts){
+                [self handleForkliftNoOverlapAnimationsForLift:t];
             }
-            
-            [s removeFromSuperview];
-            [socks removeObject:s];
-            
-            [lift removeFromSuperview];
-            [forklifts removeObject:lift];
         }];
+        
     }
+}
+
+-(void)forkliftAnimationComplete:(bool)point sock:(Sock*)sock lift:(Forklift*)lift{
+//    if(point == true){
+//        [self pointForSock:sock];
+//    }
+    
+    [sock removeFromSuperview];
+    [socks removeObject:sock];
+    
+    [lift removeFromSuperview];
+    [forklifts removeObject:lift];
 }
 
 -(void) pointForSock:(Sock*)s{
@@ -1605,15 +1598,23 @@
         sockAlertImage = [sockMainImages objectAtIndex:floor(difficultyCurve.numOfDifferentSocksToGenerate)];
     }
     
-    GameAlertView* gav = [[GameAlertView alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.5)] screenFrame:self.view.frame title:@"new sock type!" text:@"there is a new sock to match!" image: sockAlertImage];
-    gav.layer.zPosition = 151;
+    GameAlertView* gav = [[GameAlertView alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.5)] screenFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) title:@"new sock type!" text:@"there is a new sock to match!" image: sockAlertImage];
+    gav.layer.zPosition = 251;
     timerPaused = true;
     __unsafe_unretained typeof(GameAlertView*) weak = gav;
     
     [gav setButtonPressBlock:^void{
         timerPaused = false;
+        [self enableSockMovement];
         [weak hideAndRemove];
     }];
+    
+    for(Sock* s in [self->socks copy]){
+        [s animateDecreaseCoreScale];
+        s.touchEndedBlock(s, CGPointZero);
+    }
+    [self disableSockMovement];
+    
     [self.view addSubview:gav];
 }
 

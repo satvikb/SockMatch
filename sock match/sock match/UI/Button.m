@@ -11,8 +11,6 @@
 @implementation Button{
     UIImageView* innerImageView;
     CGFloat innerBarStartWidth;
-    
-    UILabel* textLabel;
     bool labelDown;
 }
 
@@ -21,6 +19,7 @@
 @synthesize innerImageDown;
 @synthesize block;
 @synthesize pressedDown;
+@synthesize textLabel;
 
 const CGFloat innerBar3DOffset = 0.1111111111;
 

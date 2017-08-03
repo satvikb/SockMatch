@@ -45,6 +45,11 @@
 		40D77E2A1F0DAFAD004577D7 /* DifficultyCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D77E291F0DAFAD004577D7 /* DifficultyCurve.m */; };
 		40D77E2D1F0E68CE004577D7 /* FocusOnRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D77E2C1F0E68CE004577D7 /* FocusOnRect.m */; };
 		40D77E301F0ECF4D004577D7 /* TouchImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D77E2F1F0ECF4D004577D7 /* TouchImage.m */; };
+		40FA5E5C1F2EA05800BEA091 /* BestSong.wav in Resources */ = {isa = PBXBuildFile; fileRef = 40FA5E5B1F2EA04200BEA091 /* BestSong.wav */; };
+		40FA5E5F1F3137C900BEA091 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FA5E5E1F3137C900BEA091 /* SettingsViewController.m */; };
+		40FA5E631F31476000BEA091 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FA5E621F313DBF00BEA091 /* settings.png */; };
+		40FA5E661F325E9000BEA091 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FA5E651F325E9000BEA091 /* Settings.m */; };
+		40FA5E691F32702400BEA091 /* SettingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FA5E681F32702400BEA091 /* SettingView.m */; };
 		40FF79BA1F1A373400FFF03B /* animBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FF79B91F1A34AA00FFF03B /* animBox.png */; };
 		40FF79BB1F1A373400FFF03B /* belt.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FF79AD1F1A345500FFF03B /* belt.png */; };
 		40FF79BC1F1A373400FFF03B /* countdownNumbers.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FF79B21F1A345500FFF03B /* countdownNumbers.png */; };
@@ -131,6 +136,14 @@
 		40D77E2C1F0E68CE004577D7 /* FocusOnRect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FocusOnRect.m; sourceTree = "<group>"; };
 		40D77E2E1F0ECF4D004577D7 /* TouchImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchImage.h; sourceTree = "<group>"; };
 		40D77E2F1F0ECF4D004577D7 /* TouchImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchImage.m; sourceTree = "<group>"; };
+		40FA5E5B1F2EA04200BEA091 /* BestSong.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = BestSong.wav; sourceTree = "<group>"; };
+		40FA5E5D1F3137C900BEA091 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		40FA5E5E1F3137C900BEA091 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		40FA5E621F313DBF00BEA091 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
+		40FA5E641F325E9000BEA091 /* Settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		40FA5E651F325E9000BEA091 /* Settings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
+		40FA5E671F32702400BEA091 /* SettingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingView.h; sourceTree = "<group>"; };
+		40FA5E681F32702400BEA091 /* SettingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingView.m; sourceTree = "<group>"; };
 		40FF79A71F1A345500FFF03B /* wheelAnimation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wheelAnimation.png; sourceTree = "<group>"; };
 		40FF79A81F1A345500FFF03B /* UIGC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UIGC.png; sourceTree = "<group>"; };
 		40FF79A91F1A345500FFF03B /* UIInnerUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UIInnerUp.png; sourceTree = "<group>"; };
@@ -208,6 +221,8 @@
 				40D77E291F0DAFAD004577D7 /* DifficultyCurve.m */,
 				40C8B25B1F1FDAA500B25BC3 /* Sounds.h */,
 				40C8B25C1F1FDAA500B25BC3 /* Sounds.m */,
+				40FA5E641F325E9000BEA091 /* Settings.h */,
+				40FA5E651F325E9000BEA091 /* Settings.m */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -241,6 +256,8 @@
 				403153591F10D1B000203779 /* InfoBanner.m */,
 				408FAA0F1F21E51600248513 /* GameAlertView.h */,
 				408FAA101F21E51600248513 /* GameAlertView.m */,
+				40FA5E671F32702400BEA091 /* SettingView.h */,
+				40FA5E681F32702400BEA091 /* SettingView.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -318,6 +335,7 @@
 				401EB8511F2D24DD00E7EA21 /* forkliftMoving.wav */,
 				401EB8531F2D24DD00E7EA21 /* pauseunpause.wav */,
 				401EB84F1F2D24DD00E7EA21 /* sockPassedFinal.wav */,
+				40FA5E5B1F2EA04200BEA091 /* BestSong.wav */,
 				401EB8551F2D25F400E7EA21 /* mainMenu.wav */,
 			);
 			path = Sounds;
@@ -334,6 +352,8 @@
 				408E6B671EEFCA1B0011C450 /* GameViewController.m */,
 				403A892D1EF7CEA500C81DB4 /* GameOverViewController.h */,
 				403A892E1EF7CEA500C81DB4 /* GameOverViewController.m */,
+				40FA5E5D1F3137C900BEA091 /* SettingsViewController.h */,
+				40FA5E5E1F3137C900BEA091 /* SettingsViewController.m */,
 				40849FA91F066B2700953616 /* TutorialView.h */,
 				40849FAA1F066B2700953616 /* TutorialView.m */,
 				40D12D4F1F0833060051D180 /* GCLeaderboardViewController.h */,
@@ -345,6 +365,7 @@
 		40FF79A61F1A2EFE00FFF03B /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				40FA5E621F313DBF00BEA091 /* settings.png */,
 				40FF79B91F1A34AA00FFF03B /* animBox.png */,
 				40FF79AD1F1A345500FFF03B /* belt.png */,
 				40FF79B21F1A345500FFF03B /* countdownNumbers.png */,
@@ -429,6 +450,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40FA5E5C1F2EA05800BEA091 /* BestSong.wav in Resources */,
 				401EB8561F2D266A00E7EA21 /* beltNoise.wav in Resources */,
 				401EB8571F2D266A00E7EA21 /* boxPackaging.wav in Resources */,
 				401EB8581F2D266A00E7EA21 /* countdown.wav in Resources */,
@@ -447,6 +469,7 @@
 				40FF79C21F1A373400FFF03B /* pause.png in Resources */,
 				40FF79C31F1A373400FFF03B /* redlightoff.png in Resources */,
 				40FF79C41F1A373400FFF03B /* redlighton.png in Resources */,
+				40FA5E631F31476000BEA091 /* settings.png in Resources */,
 				40FF79C51F1A373400FFF03B /* sockMain.png in Resources */,
 				40FF79C61F1A373400FFF03B /* sockPackage.png in Resources */,
 				40FF79C71F1A373400FFF03B /* UIFrame.png in Resources */,
@@ -469,6 +492,7 @@
 			files = (
 				40D77E2A1F0DAFAD004577D7 /* DifficultyCurve.m in Sources */,
 				40849FAB1F066B2700953616 /* TutorialView.m in Sources */,
+				40FA5E661F325E9000BEA091 /* Settings.m in Sources */,
 				40728D3A1F09A5E8008D2F36 /* SockData.m in Sources */,
 				404D1B1A1F060DE6003C9383 /* Lockbox.m in Sources */,
 				404D1AE41F05EBED003C9383 /* Storage.m in Sources */,
@@ -489,6 +513,8 @@
 				408E6B651EEFA5EA0011C450 /* Sock.m in Sources */,
 				40D12D541F084C690051D180 /* Button.m in Sources */,
 				408E6B6F1EEFF2530011C450 /* Functions.m in Sources */,
+				40FA5E691F32702400BEA091 /* SettingView.m in Sources */,
+				40FA5E5F1F3137C900BEA091 /* SettingsViewController.m in Sources */,
 				408E6B4C1EEF88180011C450 /* AppDelegate.m in Sources */,
 				40728D3D1F0ABD2F008D2F36 /* Countdown.m in Sources */,
 			);

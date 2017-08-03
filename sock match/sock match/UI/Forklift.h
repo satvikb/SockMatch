@@ -28,10 +28,14 @@ typedef enum ForkliftState {
 -(void) animateWheels;
 -(void) animateWheelsBackward;
 -(void) animateWithSpeed:(NSTimeInterval)animateSpeed withCompletion: (void (^)(void)) completion;
--(void)dummyAnimateWithSpeed:(NSTimeInterval)speed xTranslate:(CGFloat)xTranslate withCompletion: (void (^)(void)) completion;
+-(void) dummyAnimateWithSpeed:(NSTimeInterval)speed xTranslate:(CGFloat)xTranslate withCompletion: (void (^)(void)) completion;
+-(Sock*) getSock;
 
 @property (nonatomic, assign) ForkliftState currentState;
 @property (nonatomic, assign) bool forkliftFacesRight;
 @property (nonatomic, copy) ForkliftAnimationComplete extraAnimationCompleteBlock;
+@property (nonatomic, retain) Forklift* nextForklift; //used for animation
+@property (nonatomic, assign) bool givePoint; //used for animation
+
 
 @end

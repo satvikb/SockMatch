@@ -34,5 +34,6 @@
 @protocol MenuDelegate <NSObject>
 -(int)getAppState;
 -(void)switchFromMenuToGame:(MenuViewController*) menu;
+-(void)switchFromMenuToSettings:(MenuViewController*) menu;
 -(void)menuGameCenterButton;
 @end

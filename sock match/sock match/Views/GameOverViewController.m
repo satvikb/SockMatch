@@ -12,7 +12,11 @@
 @interface GameOverViewController (){
     UILabel* highScoreLabel;
     UIImageView* gameOverText;
+    
     Button* againButton;
+    Button* menuButton;
+    Button* shareButton;
+
     int score;
 }
 
@@ -26,9 +30,9 @@
     self.view.backgroundColor = [UIColor clearColor];//[UIColor colorWithRed:0.168627451 green:0.168627451 blue:0.168627451 alpha:1];
     self.view.userInteractionEnabled = true;
     
-    gameOverText = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.175, 0.5, 0.2)]];
-    //    testLabel.layer.borderWidth = 1;
-    //    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
+    gameOverText = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.2, 0.5, 0.2)]];
+        gameOverText.layer.borderWidth = 1;
+        gameOverText.layer.borderColor = [UIColor whiteColor].CGColor;
     [gameOverText setImage:[UIImage imageNamed:@"gameOver"]];
     gameOverText.layer.magnificationFilter = kCAFilterNearest;
     gameOverText.contentMode = UIViewContentModeScaleAspectFit;
@@ -36,11 +40,26 @@
     
 //    UIImage* againImage = [self image:[UIImage imageNamed:@"again"] WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
 //    UIImage* againDownImage = [self image:[UIImage imageNamed:@"againPressed"] WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
-    againButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)] withText:@"home" withBlock:^void{
-        [self pressMenuButton];
+    againButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)] withText:@"again" withBlock:^void{
+        [self pressAgainButton];
     }];
     againButton.layer.zPosition = 151;
+    againButton.textLabel.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:50]];
     [self.view addSubview:againButton];
+    
+    menuButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.1, 0.8, 0.3, 0.1)] withText:@"home" withBlock:^void{
+        [self pressMenuButton];
+    }];
+    menuButton.layer.zPosition = 151;
+    menuButton.textLabel.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:25]];
+    [self.view addSubview:menuButton];
+    
+    shareButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.6, 0.8, 0.3, 0.1)] withText:@"share" withBlock:^void{
+        [self shareSheet];
+    }];
+    shareButton.layer.zPosition = 151;
+    shareButton.textLabel.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:25]];
+    [self.view addSubview:shareButton];
     
     highScoreLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0, 0.475, 1, 0.125)]];
     highScoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:30];
@@ -119,12 +138,17 @@
     }
 }
 
+-(void)pressAgainButton{
+    if([self.delegate respondsToSelector:@selector(switchFromGameOverToGame:)]){
+        [self.delegate switchFromGameOverToGame:self];
+    }
+}
+
 -(void)pressMenuButton{
     if([self.delegate respondsToSelector:@selector(switchFromGameOverToMenu:)]){
         [self.delegate switchFromGameOverToMenu:self];
     }
 }
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

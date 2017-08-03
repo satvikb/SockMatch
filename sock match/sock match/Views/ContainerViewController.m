@@ -21,6 +21,7 @@
 @implementation ContainerViewController
 @synthesize currentAppState;
 @synthesize menuController;
+@synthesize settingsController;
 @synthesize gameController;
 @synthesize gameOverController;
 @synthesize gameCenterEnabled;
@@ -32,7 +33,9 @@
     [self authenticateLocalPlayer];
     
 //    [self testFile];
-    content = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 2, 1)]];
+    content = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(-1, 0, 3, 1)]];
+//    content.layer.borderWidth = 20;
+//    content.layer.borderColor = [UIColor blueColor].CGColor;
     [self.view addSubview:content];
     
     didCompleteTutorial = [Storage didCompleteTutorial];
@@ -63,9 +66,15 @@
     menuController.delegate = self;
     menuController.highScoreLabel.text = [NSString stringWithFormat:@"high score: %i", highScore];
     
-    [self displayContentController:gameController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
-    [self displayContentController:gameOverController withFrame:[self propToRect:CGRectMake(1, 0, 1, 1)]];
-    [self displayContentController:menuController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
+    
+    settingsController = [[SettingsViewController alloc] initWithForkliftAnimation:gameController.forkLiftAnimationFrames andWheel:gameController.wheelFrames sockPackages:gameController.sockPackages boxImage:[gameController.boxAnimationFrames objectAtIndex:gameController.boxAnimationFrames.count-1]];
+    settingsController.view.layer.zPosition = 100;
+    settingsController.delegate = self;
+    
+    [self displayContentController:gameController withFrame:[self propToRect:CGRectMake(1, 0, 1, 1)]];
+    [self displayContentController:gameOverController withFrame:[self propToRect:CGRectMake(2, 0, 1, 1)]];
+    [self displayContentController:settingsController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
+    [self displayContentController:menuController withFrame:[self propToRect:CGRectMake(1, 0, 1, 1)]];
     
     [self startGameLoop];
     
@@ -109,6 +118,7 @@
     currentAppState = TransitioningFromMainMenuToGame;
     
     [menuController.gameTitle removeFromSuperview];
+    menuController.gameTitle.frame = CGRectMake(menuController.gameTitle.frame.origin.x+[self propX:1], menuController.gameTitle.frame.origin.y, menuController.gameTitle.frame.size.width, menuController.gameTitle.frame.size.height);
     [content addSubview:menuController.gameTitle];
     
     for(Forklift* f in [menuController.forklifts copy]){
@@ -140,24 +150,26 @@
     [gameController animateInExtraUI];
     [[Sounds sharedInstance].beltSound play];
     
-    [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointZero animationFinished:^{
+    [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointMake([self propX:1], 0) animationFinished:^{
         NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
         
         
     }];
 }
 
--(void) switchFromGameToMenu:(GameViewController *)game{
-    currentAppState = TransitioningFromGameToMenu;
-    [Flurry logEvent:@"Switch_GameToMenu"];
-    
-}
+//-(void) switchFromGameToMenu:(GameViewController *)game{
+//    currentAppState = TransitioningFromGameToMenu;
+//    [Flurry logEvent:@"Switch_GameToMenu"];
+//
+//}
 
 - (void) switchFromGameToGameOver:(GameViewController *)game withScore:(int)score {
-    currentAppState = TransitioningFromGameOverToGame;
+    currentAppState = TransitioningFromGameToGameOver;
     [Flurry logEvent:@"Switch_GameToGameOver"];
     
     [gameOverController setScore:score];
+    
+//    for(Forklift* f in game)
     
     [UIView animateWithDuration:1 animations:^void{
         CGRect f = content.frame;
@@ -181,7 +193,8 @@
     currentAppState = TransitioningFromGameOverToMainMenu;
     [Flurry logEvent:@"Switch_GameOverToMenu"];
     
-    menuController.view.frame = [self propToRect:CGRectMake(0, 0, 1, 1)];
+    gameController.scoreLabel.text = @"0";
+    menuController.view.frame = [self propToRect:CGRectMake(1, 0, 1, 1)];
     [gameController animateOutExtraUI]; ///todo immediate
     [gameController removeAllSocks];
     
@@ -199,6 +212,94 @@
 //        [gameController updateBarForEfficiency:100.0];
 //        NSLog(@"transitioned: game over to menu %@", NSStringFromCGRect(gameController.view.frame));
 //    }];
+}
+
+- (void) switchFromGameOverToGame:(GameOverViewController *)gameOver {
+    currentAppState = TransitioningFromGameOverToGame;
+    [Flurry logEvent:@"Switch_GameOverToGame"];
+    
+    gameController.scoreLabel.text = @"0";
+    [gameController startGame:true];
+    [gameController animateInExtraUI]; ///todo immediate
+    [gameController removeAllSocks];
+    
+    [UIView animateWithDuration:1 animations:^void{
+        CGRect f = content.frame;
+        f.origin.x += [self propX:1];
+        content.frame = f;
+    } completion:^(BOOL finished){
+//        currentAppState = Game;
+        [gameController didMoveToParentViewController:self];
+        [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+    }];
+
+    
+    
+    
+
+    [menuController.gameTitle removeFromSuperview];
+    [content addSubview:menuController.gameTitle];
+    
+//    for(Forklift* f in [menuController.forklifts copy]){
+//        [f removeFromSuperview];
+//        [content addSubview:f];
+//    }
+//
+//    [[Sounds sharedInstance].mainMenuBackgroundMusic stop];
+//
+//    bool loadingData = false;
+//
+//    if(currentGameData.efficiency > 0 && currentGameData.sockData.count > 0){
+//        if([gameController loadGame:currentGameData]){
+//            loadingData = true;
+//            menuController.gameTitle.frame = CGRectOffset(menuController.gameTitle.frame, [self propX:-1], 0);
+//        }else{
+//            //            [gameController turnLightsOff];
+//        }
+//    }
+//    
+//    didCompleteTutorial = [Storage didCompleteTutorial];
+//    if(!didCompleteTutorial){
+//        [gameController.tutorialView animateTutorialLabelIn];
+//    }
+    
+    [[Sounds sharedInstance].beltSound play];
+    
+    [self animateFromViewController:menuController toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointMake([self propX:1], 0) animationFinished:^{
+        NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
+
+
+    }];
+}
+
+-(void)switchFromMenuToSettings:(MenuViewController*) menu{
+    currentAppState = TransitioningFromMenuToSettings;
+    [Flurry logEvent:@"Switch_MenuToSettings"];
+    
+    [UIView animateWithDuration:1 animations:^void{
+        CGRect f = content.frame;
+        f.origin.x += [self propX:1];
+        content.frame = f;
+    } completion:^(BOOL finished){
+        currentAppState = SettingsView;
+        [settingsController didMoveToParentViewController:self];
+        //        [game animateOutExtraUI];
+    }];
+}
+
+-(void)switchFromSettingsToMenu:(SettingsViewController*) settings{
+    currentAppState = TransitioningFromSettingsToMenu;
+    [Flurry logEvent:@"Switch_SettingsToMenu"];
+    
+    [UIView animateWithDuration:1 animations:^void{
+        CGRect f = content.frame;
+        f.origin.x -= [self propX:1];
+        content.frame = f;
+    } completion:^(BOOL finished){
+        currentAppState = MainMenu;
+        [menuController didMoveToParentViewController:self];
+        //        [game animateOutExtraUI];
+    }];
 }
 
 -(void)animateFromViewController:(UIViewController*)vc toPoint:(CGPoint)point toViewController:(UIViewController*)otherVc toPoint:(CGPoint)otherPoint animationFinished:(void (^)(void)) completion{
@@ -229,6 +330,11 @@
     }
 }
 
+- (void)switchFromGameToMenu:(GameViewController *)game {
+    
+}
+
+
 -(void)reportGCScore:(int)currentScore {
     if(gameCenterEnabled == true && leaderboardIdentifier.length > 0){
         [self gcReportScore:currentScore];
@@ -237,12 +343,12 @@
 
 -(void)startGameLoop {
     gameTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(gameLoop:)];
-//    if (@available(iOS 10.0, *)) {
-//        gameTimer.preferredFramesPerSecond = 60;
-//    } else {
-//        // Fallback on earlier versions
-//        gameTimer.frameInterval = 1;
-//    }
+    //    if (@available(iOS 10.0, *)) {
+    //        gameTimer.preferredFramesPerSecond = 60;
+    //    } else {
+    //        // Fallback on earlier versions
+    //        gameTimer.frameInterval = 1;
+    //    }
     gameTimer.preferredFramesPerSecond = 60;
     [gameTimer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
@@ -256,7 +362,7 @@
 -(void)gameLoop:(CADisplayLink*)tmr {
     CGFloat delta = tmr.duration;
     
-    if(currentAppState == TransitioningFromMainMenuToGame){
+    if(currentAppState == TransitioningFromMainMenuToGame || currentAppState == TransitioningFromGameOverToGame){
         CGFloat propMoveX = [gameController getFinalBeltMoveSpeed:gameController.animateBeltMoveSpeed];
         CGFloat moveX = [self propX:propMoveX];
         
@@ -336,29 +442,29 @@
 
 -(void)gcShowLeaderboard{
     if(gameCenterEnabled){
-//        GKLeaderboard* gameLeaderboard = [[GKLeaderboard alloc] init];
-//        gameLeaderboard.identifier = leaderboardIdentifier;
-//        gameLeaderboard.playerScope = GKLeaderboardPlayerScopeGlobal;
-////        gameLeaderboard.ra
-//
-//        [gameLeaderboard loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error){
-//            if(error){
-//                NSLog(@"Error retreiving scores %@", error);
-//            }else{
-//                for(GKScore* score in scores){
-//                    NSLog(@"SCORE: %@ %lli", score.player.displayName, score.value);
-//                }
-//
-//                GCLeaderboardViewController* scoreViewController = [[GCLeaderboardViewController alloc] initWithScores: scores];
-//                scoreViewController.view.layer.zPosition = 200;
-//                scoreViewController.view.frame = [self propToRect:CGRectMake(0, 0, 1, 1)];
-//                scoreViewController.delegate = self;
-//                [self addChildViewController:scoreViewController];
-//                [self.view addSubview:scoreViewController.view];
-//                [scoreViewController createScoreCells];
-//                [scoreViewController animateIn];
-//            }
-//        }];
+        //        GKLeaderboard* gameLeaderboard = [[GKLeaderboard alloc] init];
+        //        gameLeaderboard.identifier = leaderboardIdentifier;
+        //        gameLeaderboard.playerScope = GKLeaderboardPlayerScopeGlobal;
+        ////        gameLeaderboard.ra
+        //
+        //        [gameLeaderboard loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error){
+        //            if(error){
+        //                NSLog(@"Error retreiving scores %@", error);
+        //            }else{
+        //                for(GKScore* score in scores){
+        //                    NSLog(@"SCORE: %@ %lli", score.player.displayName, score.value);
+        //                }
+        //
+        //                GCLeaderboardViewController* scoreViewController = [[GCLeaderboardViewController alloc] initWithScores: scores];
+        //                scoreViewController.view.layer.zPosition = 200;
+        //                scoreViewController.view.frame = [self propToRect:CGRectMake(0, 0, 1, 1)];
+        //                scoreViewController.delegate = self;
+        //                [self addChildViewController:scoreViewController];
+        //                [self.view addSubview:scoreViewController.view];
+        //                [scoreViewController createScoreCells];
+        //                [scoreViewController animateIn];
+        //            }
+        //        }];
         
         GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
         

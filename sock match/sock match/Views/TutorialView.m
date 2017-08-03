@@ -120,8 +120,8 @@
     tutorialText.text = @"welcome to sock shop!";
     tutorialText.textAlignment = NSTextAlignmentCenter;
     tutorialText.adjustsFontSizeToFitWidth = true;
-    tutorialText.layer.borderColor = [UIColor blackColor].CGColor;
-    tutorialText.layer.borderWidth = 2;
+//    tutorialText.layer.borderColor = [UIColor blackColor].CGColor;
+//    tutorialText.layer.borderWidth = 2;
     tutorialText.numberOfLines = 0;
     [self addSubview:tutorialText];
     
@@ -178,7 +178,7 @@
 
 -(void)focusOnRect:(CGRect)rect withLabels:(NSArray<UILabel*>*)labels touchBlock:(void (^)(void))touched{
     FocusOnRect* focus = [[FocusOnRect alloc] initWithRectToFocusOn:rect withLabels:labels screenSize:UIScreen.mainScreen.bounds.size];
-    
+    focus.layer.zPosition = 151;
     __unsafe_unretained typeof(FocusOnRect*) weak = focus;
     
     [focus setTouchBlock:^void{

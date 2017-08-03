@@ -19,152 +19,8 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.281177"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1549"
-            endingLineNumber = "1549"
-            landmarkName = "-createForklift:givePoint:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.281778"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1531"
-            endingLineNumber = "1531"
-            landmarkName = "-createForklift:givePoint:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.282292"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1530"
-            endingLineNumber = "1530"
-            landmarkName = "-createForklift:givePoint:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.282878"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1571"
-            endingLineNumber = "1571"
-            landmarkName = "-createForklift:givePoint:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[GameViewController createForklift:givePoint:]"
-                  moduleName = "sock match"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Satvik/Desktop/SockMatch/sock%20match/sock%20match/Views/GameViewController.m"
-                  timestampString = "521917977.959665"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1452"
-                  endingLineNumber = "1452"
-                  offsetFromSymbolStart = "1772">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__47-[GameViewController createForklift:givePoint:]_block_invoke.636"
-                  moduleName = "sock match"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Satvik/Desktop/SockMatch/sock%20match/sock%20match/Views/GameViewController.m"
-                  timestampString = "521917977.961231"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1452"
-                  endingLineNumber = "1452"
-                  offsetFromSymbolStart = "16">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.283275"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1564"
-            endingLineNumber = "1564"
-            landmarkName = "-createForklift:givePoint:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.28366"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1532"
-            endingLineNumber = "1532"
-            landmarkName = "-createForklift:givePoint:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.284033"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1534"
-            endingLineNumber = "1534"
-            landmarkName = "-createForklift:givePoint:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "sock match/UI/Forklift.m"
-            timestampString = "523053728.28441"
+            timestampString = "523487482.692268"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "254"
@@ -180,7 +36,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sock match/UI/Forklift.m"
-            timestampString = "523053728.284461"
+            timestampString = "523487482.692602"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "252"
@@ -196,107 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.284502"
+            timestampString = "523487482.692666"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1545"
-            endingLineNumber = "1545"
-            landmarkName = "-createForklift:givePoint:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__47-[GameViewController createForklift:givePoint:]_block_invoke"
-                  moduleName = "sock match"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Satvik/Desktop/SockMatch/sock%20match/sock%20match/Views/GameViewController.m"
-                  timestampString = "521918392.636342"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1430"
-                  endingLineNumber = "1430"
-                  offsetFromSymbolStart = "56">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__47-[GameViewController createForklift:givePoint:]_block_invoke_2"
-                  moduleName = "sock match"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Satvik/Desktop/SockMatch/sock%20match/sock%20match/Views/GameViewController.m"
-                  timestampString = "521918392.639147"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1430"
-                  endingLineNumber = "1430"
-                  offsetFromSymbolStart = "16">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.284877"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1542"
-            endingLineNumber = "1542"
-            landmarkName = "-createForklift:givePoint:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__47-[GameViewController createForklift:givePoint:]_block_invoke"
-                  moduleName = "sock match"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Satvik/Desktop/SockMatch/sock%20match/sock%20match/Views/GameViewController.m"
-                  timestampString = "521918471.009178"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1430"
-                  endingLineNumber = "1430"
-                  offsetFromSymbolStart = "56">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__47-[GameViewController createForklift:givePoint:]_block_invoke_2"
-                  moduleName = "sock match"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Satvik/Desktop/SockMatch/sock%20match/sock%20match/Views/GameViewController.m"
-                  timestampString = "521918471.012202"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1430"
-                  endingLineNumber = "1430"
-                  offsetFromSymbolStart = "16">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.285258"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "328"
-            endingLineNumber = "328"
+            startingLineNumber = "327"
+            endingLineNumber = "327"
             landmarkName = "-createUI"
             landmarkType = "7">
          </BreakpointContent>
@@ -308,7 +68,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sock match/UI/GameAlertView.m"
-            timestampString = "522319088.8454"
+            timestampString = "523486551.064847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "93"
@@ -324,7 +84,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sock match/Core/DifficultyCurve.m"
-            timestampString = "522319088.845466"
+            timestampString = "523487482.693766"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "100"
@@ -340,7 +100,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sock match/Core/Sounds.m"
-            timestampString = "523053728.285686"
+            timestampString = "523487482.693961"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "47"
@@ -356,11 +116,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.285755"
+            timestampString = "523487482.694143"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1421"
-            endingLineNumber = "1421"
+            startingLineNumber = "1423"
+            endingLineNumber = "1423"
             landmarkName = "-madePairBetweenMainSock:andOtherSock:"
             landmarkType = "7">
          </BreakpointContent>
@@ -372,11 +132,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sock match/Views/GameViewController.m"
-            timestampString = "523053728.286141"
+            timestampString = "523487482.694891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1423"
-            endingLineNumber = "1423"
+            startingLineNumber = "1427"
+            endingLineNumber = "1427"
             landmarkName = "-madePairBetweenMainSock:andOtherSock:"
             landmarkType = "7">
          </BreakpointContent>
@@ -410,6 +170,134 @@
             startingLineNumber = "112"
             endingLineNumber = "112"
             landmarkName = "-startAnimatingWithCGImages:CompletionBlock:KeyBlock:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sock match/Core/DifficultyCurve.m"
+            timestampString = "523487482.695627"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "170"
+            endingLineNumber = "170"
+            landmarkName = "-getNextSock:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sock match/Views/GameViewController.m"
+            timestampString = "523487482.695678"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "810"
+            endingLineNumber = "810"
+            landmarkName = "-getFinalBeltMoveSpeed:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sock match/Views/GameViewController.m"
+            timestampString = "523487482.69631"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "733"
+            endingLineNumber = "733"
+            landmarkName = "-gameFrame:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sock match/Views/ContainerViewController.m"
+            timestampString = "523487482.69699"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
+            landmarkName = "-switchFromGameOverToGame:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sock match/Views/SettingsViewController.m"
+            timestampString = "523487482.697243"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sock match/Views/GameViewController.m"
+            timestampString = "523487482.697447"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1602"
+            endingLineNumber = "1602"
+            landmarkName = "-newSockType"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sock match/Views/GameViewController.m"
+            timestampString = "523487482.698164"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1617"
+            endingLineNumber = "1617"
+            landmarkName = "-newSockType"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sock match/Views/GameViewController.m"
+            timestampString = "523487482.699216"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1606"
+            endingLineNumber = "1606"
+            landmarkName = "-newSockType"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

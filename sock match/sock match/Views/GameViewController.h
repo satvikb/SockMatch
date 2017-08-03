@@ -53,6 +53,8 @@
 
 @property (strong, nonatomic) NSMutableArray<UIImage*>* countdownNumbers;
 
+@property (strong, nonatomic) UILabel* scoreLabel;
+
 @property (nonatomic, assign) bool timerPaused;
 @property (nonatomic, assign) bool doingTutorial;
 

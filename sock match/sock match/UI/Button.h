@@ -18,6 +18,8 @@ typedef void (^ButtonPressDown)(void);
 @property (nonatomic, copy) UIImage* imageFrame;
 @property (nonatomic, copy) UIImage* innerImageUp;
 @property (nonatomic, copy) UIImage* innerImageDown;
+@property (nonatomic, copy) UILabel* textLabel;
+
 @property (nonatomic, assign) bool pressedDown;
 -(void) setPushedDown;
 -(void) setPushedUp;

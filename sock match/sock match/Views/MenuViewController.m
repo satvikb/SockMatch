@@ -166,7 +166,7 @@
     [Flurry logEvent:@"GameCenterButtonPress"];
     
     if([self.delegate respondsToSelector:@selector(menuGameCenterButton)]){
-        [self.delegate menuGameCenterButton];
+        [self.delegate switchFromMenuToSettings:self];
     }
 }
 

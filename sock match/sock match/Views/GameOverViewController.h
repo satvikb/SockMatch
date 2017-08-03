@@ -19,6 +19,7 @@
 
 @protocol GameOverDelegate <NSObject>
 - (void) switchFromGameOverToMenu:(GameOverViewController *)gameOver;
+- (void) switchFromGameOverToGame:(GameOverViewController *)gameOver;
 - (void) gameEndScore:(int)score;
 //- (void)reportGCScore:(int)currentScore;
 @end
