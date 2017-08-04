@@ -17,7 +17,6 @@
 #import <MessageUI/MessageUI.h>
 
 @interface ContainerViewController : UIViewController <MenuDelegate, SettingsDelegate, GameDelegate, GameOverDelegate, LeaderboardDelegate, GKGameCenterControllerDelegate, MFMailComposeViewControllerDelegate>{
-    
 }
 
 @property (nonatomic, assign) AppState currentAppState;

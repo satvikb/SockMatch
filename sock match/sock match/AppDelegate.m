@@ -20,6 +20,8 @@
 @synthesize containerController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
+
     // Override point for customization after application launch.
     [Sounds sharedInstance];
     FlurrySessionBuilder* builder = [[[[[FlurrySessionBuilder new]
@@ -59,6 +61,9 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+//    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
+
+//    [[AVAudioSession sharedInstance] setActive:YES error:nil];
 }
 
 

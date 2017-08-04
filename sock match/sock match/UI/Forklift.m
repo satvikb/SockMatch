@@ -104,8 +104,8 @@
     return self;
 }
 
-// TODO add size image
--(id)initDummyFromLeft:(bool)fromLeft boxImage:(UIImage*)boxImage sockImage:(UIImage*)sockImage sockSize:(CGSize)sockSize atY:(CGFloat)y forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation{
+// TODO add size image (S, M, L)
+-(id)initDummyFromLeft:(bool)fromLeft boxImage:(UIImage*)boxImage sockImage:(UIImage*)sockImage sockSize:(CGSize)sockSize atX:(CGFloat)x atY:(CGFloat)y forkliftAnimationFrames:(NSMutableArray<UIImage*>*)forkliftAnimation wheelAnimationFrames:(NSMutableArray<UIImage*>*)wheelAnimation{
     
     screenSize = UIScreen.mainScreen.bounds.size;
     
@@ -135,7 +135,7 @@
     
     firstForklift = forkliftFacesRight ? [UIImage imageWithCGImage:firstForklift.CGImage scale:firstForklift.scale orientation:UIImageOrientationUpMirrored] : firstForklift;
     
-    CGFloat x = forkliftFacesRight ? -width : screenSize.width;
+//    CGFloat x = forkliftFacesRight ? -width : screenSize.width;
     
     CGRect frame = CGRectMake(x, y, width, height);
     
@@ -243,8 +243,8 @@
             currentState = GoingBack;
             CGRect transformedBounds = CGRectApplyAffineTransform(sock.bounds, sock.transform);
             [s play];
-            [UIView animateWithDuration:animateSpeed animations:^{
-                CGRect newRect = CGRectMake(forkliftFacesRight == true ? -(self.frame.size.width+(transformedBounds.size.width-sock.bounds.size.width)) : screenSize.width+(transformedBounds.size.width-sock.bounds.size.width), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+            [UIView animateWithDuration:forkliftFacesRight == false ? animateSpeed*2 : animateSpeed animations:^{
+                CGRect newRect = CGRectMake(forkliftFacesRight == true ? -(self.frame.size.width+(transformedBounds.size.width-sock.bounds.size.width)) : (screenSize.width*2)+(transformedBounds.size.width-sock.bounds.size.width), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
                 self.frame = newRect;
             } completion:^(BOOL finished){
                 currentlyAnimating = false;

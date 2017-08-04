@@ -10,10 +10,30 @@
 #import "Storage.h"
 
 @interface ContainerViewController () {
+    
     CADisplayLink* gameTimer;
     GameData* currentGameData;
     
     UIView* content;
+    
+    
+    NSMutableArray<Forklift*>* forklifts;
+    NSMutableArray<UIImage*>* sockPackages;
+    NSMutableArray<UIImage*>* forkliftAnimation;
+    NSMutableArray<UIImage*>* wheelAnimation;
+    UIImage* boxImage;
+    UIView* forkliftContent;
+
+    // random forklifts
+    CGFloat randomForkliftTimer;
+    CGFloat timeToCreateRandomForklift;
+    
+    CGFloat forkliftWheelTimer;
+    CGFloat timeToAnimateWheels;
+    
+    CGFloat forkliftAnimateTimer;
+    CGFloat timeToAnimateForklift;
+
 }
 
 @end
@@ -38,10 +58,12 @@
 //    content.layer.borderColor = [UIColor blueColor].CGColor;
     [self.view addSubview:content];
     
+//    forkliftContent = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(-1, 0, 3, 1)]];
+//    [self.view addSubview:forkliftContent];
+
+    
     didCompleteTutorial = [Storage didCompleteTutorial];
-    
     currentAppState = MainMenu;
-    
     currentGameData = [GameData sharedGameData];
     
     // Do any additional setup after loading the view.
@@ -59,15 +81,21 @@
     gameOverController.view.layer.zPosition = 150;
     gameOverController.delegate = self;
     
+    forklifts = [[NSMutableArray alloc] init];
+    sockPackages = gameController.sockPackages;
+    forkliftAnimation = gameController.forkLiftAnimationFrames;
+    wheelAnimation = gameController.wheelFrames;
+    boxImage = [gameController.boxAnimationFrames objectAtIndex:gameController.boxAnimationFrames.count-1];
+    
     int highScore = [Storage getSavedHighScore];
     
-    menuController = [[MenuViewController alloc] initWithForkliftAnimation:gameController.forkLiftAnimationFrames andWheel:gameController.wheelFrames sockPackages:gameController.sockPackages boxImage:[gameController.boxAnimationFrames objectAtIndex:gameController.boxAnimationFrames.count-1]];
+    menuController = [[MenuViewController alloc] init];
     menuController.view.layer.zPosition = 100;
     menuController.delegate = self;
     menuController.highScoreLabel.text = [NSString stringWithFormat:@"high score: %i", highScore];
     
     
-    settingsController = [[SettingsViewController alloc] initWithForkliftAnimation:gameController.forkLiftAnimationFrames andWheel:gameController.wheelFrames sockPackages:gameController.sockPackages boxImage:[gameController.boxAnimationFrames objectAtIndex:gameController.boxAnimationFrames.count-1]];
+    settingsController = [[SettingsViewController alloc] init];
     settingsController.view.layer.zPosition = 100;
     settingsController.delegate = self;
     
@@ -75,10 +103,14 @@
     [self displayContentController:gameOverController withFrame:[self propToRect:CGRectMake(2, 0, 1, 1)]];
     [self displayContentController:settingsController withFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
     [self displayContentController:menuController withFrame:[self propToRect:CGRectMake(1, 0, 1, 1)]];
+
     
     [self startGameLoop];
     
-    [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+    if([[Settings sharedInstance] getCurrentSetting:Sound] == true){
+        [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+    }
+    
 }
 
 -(void)testFile{
@@ -120,12 +152,7 @@
     [menuController.gameTitle removeFromSuperview];
     menuController.gameTitle.frame = CGRectMake(menuController.gameTitle.frame.origin.x+[self propX:1], menuController.gameTitle.frame.origin.y, menuController.gameTitle.frame.size.width, menuController.gameTitle.frame.size.height);
     [content addSubview:menuController.gameTitle];
-    
-    for(Forklift* f in [menuController.forklifts copy]){
-        [f removeFromSuperview];
-        [content addSubview:f];
-    }
-    
+
     [[Sounds sharedInstance].mainMenuBackgroundMusic stop];
     
     [Flurry logEvent:@"Switch_MenuToGame"];
@@ -148,8 +175,11 @@
     
     [gameController startGame:loadingData == true ? false : true];
     [gameController animateInExtraUI];
-    [[Sounds sharedInstance].beltSound play];
     
+    if([[Settings sharedInstance] getCurrentSetting:Sound] == true){
+        [[Sounds sharedInstance].beltSound play];
+    }
+        
     [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointMake([self propX:1], 0) animationFinished:^{
         NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
         
@@ -205,7 +235,10 @@
     } completion:^(BOOL finished){
         currentAppState = MainMenu;
         [menuController didMoveToParentViewController:self];
-        [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+        
+        if([[Settings sharedInstance] getCurrentSetting:Sound] == true){
+            [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+        }
     }];
 //    [self animateFromViewController:gameOver toPoint:[self propToRect:CGRectMake(1, 0, 0, 0)].origin toViewController:menuController toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin animationFinished:^{
 //        currentAppState = MainMenu;
@@ -230,7 +263,10 @@
     } completion:^(BOOL finished){
 //        currentAppState = Game;
         [gameController didMoveToParentViewController:self];
-        [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+        
+        if([[Settings sharedInstance] getCurrentSetting:Sound] == true){
+            [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+        }
     }];
 
     
@@ -263,7 +299,9 @@
 //        [gameController.tutorialView animateTutorialLabelIn];
 //    }
     
-    [[Sounds sharedInstance].beltSound play];
+    if([[Settings sharedInstance] getCurrentSetting:Sound] == true){
+        [[Sounds sharedInstance].beltSound play];
+    }
     
     [self animateFromViewController:menuController toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointMake([self propX:1], 0) animationFinished:^{
         NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
@@ -341,6 +379,18 @@
     }
 }
 
+-(void)settingChanged:(SettingTypes)type{
+    if([[Settings sharedInstance] getCurrentSetting:Sound] == false){
+        [[Sounds sharedInstance].mainMenuBackgroundMusic stop];
+        [[Sounds sharedInstance].beltSound stop];
+    }else{
+        if(type == Sound){
+            [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+            [[Sounds sharedInstance].beltSound play];
+        }
+    }
+}
+
 -(void)startGameLoop {
     gameTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(gameLoop:)];
     //    if (@available(iOS 10.0, *)) {
@@ -368,6 +418,7 @@
         
         menuController.gameTitle.frame = CGRectOffset(menuController.gameTitle.frame, -moveX*delta, 0);
         
+        //TODO warming up takes priority not title dissapearing. create a delegate method in gamecontroller to say when warming up is complete
         if(menuController.gameTitle.frame.origin.x < -menuController.gameTitle.frame.size.width){
             [menuController.gameTitle removeFromSuperview];
             menuController.gameTitle.frame = menuController.titleFrame;
@@ -381,12 +432,49 @@
                 [gameController generateSock];
             }
         }
-        
-        [menuController handleForkliftAnimation:delta];
     }
     
-    [menuController gameFrame:tmr];
     [gameController gameFrame:tmr];
+    
+    
+    
+    
+    
+    
+//        if(currentAppState == MainMenu || currentAppState == SettingsView || currentAppState == TransitioningFromSettingsToMenu || currentAppState == TransitioningFromMenuToSettings || currentAppState == TransitioningFromMainMenuToGame || currentAppState == TransitioningFromGameOverToGame){
+    
+            randomForkliftTimer += tmr.duration;
+            forkliftWheelTimer += tmr.duration;
+            
+            if(randomForkliftTimer >= timeToCreateRandomForklift && currentAppState != Game && currentAppState != TransitioningFromMainMenuToGame){
+                timeToCreateRandomForklift = [Functions randFromMin:1 toMax:4];
+                [self createRandomForklift];
+                randomForkliftTimer = 0;
+            }
+            
+            if(forkliftWheelTimer >= timeToAnimateWheels){
+                for(Forklift* f in forklifts){
+                    switch (f.currentState) {
+                        case None:
+                            break;
+                        case GoingToSock:
+                            [f animateWheels];
+                            break;
+                        case PickingUpSock:
+                            break;
+                        case GoingBack:
+                            [f animateWheelsBackward];
+                        default:
+                            break;
+                    }
+                }
+                
+                forkliftWheelTimer = 0;
+            }
+            
+            [self handleForkliftAnimation:tmr.duration];
+//        }
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -490,6 +578,86 @@
 -(void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController {
     [gameCenterViewController dismissViewControllerAnimated:YES completion:nil];
 }
+
+
+
+
+
+//creating random forklifts
+
+-(void) gameFrame:(CADisplayLink*)tmr{
+    
+}
+
+// so container can continue animations when play button is pressed
+-(void)handleForkliftAnimation:(CGFloat)delta {
+    forkliftAnimateTimer += delta;
+    
+    if(forkliftAnimateTimer >= timeToAnimateForklift){
+        for(Forklift* f in forklifts){
+            [f animateAnimation];
+        }
+        forkliftAnimateTimer = 0;
+    }
+}
+
+// TODO make them not overlap (seperate into rows or sth)
+-(void)createRandomForklift{
+    CGFloat y = [Functions randFromMin:0.5 toMax:0.9];
+    
+    int sockId = [self getRandomSockId];
+    SockSize size = [self getRandomSockSize];
+    
+    CGRect newSockFrame = [self propToRect:CGRectMake(0, y, [Functions propSizeFromSockSize:size], 0)];
+    CGSize sockSize = CGSizeMake(newSockFrame.size.width, newSockFrame.size.width);
+    //imageName:[NSString stringWithFormat:@"sock%i", sockId]
+    
+    bool fromLeft = [Functions randomNumberBetween:0 maxNumber:100] < 50;
+    
+    UIImage* img = [Functions randomNumberBetween:0 maxNumber:100] < 50 ? [sockPackages objectAtIndex:sockId] : nil;
+    
+    
+    UIImage* firstForklift = [forkliftAnimation objectAtIndex:0];
+    CGFloat sockHeight = sockSize.height;
+    CGFloat aspectRatio = sockHeight / firstForklift.size.height;
+    CGFloat finalWidth = firstForklift.size.width*aspectRatio;
+    
+    
+    CGFloat x = fromLeft == true ? -finalWidth : [self propX:3];
+    
+    
+    
+    Forklift* fork = [[Forklift alloc] initDummyFromLeft:fromLeft boxImage:boxImage sockImage:img sockSize:sockSize atX:x atY:newSockFrame.origin.y forkliftAnimationFrames:forkliftAnimation wheelAnimationFrames:wheelAnimation];
+    
+    fork.layer.zPosition = 2;
+    [forklifts addObject:fork];
+    [content addSubview:fork];
+    
+//    CGFloat speed = [Functions randFromMin:1.5 toMax:4];
+    CGFloat speed = [Functions randFromMin:3 toMax:8];
+    
+    [fork dummyAnimateWithSpeed:speed xTranslate:fromLeft == true ? [self propX:3]+fork.frame.size.width : -([self propX: 3]+fork.frame.size.width) withCompletion:^void{
+        [fork removeFromSuperview];
+        [forklifts removeObject:fork];
+    }];
+}
+
+-(int) getRandomSockId {
+    return [Functions randomNumberBetween:0 maxNumber:4];
+}
+
+-(SockSize) getRandomSockSize {
+    return [Functions randomNumberBetween:0 maxNumber:2];
+}
+
+
+
+
+
+
+
+
+
 
 -(CGFloat) propX:(CGFloat) x {
     return x*self.view.frame.size.width;

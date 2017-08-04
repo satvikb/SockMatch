@@ -18,21 +18,15 @@
 @interface SettingsViewController : UIViewController<UIGestureRecognizerDelegate>
 @property (nonatomic, strong) id<SettingsDelegate> delegate;
 
-@property (nonatomic, strong) NSMutableArray<Forklift*>* forklifts;
-
 @property (nonatomic, strong) UIImageView* settingsTitle;
 @property (nonatomic, assign) CGRect titleFrame;
 @property (nonatomic, strong) Button* backButton;
-
-
--(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages boxImage:(UIImage*)boxImage;
-//-(void) gameFrame:(CADisplayLink*)tmr;
-//-(void)handleForkliftAnimation:(CGFloat)delta;
 
 @end
 
 @protocol SettingsDelegate <NSObject>
 -(void)switchFromSettingsToMenu:(SettingsViewController*) settings;
+-(void)settingChanged:(SettingTypes)type;
 //-(void)menuGameCenterButton;
 @end
 

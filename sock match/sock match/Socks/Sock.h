@@ -34,6 +34,7 @@ typedef void (^TouchEnded)(Sock* s, CGPoint p);
 @property (nonatomic, assign) SockSize sockSize;
 @property (nonatomic, assign) bool onConvayorBelt;
 
+@property (nonatomic, assign) CGRect startTouchRect;
 @property (nonatomic, assign) CGRect theoreticalFrame;
 
 @property (nonatomic, strong) UIImageView* coreImageView;

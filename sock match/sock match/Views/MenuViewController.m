@@ -12,59 +12,26 @@
 
 #import "GameAlertView.h"
 
-@interface MenuViewController () {
-    NSMutableArray<UIImage*>* sockPackages;
-    NSMutableArray<UIImage*>* forkliftAnimation;
-    NSMutableArray<UIImage*>* wheelAnimation;
-    UIImage* boxImage;
-    
-    // random forklifts
-    CGFloat randomForkliftTimer;
-    CGFloat timeToCreateRandomForklift;
-    
-    CGFloat forkliftWheelTimer;
-    CGFloat timeToAnimateWheels;
-    
-    CGFloat forkliftAnimateTimer;
-    CGFloat timeToAnimateForklift;
-}
+@interface MenuViewController () {}
 
 @end
 
 
 @implementation MenuViewController
 
-@synthesize forklifts;
 @synthesize gameTitle;
 @synthesize titleFrame;
 @synthesize playButton;
 @synthesize gameCenterButton;
+@synthesize settingsButton;
 @synthesize highScoreLabel;
--(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages boxImage:(UIImage*)bxImage{
-    self = [super init];
-    
-    forklifts = [[NSMutableArray alloc] init];
-    sockPackages = packages;
-    forkliftAnimation = forklift;
-    wheelAnimation = wheels;
-    boxImage = bxImage;
-    return self;
-}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];//[UIColor colorWithRed:0.168627451 green:0.168627451 blue:0.168627451 alpha:1];
     self.view.userInteractionEnabled = true;
-    
-    randomForkliftTimer = 5; // immedietely create one
-    timeToCreateRandomForklift = 3;
-    
-    forkliftWheelTimer = 0;
-    timeToAnimateWheels = 0.1;
-    
-    forkliftAnimateTimer = 0;
-    timeToAnimateForklift = 0.5;
     
     gameTitle = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.2, 0.5, 0.195)]];
 //    testLabel.layer.borderWidth = 1;
@@ -110,6 +77,39 @@
     [gameCenterButton addGestureRecognizer:gcTapRecognizer];
     
     [self.view addSubview:gameCenterButton];
+    
+    
+    
+    
+    
+    
+    
+    
+    CGFloat settingBtnWidth = [self propX: 0.15];
+    CGFloat settingPadding = [self propX:0.01];
+    CGRect settingMetaFrame = [self propToRect:CGRectMake(0, 1, 0.15, 0)];
+    settingsButton = [[UIImageView alloc] initWithFrame: CGRectMake(settingMetaFrame.origin.x+settingPadding, settingMetaFrame.origin.y-settingBtnWidth-settingPadding, settingMetaFrame.size.width, settingBtnWidth)];
+    //    testLabel.layer.borderWidth = 1;
+    //    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
+    
+    UIImage* settingImage = [UIImage imageNamed:@"settingscog"];
+    //    gcImage = [gcImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    //    gcImage = [self image:playImage WithTint:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1]];
+    //    playButton.tintColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1];
+    [settingsButton setImage:settingImage];
+    settingsButton.layer.magnificationFilter = kCAFilterNearest;
+    settingsButton.contentMode = UIViewContentModeScaleAspectFit;
+    
+    UITapGestureRecognizer *settingTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pressSettingButton:)];
+    [settingTapRecognizer setNumberOfTouchesRequired:1];
+    [settingTapRecognizer setDelegate:self];
+    //Don't forget to set the userInteractionEnabled to YES, by default It's NO.
+    settingsButton.userInteractionEnabled = YES;
+    [settingsButton addGestureRecognizer:settingTapRecognizer];
+    
+    [self.view addSubview:settingsButton];
+    
+    
     
     
     
@@ -166,93 +166,17 @@
     [Flurry logEvent:@"GameCenterButtonPress"];
     
     if([self.delegate respondsToSelector:@selector(menuGameCenterButton)]){
+        [self.delegate menuGameCenterButton];
+    }
+}
+
+-(void)pressSettingButton:(id)sender{
+    NSLog(@"GAME CENTER");
+    [Flurry logEvent:@"GameCenterButtonPress"];
+    
+    if([self.delegate respondsToSelector:@selector(switchFromMenuToSettings:)]){
         [self.delegate switchFromMenuToSettings:self];
     }
-}
-
--(void) gameFrame:(CADisplayLink*)tmr{
-    if([self.delegate respondsToSelector:@selector(getAppState)]){
-        if([self.delegate getAppState] == MainMenu){
-            randomForkliftTimer += tmr.duration;
-            forkliftWheelTimer += tmr.duration;
-            
-            if(randomForkliftTimer >= timeToCreateRandomForklift){
-                timeToCreateRandomForklift = [Functions randFromMin:1 toMax:4];
-                [self createRandomForklift];
-                randomForkliftTimer = 0;
-            }
-            
-            if(forkliftWheelTimer >= timeToAnimateWheels){
-                for(Forklift* f in forklifts){
-                    switch (f.currentState) {
-                        case None:
-                            break;
-                        case GoingToSock:
-                            [f animateWheels];
-                            break;
-                        case PickingUpSock:
-                            break;
-                        case GoingBack:
-                            [f animateWheelsBackward];
-                        default:
-                            break;
-                    }
-                }
-                
-                forkliftWheelTimer = 0;
-            }
-            
-            [self handleForkliftAnimation:tmr.duration];
-        }
-    }
-}
-
-// so container can continue animations when play button is pressed
--(void)handleForkliftAnimation:(CGFloat)delta {
-    forkliftAnimateTimer += delta;
-    
-    if(forkliftAnimateTimer >= timeToAnimateForklift){
-        for(Forklift* f in forklifts){
-            [f animateAnimation];
-        }
-        forkliftAnimateTimer = 0;
-    }
-}
-
-// TODO make them not overlap (seperate into rows or sth)
--(void)createRandomForklift{
-    CGFloat y = [Functions randFromMin:0.5 toMax:0.9];
-    
-    int sockId = [self getRandomSockId];
-    SockSize size = [self getRandomSockSize];
-    
-    CGRect newSockFrame = [self propToRect:CGRectMake(0, y, [Functions propSizeFromSockSize:size], 0)];
-    //imageName:[NSString stringWithFormat:@"sock%i", sockId]
-    
-    bool fromLeft = [Functions randomNumberBetween:0 maxNumber:100] < 50;
-    
-    UIImage* img = [Functions randomNumberBetween:0 maxNumber:100] < 50 ? [sockPackages objectAtIndex:sockId] : nil;
-    
-    Forklift* fork = [[Forklift alloc] initDummyFromLeft:fromLeft boxImage:boxImage sockImage:img sockSize:CGSizeMake(newSockFrame.size.width, newSockFrame.size.width) atY:newSockFrame.origin.y forkliftAnimationFrames:forkliftAnimation wheelAnimationFrames:wheelAnimation];
-    
-    fork.layer.zPosition = 102;
-    [forklifts addObject:fork];
-    [self.view addSubview:fork];
-    
-    CGFloat speed = [Functions randFromMin:1.5 toMax:4];
-        
-    [fork dummyAnimateWithSpeed:speed xTranslate:fromLeft == true ? [self propX:1]+fork.frame.size.width : -([self propX: 1]+fork.frame.size.width) withCompletion:^void{
-        [fork removeFromSuperview];
-        [forklifts removeObject:fork];
-    }];
-}
-
--(int) getRandomSockId {
-    return [Functions randomNumberBetween:0 maxNumber:4];
-}
-
--(SockSize) getRandomSockSize {
-    return [Functions randomNumberBetween:0 maxNumber:2];
 }
 
 - (void)didReceiveMemoryWarning {

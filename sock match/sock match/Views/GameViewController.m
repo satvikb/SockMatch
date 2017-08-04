@@ -122,7 +122,7 @@
         }];
             
         [tutorialView setSockOneTouchEndBlock:^(Sock* s){
-            bool onBelt = CGRectContainsPoint(ws->conveyorBeltRect, CGPointMake(CGRectGetMidX([ws.tutorialView.sockOne getCoreRect]), CGRectGetMidY([ws.tutorialView.sockOne getCoreRect])));
+            bool onBelt = [ws _sockRectOnBelt:ws.tutorialView.sockOne];//CGRectContainsPoint(ws->conveyorBeltRect, CGPointMake(CGRectGetMidX([ws.tutorialView.sockOne getCoreRect]), CGRectGetMidY([ws.tutorialView.sockOne getCoreRect])));
             
             if(ws.tutorialView.tutorialState <= 3){
                 if(!onBelt){
@@ -159,7 +159,7 @@
         [ws madePairBetweenMainSock:ws.tutorialView.sockOne andOtherSock:ws.tutorialView.sockTwo];
         
         UILabel* efficiencyInfo = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.98, 0.3)]];
-        efficiencyInfo.text = @"this is the efficiency of the factory.\nletting socks through or building up socks reduces the efficiency.\n when efficiency reaches 0, you lose.";
+        efficiencyInfo.text = @"this is the efficiency of the factory.\nletting socks through or building up socks reduces the efficiency.\n when efficiency reaches 0 you lose.";
         efficiencyInfo.textAlignment = NSTextAlignmentCenter;
         efficiencyInfo.numberOfLines = 0;
 //        efficiencyInfo.layer.borderWidth = 2;
@@ -290,6 +290,12 @@
 -(void)createUI {
     
     conveyorBeltRect = [self propToRect:CGRectMake(-0.25, 0.15, 1.5, 0.3)];
+    
+//    UIView* cbeltrect = [[UIView alloc] initWithFrame:conveyorBeltRect];
+//    cbeltrect.layer.borderWidth = 4;
+//    cbeltrect.layer.borderColor = UIColor.blueColor.CGColor;
+//    cbeltrect.layer.zPosition = 1000;
+//    [self.view addSubview:cbeltrect];
     
     UIView* topBackground = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 2, 0.15)]];
     topBackground.backgroundColor = [UIColor colorWithRed:(140.0/255.0) green:(174.0/255.0) blue:(0.0/255.0) alpha:1];
@@ -457,6 +463,7 @@
     
     
 //    [self createInfoBanner:0 text:@"test should pause"];
+//    [self newSockSize];
 }
 
 - (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor{
@@ -635,7 +642,7 @@
     CGFloat aspectRatio = frame.size.height / beltTileImage.size.height;
     CGFloat imageWidth = beltTileImage.size.width*aspectRatio;
     
-    int numOfBeltTiles = [self propX:3]/imageWidth;//((frame.size.width / imageWidth)*2)+5;
+    int numOfBeltTiles = ([self propX:3]/imageWidth)+5;//((frame.size.width / imageWidth)*2)+5;
     
     _beltImagesSideExtra = (numOfBeltTiles*imageWidth);;
     
@@ -659,7 +666,7 @@
     CGFloat aspectRatio = frame.size.height / beltWheelImage.size.height;
     CGFloat imageWidth = beltWheelImage.size.width*aspectRatio;
     
-    int numOfWheelTiles = [self propX:3]/imageWidth;//((frame.size.width / imageWidth)*2)+5;
+    int numOfWheelTiles = ([self propX:3]/imageWidth)+5;//((frame.size.width / imageWidth)*2)+5;
     
     for (NSInteger i = 0; i < numOfWheelTiles; ++i){
         [framesArray addObject:[NSNumber numberWithInt:0]];
@@ -983,7 +990,9 @@
 }
 
 -(bool)_sockRectOnBelt:(Sock*)s{
-    return CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX([s getCoreRect]), CGRectGetMidY([s getCoreRect])));
+    CGRect main = [s getCoreRect];
+    return CGRectIntersectsRect(conveyorBeltRect, CGRectMake(main.origin.x+(main.size.width*0.2), main.origin.y+(main.size.height*0.2), main.size.width*0.8, main.size.height*0.8));
+//    return CGRectContainsPoint(conveyorBeltRect, CGPointMake(CGRectGetMidX([s getCoreRect]), CGRectGetMidY([s getCoreRect])));
 }
 
 -(bool)_sockInGameView:(Sock*)s{
@@ -1254,6 +1263,21 @@
             [self updateWeatherSockOnBelt:s];
         }
         
+        //check if sock is at top of screen
+        CGRect top = [self propToRect:CGRectMake(0, 0, 1, 0.15)];
+        CGRect sock = [s getCoreTheoreticalRect];//ss.frame;
+        if(CGRectIntersectsRect(sock, top)){
+            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
+                [s setRectFromCoreRect:s.startTouchRect];
+                [s setTheoreticalRectFromCoreTheoreticalRect:s.startTouchRect];
+                //                s.frame = s.theoreticalFrame;
+                //                s.theoreticalFrame = s.frame;
+            } completion:^(BOOL completion){
+                [self updateWeatherSockOnBelt:s];
+                //                [self checkPairsWithSock:s];
+            }];
+        }
+        
         if([self handleIntersection:s previousOverlap:false direction:0 recursionCount:0]){
             [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
                 s.frame = s.theoreticalFrame;
@@ -1463,12 +1487,6 @@
     }
 }
 
--(void)makeAllForkliftsAnimateToTheLeft {
-    for(Forklift* f in [forklifts copy]){
-        //change to move left
-    }
-}
-
 -(void) animateAllForklifts {
     for (Forklift* f in [forklifts copy]) {
         [f animateAnimation];
@@ -1583,39 +1601,113 @@
 }
 
 -(void)newSockSize{
-    InfoBanner* b = [self createInfoBanner:3 text:@"new sock size!"];
-    b.tag = 2;
-   // TODO use a alert view
+//    InfoBanner* b = [self createInfoBanner:3 text:@"new sock size!"];
+//    b.tag = 2;
+    
+    // TODO use a alert view
+    if([[Settings sharedInstance] getCurrentSetting:GameAlertSockSize] == true){
+        UIImage* sockAlertImage = [sockMainImages objectAtIndex:0];
+        
+        GameAlertView* gav = [[GameAlertView alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.5)] screenFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) title:@"new sock size!" text:@"you must match socks that are also the same size!" image: sockAlertImage smallerImg:sockAlertImage];
+        gav.layer.zPosition = 251;
+        timerPaused = true;
+        __unsafe_unretained typeof(GameAlertView*) weak = gav;
+        
+        [gav setButtonPressBlock:^void{
+            timerPaused = false;
+            [self enableSockMovement];
+            [weak hideAndRemove];
+        }];
+        
+        for(Sock* s in [self->socks copy]){
+            [s animateDecreaseCoreScale];
+            s.touchEndedBlock(s, CGPointZero);
+        }
+        [self disableSockMovement];
+        
+        [self.view addSubview:gav];
+    }
 }
+//
+//- (UIImage*)getNewSockSizeImage:(UIImage*)img {
+//    UIImage* newImage = [self resizeImage:img newSize:CGSizeMake(img.size.width*0.4, img.size.height*0.4)];
+//
+//    UIImage *image = nil;
+//
+//    CGSize newImageSize = CGSizeMake(img.size.width*1.5, img.size.height);
+//
+//    UIGraphicsBeginImageContextWithOptions(newImageSize, NO, [[UIScreen mainScreen] scale]);
+//
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    CGContextSetInterpolationQuality(context, kCGInterpolationNone);
+//
+//
+////    [img drawAtPoint:CGPointMake(roundf((img.size.width)/2), roundf((newImageSize.height-img.size.height)/2))];
+//    [newImage drawInRect:CGRectMake(0, 0, newImage.size.width, newImage.size.height)];
+////    [img drawAtPoint:CGPointMake(roundf((newImageSize.width)-(img.size.width/2)), roundf((newImageSize.height-img.size.height)/2))];
+//    [img drawInRect:CGRectMake(img.size.width, img.size.height*0.5, img.size.width*0.5, img.size.height*0.5)];
+//    image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//
+//    return image;
+//}
+//
+//- (UIImage *)resizeImage:(UIImage*)image newSize:(CGSize)newSize {
+//    CGRect newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width, newSize.height));
+//    CGImageRef imageRef = image.CGImage;
+//
+//    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0);
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//
+//    // Set the quality level to use when rescaling
+//    CGContextSetInterpolationQuality(context, kCGInterpolationNone);
+//    CGAffineTransform flipVertical = CGAffineTransformMake(1, 0, 0, -1, 0, newSize.height);
+//
+//    CGContextConcatCTM(context, flipVertical);
+//    // Draw into the context; this scales the image
+//    CGContextDrawImage(context, newRect, imageRef);
+//
+//    // Get the resized image from the context and a UIImage
+//    CGImageRef newImageRef = CGBitmapContextCreateImage(context);
+//    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+//
+//    CGImageRelease(newImageRef);
+//    UIGraphicsEndImageContext();
+//
+//    return newImage;
+//}
 
 -(void)newSockType{
 //    InfoBanner* b = [self createInfoBanner:3 text:@"new sock type!"];
 //    b.tag = 0;
     
-    UIImage* sockAlertImage = nil;
-    
-    if(floor(difficultyCurve.numOfDifferentSocksToGenerate) < sockMainImages.count){
-        sockAlertImage = [sockMainImages objectAtIndex:floor(difficultyCurve.numOfDifferentSocksToGenerate)];
+    if([[Settings sharedInstance] getCurrentSetting:GameAlertSockType] == true){
+        
+        UIImage* sockAlertImage = nil;
+        
+        if(floor(difficultyCurve.numOfDifferentSocksToGenerate) < sockMainImages.count){
+            sockAlertImage = [sockMainImages objectAtIndex:floor(difficultyCurve.numOfDifferentSocksToGenerate)];
+        }
+        
+        GameAlertView* gav = [[GameAlertView alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.5)] screenFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) title:@"new sock type!" text:@"there is a new sock to match!" image: sockAlertImage];
+        gav.layer.zPosition = 251;
+        timerPaused = true;
+        __unsafe_unretained typeof(GameAlertView*) weak = gav;
+        
+        [gav setButtonPressBlock:^void{
+            timerPaused = false;
+            [self enableSockMovement];
+            [weak hideAndRemove];
+        }];
+        
+        for(Sock* s in [self->socks copy]){
+            [s animateDecreaseCoreScale];
+            s.touchEndedBlock(s, CGPointZero);
+        }
+        [self disableSockMovement];
+        
+        [self.view addSubview:gav];
     }
-    
-    GameAlertView* gav = [[GameAlertView alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.5)] screenFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) title:@"new sock type!" text:@"there is a new sock to match!" image: sockAlertImage];
-    gav.layer.zPosition = 251;
-    timerPaused = true;
-    __unsafe_unretained typeof(GameAlertView*) weak = gav;
-    
-    [gav setButtonPressBlock:^void{
-        timerPaused = false;
-        [self enableSockMovement];
-        [weak hideAndRemove];
-    }];
-    
-    for(Sock* s in [self->socks copy]){
-        [s animateDecreaseCoreScale];
-        s.touchEndedBlock(s, CGPointZero);
-    }
-    [self disableSockMovement];
-    
-    [self.view addSubview:gav];
 }
 
 -(InfoBanner*)createInfoBanner:(int)times text:(NSString*)text{

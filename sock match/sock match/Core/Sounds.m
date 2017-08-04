@@ -27,6 +27,7 @@
     dispatch_once(&onceToken, ^{
         sharedInstance = [[Sounds alloc] init];
         // Do any other initialisation stuff here
+        
     });
     return sharedInstance;
 }
@@ -116,16 +117,19 @@
 }
 
 -(AVAudioPlayer*)createAudioPlayer:(NSURL*)url loops:(NSInteger)loops{
-    AVAudioPlayer* soundEffect = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
-    //    beltSound.numberO
-    soundEffect.numberOfLoops = loops;
-    [soundEffect prepareToPlay];
-    soundEffect.enableRate = true;
-    
-    soundEffect.delegate = self;
-    //    beltSound.rate = 0;
-    [soundEffectPlayers addObject:soundEffect];
-    return soundEffect;
+    if([[Settings sharedInstance] getCurrentSetting:Sound]){
+        AVAudioPlayer* soundEffect = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
+        //    beltSound.numberO
+        soundEffect.numberOfLoops = loops;
+        [soundEffect prepareToPlay];
+        soundEffect.enableRate = true;
+        
+        soundEffect.delegate = self;
+        //    beltSound.rate = 0;
+        [soundEffectPlayers addObject:soundEffect];
+        return soundEffect;
+    }
+    return nil;
 }
 
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {

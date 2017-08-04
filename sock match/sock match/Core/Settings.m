@@ -8,8 +8,15 @@
 
 #import "Settings.h"
 
+#define SoundEnabledKey  @"soundEnabled"
+#define SockTypeAlertEnabledKey  @"sockTypeAlert"
+#define SockSizeAlertEnabledKey  @"sockSizeAlert"
+
 @implementation Settings
 
+@synthesize soundsEnabled;
+@synthesize sockTypeAlertEnabled;
+@synthesize sockSizeAlertEnabled;
 
 + (instancetype)sharedInstance
 {
@@ -18,6 +25,27 @@
     dispatch_once(&onceToken, ^{
         sharedInstance = [[Settings alloc] init];
         // Do any other initialisation stuff here
+        if([[NSUserDefaults standardUserDefaults] objectForKey:SoundEnabledKey] != nil){
+            sharedInstance.soundsEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:SoundEnabledKey];
+        }else{
+            sharedInstance.soundsEnabled = true;
+            [[NSUserDefaults standardUserDefaults] setBool:true forKey:SoundEnabledKey];
+        }
+        
+        if([[NSUserDefaults standardUserDefaults] objectForKey:SockTypeAlertEnabledKey] != nil){
+            sharedInstance.sockTypeAlertEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:SockTypeAlertEnabledKey];
+        }else{
+            sharedInstance.sockTypeAlertEnabled = true;
+            [[NSUserDefaults standardUserDefaults] setBool:true forKey:SockTypeAlertEnabledKey];
+        }
+        
+        if([[NSUserDefaults standardUserDefaults] objectForKey:SockSizeAlertEnabledKey] != nil){
+            sharedInstance.sockSizeAlertEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:SockSizeAlertEnabledKey];
+        }else{
+            sharedInstance.sockSizeAlertEnabled = true;
+            [[NSUserDefaults standardUserDefaults] setBool:true forKey:SockSizeAlertEnabledKey];
+        }
+        
     });
     return sharedInstance;
 }
@@ -25,12 +53,39 @@
 -(NSString*)getSettingTextForType:(SettingTypes)type{
     switch (type) {
         case Sound:
-            return @"Sound Effects";
+            return @"Sound";
+        case GameAlertSockType:
+            return @"Sock type alerts";
+        case GameAlertSockSize:
+            return @"Sock size alerts";
+    }
+}
+
+-(void)toggleSetting:(SettingTypes)settingType{
+    switch (settingType) {
+        case Sound:
+            soundsEnabled = !soundsEnabled;
+            [[NSUserDefaults standardUserDefaults] setBool:soundsEnabled forKey:SoundEnabledKey];
             break;
         case GameAlertSockType:
-            return @"New sock type alerts";
+            sockTypeAlertEnabled = !sockTypeAlertEnabled;
+            [[NSUserDefaults standardUserDefaults] setBool:sockTypeAlertEnabled forKey:SockTypeAlertEnabledKey];
+            break;
         case GameAlertSockSize:
-            return @"New sock size alerts";
+            sockSizeAlertEnabled = !sockSizeAlertEnabled;
+            [[NSUserDefaults standardUserDefaults] setBool:sockSizeAlertEnabled forKey:SockSizeAlertEnabledKey];
+            break;
+    }
+}
+
+-(bool)getCurrentSetting:(SettingTypes)settingType{
+    switch (settingType) {
+        case Sound:
+            return soundsEnabled;
+        case GameAlertSockType:
+            return sockTypeAlertEnabled;
+        case GameAlertSockSize:
+            return sockSizeAlertEnabled;
     }
 }
 

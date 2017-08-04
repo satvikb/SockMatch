@@ -8,17 +8,22 @@
 
 #import "SettingView.h"
 
-@implementation SettingView
+@implementation SettingView {
+    UIView* toggleBoxView;
+}
+
+@synthesize touchBeganBlock;
 
 -(id)initWithFrame:(CGRect)frame settingType:(SettingTypes)type{
     self = [super initWithFrame:frame];
     
     CGFloat height = frame.size.width*0.2;
-    UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, frame.size.width*0.8, height)];
+    UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, frame.size.width*0.75, height)];
     textLabel.text = [[Settings sharedInstance] getSettingTextForType: type];
     textLabel.textColor = UIColor.blackColor;
     textLabel.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:20]];
     textLabel.textAlignment = NSTextAlignmentCenter;
+    textLabel.adjustsFontSizeToFitWidth = true;
     [self addSubview:textLabel];
     
     
@@ -26,7 +31,21 @@
     boxView.layer.borderWidth = 2;
     [self addSubview:boxView];
     
+    toggleBoxView = [[UIView alloc] initWithFrame:CGRectMake(boxView.frame.size.width*0.1, boxView.frame.size.height*0.1, boxView.frame.size.width*0.8, boxView.frame.size.height*0.8)];
+    toggleBoxView.backgroundColor = [[Settings sharedInstance] getCurrentSetting:type] == true ? UIColor.blueColor : UIColor.clearColor;
+    [boxView addSubview:toggleBoxView];
+    
     return self;
+}
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    if(touchBeganBlock != nil){
+        touchBeganBlock();
+    }
+}
+
+-(void)updateSetting:(SettingTypes)type{
+    toggleBoxView.backgroundColor = [[Settings sharedInstance] getCurrentSetting:type] == true ? UIColor.blueColor : UIColor.clearColor;
 }
 
 @end

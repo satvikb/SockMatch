@@ -25,7 +25,6 @@ collisions
 
 ui
 	-improve pause button
-	-too many socks alert
 
 settings
 	-credits
@@ -33,6 +32,7 @@ settings
 sounds
 	-improve sock package
 	-add point.wav
+	-compress sounds
 
 saving
 	-load
@@ -47,17 +47,12 @@ meta
 	-splash screen
 
 bugs
-	-clicking play on menu while forklift is moving through screen changed speed of forklifts to a constant value
-	-matching socks near belt overlap conveyor belt/wheels (put forklift below belt)
-	-if the play button is above forklift pressing play changes it to be below
-	-facing left forklifts while animating to game over
-	-boxes in dead center don't get picked up?
 	-as belt speeds up socks are hard to touch
 	-invalidate timers in bg
 	-collision - socks that auto move out can cost efficiency if moved out on belt
-	-phone music stops when playing
-	-random forklifts while transitioning scenes
-
+	-prevent random forklift overlap
+	-sometimes game data isn't saved? main menu score resets to 0 when a different value on play
+	-warming up takes priority not moving title out of view
 crashes
 	-
 

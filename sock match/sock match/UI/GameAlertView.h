@@ -16,6 +16,7 @@ typedef void (^GameAlertButtonPress)(void);
 @property (nonatomic, copy) GameAlertButtonPress buttonPressBlock;
 
 -(id)initWithFrame:(CGRect)frame screenFrame:(CGRect)screen title:(NSString*)title text:(NSString*)text image:(UIImage*)img;
+-(id)initWithFrame:(CGRect)frame screenFrame:(CGRect)screen title:(NSString*)title text:(NSString*)text image:(UIImage*)img smallerImg:(UIImage*)img2;
 -(void)show;
 -(void)hideAndRemove;
 

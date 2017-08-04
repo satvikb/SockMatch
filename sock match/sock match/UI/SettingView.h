@@ -11,6 +11,11 @@
 #import "Functions.h"
 @interface SettingView : UIView
 
+typedef void (^SettingTouch)(void);
+
 -(id)initWithFrame:(CGRect)frame settingType:(SettingTypes)type;
+-(void)updateSetting:(SettingTypes)type;
+
+@property (nonatomic, copy) SettingTouch touchBeganBlock;
 
 @end

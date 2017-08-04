@@ -18,5 +18,12 @@ typedef enum SettingTypes {
 
 + (instancetype)sharedInstance;
 -(NSString*)getSettingTextForType:(SettingTypes)type;
+-(void)toggleSetting:(SettingTypes)settingType;
+-(bool)getCurrentSetting:(SettingTypes)settingType;
+
+@property (nonatomic, assign) bool soundsEnabled;
+@property (nonatomic, assign) bool sockTypeAlertEnabled;
+@property (nonatomic, assign) bool sockSizeAlertEnabled;
+
 
 @end

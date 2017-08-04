@@ -20,6 +20,7 @@
 @synthesize sockSize;
 @synthesize onConvayorBelt;
 
+@synthesize startTouchRect;
 @synthesize theoreticalFrame;
 
 @synthesize coreImageView;
@@ -86,7 +87,7 @@
     veryTopImageView.layer.zPosition = 3;
     [self addSubview:veryTopImageView];
     
-    veryTopImageView2 = [[UIImageView alloc] initWithFrame:CGRectMake(boxFrame.origin.x+((boxFrame.size.width/8)*3), boxFrame.origin.y+((boxFrame.size.height/8)*5), boxFrame.size.height/4, boxFrame.size.height/4)];
+    veryTopImageView2 = [[UIImageView alloc] initWithFrame:CGRectMake(boxFrame.origin.x+((boxFrame.size.width/8)*2.9), boxFrame.origin.y+((boxFrame.size.height/8)*5), boxFrame.size.height/3.9, boxFrame.size.height/3.9)];
     veryTopImageView2.contentMode = UIViewContentModeScaleAspectFit;
     veryTopImageView2.layer.magnificationFilter = kCAFilterNearest;
 //        veryTopImageView2.layer.borderColor = [UIColor yellowColor].CGColor;
@@ -102,7 +103,7 @@
         UITouch *touch = [touches anyObject];
         CGPoint location = [touch locationInView:nil];
         touchPoint = location;
-        
+        startTouchRect = [self getCoreRect];
         if(touchBeganBlock != nil){
             [self animateIncreaseCoreScale];
             touchBeganBlock(self, location);

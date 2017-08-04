@@ -16,18 +16,13 @@
 @interface MenuViewController : UIViewController<UIGestureRecognizerDelegate>
 @property (nonatomic, strong) id<MenuDelegate> delegate;
 
-@property (nonatomic, strong) NSMutableArray<Forklift*>* forklifts;
-
 @property (nonatomic, strong) UIImageView* gameTitle;
 @property (nonatomic, assign) CGRect titleFrame;
 @property (nonatomic, strong) Button* playButton;
 @property (nonatomic, strong) UIImageView* gameCenterButton;
+@property (nonatomic, strong) UIImageView* settingsButton;
 
 @property (nonatomic, strong) UILabel* highScoreLabel;
-
--(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages boxImage:(UIImage*)boxImage;
--(void) gameFrame:(CADisplayLink*)tmr;
--(void)handleForkliftAnimation:(CGFloat)delta;
 
 @end
 

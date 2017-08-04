@@ -13,20 +13,7 @@
 #import "GameAlertView.h"
 
 @interface SettingsViewController () {
-    NSMutableArray<UIImage*>* sockPackages;
-    NSMutableArray<UIImage*>* forkliftAnimation;
-    NSMutableArray<UIImage*>* wheelAnimation;
-    UIImage* boxImage;
-    
-    // random forklifts
-    CGFloat randomForkliftTimer;
-    CGFloat timeToCreateRandomForklift;
-    
-    CGFloat forkliftWheelTimer;
-    CGFloat timeToAnimateWheels;
-    
-    CGFloat forkliftAnimateTimer;
-    CGFloat timeToAnimateForklift;
+
 }
 
 @end
@@ -34,38 +21,17 @@
 
 @implementation SettingsViewController
 
-@synthesize forklifts;
 @synthesize settingsTitle;
 @synthesize titleFrame;
 @synthesize backButton;
-
--(id)initWithForkliftAnimation:(NSMutableArray<UIImage*>*)forklift andWheel:(NSMutableArray<UIImage*>*)wheels sockPackages:(NSMutableArray<UIImage*>*)packages boxImage:(UIImage*)bxImage{
-    self = [super init];
-    
-    forklifts = [[NSMutableArray alloc] init];
-    sockPackages = packages;
-    forkliftAnimation = forklift;
-    wheelAnimation = wheels;
-    boxImage = bxImage;
-    return self;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];//[UIColor colorWithRed:0.168627451 green:0.168627451 blue:0.168627451 alpha:1];
     self.view.userInteractionEnabled = true;
-    
-    randomForkliftTimer = 5; // immedietely create one
-    timeToCreateRandomForklift = 3;
-    
-    forkliftWheelTimer = 0;
-    timeToAnimateWheels = 0.1;
-    
-    forkliftAnimateTimer = 0;
-    timeToAnimateForklift = 0.5;
-    
-    settingsTitle = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.2, 0.5, 0.195)]];
+
+    settingsTitle = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.15, 0.2, 0.7, 0.195)]];
     //    testLabel.layer.borderWidth = 1;
     //    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
     [settingsTitle setImage:[UIImage imageNamed:@"settings"]];
@@ -83,40 +49,28 @@
     backButton.layer.zPosition = 103;
     [self.view addSubview:backButton];
 
+    CGFloat propHeight = ([self propX:0.5]*0.2)/self.view.frame.size.height;
     [self createSettingViewWithPropFrame:CGRectMake(0.25, 0.6, 0.5, 0.2) settingType:Sound];
+    [self createSettingViewWithPropFrame:CGRectMake(0.25, 0.6+propHeight, 0.5, 0.2) settingType:GameAlertSockType];
+    [self createSettingViewWithPropFrame:CGRectMake(0.25, 0.6+(propHeight*2), 0.5, 0.2) settingType:GameAlertSockSize];
+
 }
 
 -(void)createSettingViewWithPropFrame:(CGRect)propFrame settingType:(SettingTypes)type{
     SettingView* settingView = [[SettingView alloc] initWithFrame:[self propToRect:propFrame] settingType:type];
-    [self.view addSubview:settingView];
-}
+    
+    __unsafe_unretained typeof(SettingView*) ws = settingView;
 
-- (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor{
-    UIGraphicsBeginImageContextWithOptions (image.size, NO, image.scale); // for correct resolution on retina, thanks @MobileVet
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextTranslateCTM(context, 0, image.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    
-    CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
-    
-    // image drawing code here
-    CGContextSetBlendMode(context, kCGBlendModeNormal);
-    CGContextDrawImage(context, rect, image.CGImage);
-    
-    // tint image (loosing alpha) - the luminosity of the original image is preserved
-    CGContextSetBlendMode(context, kCGBlendModeMultiply);
-    [tintColor setFill];
-    CGContextFillRect(context, rect);
-    
-    // mask by alpha values of original image
-    CGContextSetBlendMode(context, kCGBlendModeDestinationIn);
-    CGContextDrawImage(context, rect, image.CGImage);
-    
-    UIImage *coloredImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return coloredImage;
+    [settingView setTouchBeganBlock:^void{
+        [[Settings sharedInstance] toggleSetting:type];
+        
+        if([self.delegate respondsToSelector:@selector(settingChanged:)]){
+            [self.delegate settingChanged:type];
+        }
+        
+        [ws updateSetting:type];
+    }];
+    [self.view addSubview:settingView];
 }
 
 -(void)pressBackButton:(id)sender{

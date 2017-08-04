@@ -50,6 +50,7 @@
 		40FA5E631F31476000BEA091 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FA5E621F313DBF00BEA091 /* settings.png */; };
 		40FA5E661F325E9000BEA091 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FA5E651F325E9000BEA091 /* Settings.m */; };
 		40FA5E691F32702400BEA091 /* SettingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FA5E681F32702400BEA091 /* SettingView.m */; };
+		40FA5E6F1F34933B00BEA091 /* settingscog.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FA5E6E1F34933700BEA091 /* settingscog.png */; };
 		40FF79BA1F1A373400FFF03B /* animBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FF79B91F1A34AA00FFF03B /* animBox.png */; };
 		40FF79BB1F1A373400FFF03B /* belt.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FF79AD1F1A345500FFF03B /* belt.png */; };
 		40FF79BC1F1A373400FFF03B /* countdownNumbers.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FF79B21F1A345500FFF03B /* countdownNumbers.png */; };
@@ -144,6 +145,7 @@
 		40FA5E651F325E9000BEA091 /* Settings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
 		40FA5E671F32702400BEA091 /* SettingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingView.h; sourceTree = "<group>"; };
 		40FA5E681F32702400BEA091 /* SettingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingView.m; sourceTree = "<group>"; };
+		40FA5E6E1F34933700BEA091 /* settingscog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settingscog.png; sourceTree = "<group>"; };
 		40FF79A71F1A345500FFF03B /* wheelAnimation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wheelAnimation.png; sourceTree = "<group>"; };
 		40FF79A81F1A345500FFF03B /* UIGC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UIGC.png; sourceTree = "<group>"; };
 		40FF79A91F1A345500FFF03B /* UIInnerUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UIInnerUp.png; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 				40FF79B71F1A345500FFF03B /* UIInnerDown.png */,
 				40FF79A91F1A345500FFF03B /* UIInnerUp.png */,
 				40FF79A71F1A345500FFF03B /* wheelAnimation.png */,
+				40FA5E6E1F34933700BEA091 /* settingscog.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -450,6 +453,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40FA5E6F1F34933B00BEA091 /* settingscog.png in Resources */,
 				40FA5E5C1F2EA05800BEA091 /* BestSong.wav in Resources */,
 				401EB8561F2D266A00E7EA21 /* beltNoise.wav in Resources */,
 				401EB8571F2D266A00E7EA21 /* boxPackaging.wav in Resources */,
