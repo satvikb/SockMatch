@@ -33,9 +33,9 @@
     self.view.backgroundColor = [UIColor clearColor];//[UIColor colorWithRed:0.168627451 green:0.168627451 blue:0.168627451 alpha:1];
     self.view.userInteractionEnabled = true;
     
-    gameTitle = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.2, 0.5, 0.195)]];
-//    testLabel.layer.borderWidth = 1;
-//    testLabel.layer.borderColor = [UIColor blackColor].CGColor;
+    gameTitle = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.15, 0.2, 0.7, 0.195)]];
+//    gameTitle.layer.borderWidth = 1;
+//    gameTitle.layer.borderColor = [UIColor whiteColor].CGColor;
     [gameTitle setImage:[UIImage imageNamed:@"gameTitle"]];
     gameTitle.layer.magnificationFilter = kCAFilterNearest;
     gameTitle.contentMode = UIViewContentModeScaleAspectFit;

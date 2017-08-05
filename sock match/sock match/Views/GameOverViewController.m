@@ -10,6 +10,9 @@
 #import "Storage.h"
 
 @interface GameOverViewController (){
+    
+    UILabel* scoreLabel;
+
     UILabel* highScoreLabel;
     UIImageView* gameOverText;
     
@@ -31,8 +34,8 @@
     self.view.userInteractionEnabled = true;
     
     gameOverText = [[UIImageView alloc] initWithFrame: [self propToRect:CGRectMake(0.25, 0.2, 0.5, 0.2)]];
-        gameOverText.layer.borderWidth = 1;
-        gameOverText.layer.borderColor = [UIColor whiteColor].CGColor;
+//        gameOverText.layer.borderWidth = 1;
+//        gameOverText.layer.borderColor = [UIColor whiteColor].CGColor;
     [gameOverText setImage:[UIImage imageNamed:@"gameOver"]];
     gameOverText.layer.magnificationFilter = kCAFilterNearest;
     gameOverText.contentMode = UIViewContentModeScaleAspectFit;
@@ -66,10 +69,19 @@
     highScoreLabel.textAlignment = NSTextAlignmentCenter;
     highScoreLabel.text = @"";
     [self.view addSubview:highScoreLabel];
+
+    scoreLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 1, 0.15)]];
+    scoreLabel.textAlignment = NSTextAlignmentCenter;
+    scoreLabel.font = [UIFont fontWithName:@"Pixel_3" size:40];
+    scoreLabel.adjustsFontSizeToFitWidth = true;
+    scoreLabel.text = @"";
+    scoreLabel.textColor = UIColor.whiteColor;
+    [self.view addSubview:scoreLabel ];
+
 }
 
 -(void)shareSheet {
-    NSString *textToShare = [NSString stringWithFormat:@"I got %i in sock shop.", score];
+    NSString *textToShare = [NSString stringWithFormat:@"i just got %i in sock shop", score];
     NSURL *myWebsite = [NSURL URLWithString:@"http://apple.co/2stt9uK"];
     
     NSArray *objectsToShare = @[textToShare, myWebsite];
@@ -124,6 +136,8 @@
 -(void)setScore:(int)s{
 //    testLabel.text = [NSString stringWithFormat:@"game over %i", score];
     NSLog(@"reporting score");
+    
+    scoreLabel.text = [NSString stringWithFormat:@"%i", s];
     self->score = s;
     
     if([self.delegate respondsToSelector:@selector(gameEndScore:)]){

@@ -108,7 +108,7 @@
     [self startGameLoop];
     
     if([[Settings sharedInstance] getCurrentSetting:Sound] == true){
-        [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+//        [[Sounds sharedInstance].mainMenuBackgroundMusic play];
     }
     
 }
@@ -177,7 +177,7 @@
     [gameController animateInExtraUI];
     
     if([[Settings sharedInstance] getCurrentSetting:Sound] == true){
-        [[Sounds sharedInstance].beltSound play];
+//        [[Sounds sharedInstance].beltSound play];
     }
         
     [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointMake([self propX:1], 0) animationFinished:^{
@@ -237,7 +237,7 @@
         [menuController didMoveToParentViewController:self];
         
         if([[Settings sharedInstance] getCurrentSetting:Sound] == true){
-            [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+//            [[Sounds sharedInstance].mainMenuBackgroundMusic play];
         }
     }];
 //    [self animateFromViewController:gameOver toPoint:[self propToRect:CGRectMake(1, 0, 0, 0)].origin toViewController:menuController toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin animationFinished:^{
@@ -265,7 +265,7 @@
         [gameController didMoveToParentViewController:self];
         
         if([[Settings sharedInstance] getCurrentSetting:Sound] == true){
-            [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+//            [[Sounds sharedInstance].mainMenuBackgroundMusic play];
         }
     }];
 
@@ -385,7 +385,7 @@
         [[Sounds sharedInstance].beltSound stop];
     }else{
         if(type == Sound){
-            [[Sounds sharedInstance].mainMenuBackgroundMusic play];
+//            [[Sounds sharedInstance].mainMenuBackgroundMusic play];
             [[Sounds sharedInstance].beltSound play];
         }
     }

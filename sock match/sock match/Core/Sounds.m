@@ -19,6 +19,7 @@
 @synthesize forkliftMovingURL;
 @synthesize pauseUnpauseURL;
 @synthesize sockPassedURL;
+@synthesize pointURL;
 
 + (instancetype)sharedInstance
 {
@@ -92,6 +93,8 @@
 //    sockPassed.enableRate = true;
 //    //    beltSound.rate = 0;
     
+    pointURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Point" ofType:@"wav"]];
+    
 }
 
 -(AVAudioPlayer*)playSoundEffect:(SoundEffects)soundEffect loops:(NSInteger)loops{
@@ -108,6 +111,9 @@
             break;
         case SockPassed:
             eff = [self createAudioPlayer:sockPassedURL loops:loops];
+            break;
+        case PointSound:
+            eff = [self createAudioPlayer:pointURL loops:loops];
             break;
         default:
             break;

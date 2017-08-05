@@ -20,18 +20,16 @@ graphics
 collisions
 	-IMPROVE COLLISIONS.
 	-back on belt when no space
-	**prevent moving to top
-	-prevent moving sock back on belt once removed?
 
 ui
 	-improve pause button
+	-top of screen
 
 settings
 	-credits
 
 sounds
 	-improve sock package
-	-add point.wav
 	-compress sounds
 
 saving
@@ -53,6 +51,7 @@ bugs
 	-prevent random forklift overlap
 	-sometimes game data isn't saved? main menu score resets to 0 when a different value on play
 	-warming up takes priority not moving title out of view
+	-belt moving audio not in sync with belt
 crashes
 	-
 

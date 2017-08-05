@@ -85,4 +85,5 @@
 - (void) switchFromGameToMenu:(GameViewController *)game;
 - (void) switchFromGameToGameOver:(GameViewController *)game withScore:(int)score;
 - (void) gameEndScore:(int)score;
+- (AppState) getAppState;
 @end

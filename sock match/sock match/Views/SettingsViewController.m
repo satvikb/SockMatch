@@ -49,10 +49,10 @@
     backButton.layer.zPosition = 103;
     [self.view addSubview:backButton];
 
-    CGFloat propHeight = ([self propX:0.5]*0.2)/self.view.frame.size.height;
-    [self createSettingViewWithPropFrame:CGRectMake(0.25, 0.6, 0.5, 0.2) settingType:Sound];
-    [self createSettingViewWithPropFrame:CGRectMake(0.25, 0.6+propHeight, 0.5, 0.2) settingType:GameAlertSockType];
-    [self createSettingViewWithPropFrame:CGRectMake(0.25, 0.6+(propHeight*2), 0.5, 0.2) settingType:GameAlertSockSize];
+    CGFloat propHeight = ([self propX:0.9]*0.2)/self.view.frame.size.height;
+    [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6, 0.9, propHeight) settingType:Sound];
+    [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6+propHeight, 0.9, propHeight) settingType:GameAlertSockType];
+    [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6+(propHeight*2), 0.9, propHeight) settingType:GameAlertSockSize];
 
 }
 
@@ -71,6 +71,9 @@
         [ws updateSetting:type];
     }];
     [self.view addSubview:settingView];
+    
+    [settingView setFrame:CGRectIntegral(settingView.frame)];
+    settingView.center = CGPointMake(round(settingView.center.x), round(settingView.center.y));
 }
 
 -(void)pressBackButton:(id)sender{

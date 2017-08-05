@@ -23,7 +23,8 @@ typedef enum SoundEffects {
     ResumeCountdown,
     ForkliftMoving,
     PauseUnpause,
-    SockPassed
+    SockPassed,
+    PointSound
 } SoundEffects;
 
 + (instancetype)sharedInstance;
@@ -39,6 +40,7 @@ typedef enum SoundEffects {
 @property NSURL* forkliftMovingURL;
 @property NSURL* pauseUnpauseURL;
 @property NSURL* sockPassedURL;
+@property NSURL* pointURL;
 
 
 @end

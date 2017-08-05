@@ -145,21 +145,21 @@
 }
 
 -(void)animateIncreaseCoreScale {
-    self.animatingSize = true;
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
-        self.coreImageView.transform = CGAffineTransformMakeScale(1.2, 1.2);
-    } completion:^(BOOL completed){
-        self.animatingSize = false;
-    }];
+//    self.animatingSize = true;
+//    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
+//        self.coreImageView.transform = CGAffineTransformMakeScale(1.2, 1.2);
+//    } completion:^(BOOL completed){
+//        self.animatingSize = false;
+//    }];
 }
 
 -(void)animateDecreaseCoreScale {
-    self.animatingSize = true;
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
-        self.coreImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(1.2, 1.2);
-    } completion:^(BOOL completed){
-        self.animatingSize = false;
-    }];
+//    self.animatingSize = true;
+//    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
+//        self.coreImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(1.2, 1.2);
+//    } completion:^(BOOL completed){
+//        self.animatingSize = false;
+//    }];
 }
 
 -(CGRect)getCoreRect{

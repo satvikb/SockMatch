@@ -297,7 +297,7 @@
 //    cbeltrect.layer.zPosition = 1000;
 //    [self.view addSubview:cbeltrect];
     
-    UIView* topBackground = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 2, 0.15)]];
+    UIView* topBackground = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(-1, 0, 3, 0.15)]];
     topBackground.backgroundColor = [UIColor colorWithRed:(140.0/255.0) green:(174.0/255.0) blue:(0.0/255.0) alpha:1];
     topBackground.layer.zPosition = -5;
     [self.view addSubview:topBackground];
@@ -738,14 +738,14 @@
 
 -(void) gameFrame:(CADisplayLink*)tmr {
     CGFloat delta = tmr.duration;
-    
+    [self animateAllSockBoxes:delta];
+
     if (currentGameState != NotPlaying && timerPaused == false) {
         [self updateSoundSpeed]; //TODO handle pause sounds
         [self animateBeltWithSpeed:animateBeltMoveSpeed delta:delta];
         [self updateSocksOnBeltWithSpeed:animateBeltMoveSpeed delta:delta];
         [self handleAnimateWheel:delta];
         [self handleForkliftAnimation:delta];
-        [self animateAllSockBoxes:delta];
         [self handleTickEfficiency:delta];
         //TODO remove this system or make it more effiecent
         animateScoreValueTimer += tmr.duration;
@@ -1007,7 +1007,7 @@
         CGFloat moveX = [self propX:propMoveX];
         CGFloat moveDelta = -moveX*delta;
         
-        if(img.frame.origin.x <= -img.frame.size.width*4){
+        if(img.frame.origin.x <= [self propX:-1]){
             CGRect f = img.frame;
             CGFloat overflow = img.frame.origin.x - (-img.frame.size.width);
             
@@ -1445,7 +1445,8 @@
 //        [socksBeingAnimatedIntoBox addObject:otherSock];
 //    }];
     
-    [[Sounds sharedInstance] playSoundEffect:BoxPackaging loops: 0];
+    //TODO
+//    [[Sounds sharedInstance] playSoundEffect:BoxPackaging loops: 0];
     
     [self pointForSock:otherSock];
     
@@ -1523,7 +1524,7 @@
         s.animatingIntoBox = false;
         [socksBeingAnimatedIntoBox removeObject:s];
         
-        if(!s.onConvayorBelt){
+        if(!s.onConvayorBelt && [_delegate getAppState] == Game){
             [self createForklift:s givePoint:true];
         }
     }else{
@@ -1561,7 +1562,7 @@
     bool clear = true;
     for(Forklift* f in forklifts){
         if(f != lift){
-            if(lift.currentState == None && lift.forkliftFacesRight == f.forkliftFacesRight){
+            if(lift.currentState == None && lift.forkliftFacesRight == f.forkliftFacesRight && f.currentState != None){
                 
                 if(CGRectIntersectsRect(lift.frame, CGRectMake(-1, f.frame.origin.y, [self propX:3], lift.frame.size.height))){
                     clear = false;
@@ -1596,6 +1597,7 @@
 -(void) pointForSock:(Sock*)s{
     s.allowMovement = false;
     if(s.validSock == true){
+//        [[Sounds sharedInstance] playSoundEffect:PointSound loops:0];
         [self gotPoint];
     }
 }

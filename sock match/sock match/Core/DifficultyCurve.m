@@ -37,7 +37,7 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
     self = [super init];
     _timeToGenerateSock = 1.5;
     _numOfDifferentSocksToGenerate = 0;
-    _beltMoveSpeedMultiplier = 1;
+    _beltMoveSpeedMultiplier = 2;
     _maxSockSize = 0;
     
     incrementToUnlockSockSize = 0;
