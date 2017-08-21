@@ -98,6 +98,7 @@
 }
 
 -(AVAudioPlayer*)playSoundEffect:(SoundEffects)soundEffect loops:(NSInteger)loops{
+
     AVAudioPlayer* eff;
     switch (soundEffect) {
         case BoxPackaging:
@@ -118,7 +119,22 @@
         default:
             break;
     }
-    [eff play];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        // Perform async operation
+        // Call your method/function here
+        // Example:
+        // NSString *result = [anObject calculateSomething];
+        [eff play];
+        
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            // Update UI
+            // Example:
+            // self.myLabel.text = result;
+        });
+    });
+    
     return eff;
 }
 

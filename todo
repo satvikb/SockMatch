@@ -7,11 +7,11 @@ collision if theoretical frame out of view go to start of belt?
 
 
 gameplay
-	-improve tutorial (make more interactive)
 	-improve difficulty values
 	-combos
 		-extra score (+1 or +x based on combo's in a row) when multiple socks are packaged at once
 	-too many socks - remove efficiency with acceleration
+	*different efficiency lost based on sock size and belt speed
 
 graphics
 	-sock and package designs
@@ -24,6 +24,8 @@ collisions
 ui
 	-improve pause button
 	-top of screen
+	-fix setting image
+	-2nd small bar under
 
 settings
 	-credits
@@ -41,7 +43,6 @@ gamecenter
 
 meta
 	-confirm device universality
-	-good icon
 	-splash screen
 
 bugs
@@ -49,11 +50,11 @@ bugs
 	-invalidate timers in bg
 	-collision - socks that auto move out can cost efficiency if moved out on belt
 	-prevent random forklift overlap
-	-sometimes game data isn't saved? main menu score resets to 0 when a different value on play
 	-warming up takes priority not moving title out of view
 	-belt moving audio not in sync with belt
+	-lag when pressing down on credit button
 crashes
-	-
+	-generating two large socks at once
 
 other code stuff
 	-make sure @property's are right, learn what nonatomic/strong/assign/copy means

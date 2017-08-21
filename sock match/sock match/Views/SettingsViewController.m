@@ -11,6 +11,7 @@
 #import "Flurry.h"
 
 #import "GameAlertView.h"
+#import "CreditsView.h"
 
 @interface SettingsViewController () {
 
@@ -24,6 +25,7 @@
 @synthesize settingsTitle;
 @synthesize titleFrame;
 @synthesize backButton;
+@synthesize creditsButton;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -44,7 +46,7 @@
     backButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.7, 0.05, 0.25, 0.1)] withText:@"back" withBlock:^void{
         [self pressBackButton:backButton];
     }];
-    backButton.textLabel.font = [UIFont fontWithName:@"Pixel_3" size:30];
+    backButton.textLabel.font = [UIFont fontWithName:@"Pixel_3" size:25];
     //    playButton.layer.borderWidth = 3;
     backButton.layer.zPosition = 103;
     [self.view addSubview:backButton];
@@ -53,12 +55,22 @@
     [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6, 0.9, propHeight) settingType:Sound];
     [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6+propHeight, 0.9, propHeight) settingType:GameAlertSockType];
     [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6+(propHeight*2), 0.9, propHeight) settingType:GameAlertSockSize];
+    
+    
+    
+    creditsButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.4, 0.95, 0.2, 0.05)] withText:@"credits" withBlock:^void{
+        [Flurry logEvent:@"CreditsPressed"];
+        [self pressCreditsButton:creditsButton];
+    }];
+    creditsButton.textLabel.font = [UIFont fontWithName:@"Pixel_3" size:20];
+    creditsButton.layer.zPosition = 113;
+    [self.view addSubview:creditsButton];
 
 }
 
 -(void)createSettingViewWithPropFrame:(CGRect)propFrame settingType:(SettingTypes)type{
     SettingView* settingView = [[SettingView alloc] initWithFrame:[self propToRect:propFrame] settingType:type];
-    
+//    settingView.layer.borderWidth = 2;
     __unsafe_unretained typeof(SettingView*) ws = settingView;
 
     [settingView setTouchBeganBlock:^void{
@@ -84,82 +96,11 @@
     }
 }
 
--(void) gameFrame:(CADisplayLink*)tmr{
-//    if([self.delegate respondsToSelector:@selector(getAppState)]){
-//        if([self.delegate getAppState] == MainMenu){
-//            randomForkliftTimer += tmr.duration;
-//            forkliftWheelTimer += tmr.duration;
-//
-//            if(randomForkliftTimer >= timeToCreateRandomForklift){
-//                timeToCreateRandomForklift = [Functions randFromMin:1 toMax:4];
-//                [self createRandomForklift];
-//                randomForkliftTimer = 0;
-//            }
-//
-//            if(forkliftWheelTimer >= timeToAnimateWheels){
-//                for(Forklift* f in forklifts){
-//                    switch (f.currentState) {
-//                        case None:
-//                            break;
-//                        case GoingToSock:
-//                            [f animateWheels];
-//                            break;
-//                        case PickingUpSock:
-//                            break;
-//                        case GoingBack:
-//                            [f animateWheelsBackward];
-//                        default:
-//                            break;
-//                    }
-//                }
-//
-//                forkliftWheelTimer = 0;
-//            }
-//
-//            [self handleForkliftAnimation:tmr.duration];
-//        }
-//    }
+-(void)pressCreditsButton:(id)sender{
+    CreditsView* credits = [[CreditsView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
+    credits.layer.zPosition = 250;
+    [self.view addSubview:credits];
 }
-
-// so container can continue animations when play button is pressed
-//-(void)handleForkliftAnimation:(CGFloat)delta {
-//    forkliftAnimateTimer += delta;
-//
-//    if(forkliftAnimateTimer >= timeToAnimateForklift){
-//        for(Forklift* f in forklifts){
-//            [f animateAnimation];
-//        }
-//        forkliftAnimateTimer = 0;
-//    }
-//}
-//
-//// TODO make them not overlap (seperate into rows or sth)
-//-(void)createRandomForklift{
-//    CGFloat y = [Functions randFromMin:0.5 toMax:0.9];
-//
-//    int sockId = [self getRandomSockId];
-//    SockSize size = [self getRandomSockSize];
-//
-//    CGRect newSockFrame = [self propToRect:CGRectMake(0, y, [Functions propSizeFromSockSize:size], 0)];
-//    //imageName:[NSString stringWithFormat:@"sock%i", sockId]
-//
-//    bool fromLeft = [Functions randomNumberBetween:0 maxNumber:100] < 50;
-//
-//    UIImage* img = [Functions randomNumberBetween:0 maxNumber:100] < 50 ? [sockPackages objectAtIndex:sockId] : nil;
-//
-//    Forklift* fork = [[Forklift alloc] initDummyFromLeft:fromLeft boxImage:boxImage sockImage:img sockSize:CGSizeMake(newSockFrame.size.width, newSockFrame.size.width) atY:newSockFrame.origin.y forkliftAnimationFrames:forkliftAnimation wheelAnimationFrames:wheelAnimation];
-//
-//    fork.layer.zPosition = 102;
-//    [forklifts addObject:fork];
-//    [self.view addSubview:fork];
-//
-//    CGFloat speed = [Functions randFromMin:1.5 toMax:4];
-//
-//    [fork dummyAnimateWithSpeed:speed xTranslate:fromLeft == true ? [self propX:1]+fork.frame.size.width : -([self propX: 1]+fork.frame.size.width) withCompletion:^void{
-//        [fork removeFromSuperview];
-//        [forklifts removeObject:fork];
-//    }];
-//}
 
 -(int) getRandomSockId {
     return [Functions randomNumberBetween:0 maxNumber:4];

@@ -32,12 +32,6 @@
         if(s.allowMovement){
             s.onConvayorBelt = false;
             s.layer.zPosition = 50;
-            
-            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
-                s.coreImageView.transform = CGAffineTransformMakeScale(1.2, 1.2);
-            } completion:^(BOOL completed){
-                
-            }];
         }
     }];
     
@@ -58,13 +52,6 @@
     [s1 setTouchEndedBlock:^void (Sock* s, CGPoint p) {
         if(s.allowMovement){
             sockOneTouchEndBlock(s);
-            
-            s.animatingSize = true;
-            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
-                s.coreImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(1.2, 1.2);
-            } completion:^(BOOL completed){
-                s.animatingSize = false;
-            }];
         }
     }];
     
@@ -75,12 +62,7 @@
             s.onConvayorBelt = false;
             //                [self decreaseSockLayerPositions];
             s.layer.zPosition = 50;
-            
-            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
-                s.coreImageView.transform = CGAffineTransformMakeScale(1.2, 1.2);
-            } completion:^(BOOL completed){
-                
-            }];
+
         }
     }];
     
@@ -101,12 +83,7 @@
     
     [s2 setTouchEndedBlock:^void (Sock* s, CGPoint p) {
         if(s.allowMovement){
-            s.animatingSize = true;
-            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^void{
-                s.coreImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(1.2, 1.2);
-            } completion:^(BOOL completed){
-                s.animatingSize = false;
-            }];
+
         }
     }];
     
@@ -117,7 +94,7 @@
     
     tutorialText = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.05, 1, .9, 0.1)]];
     tutorialText.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:26]];
-    tutorialText.text = @"welcome to sock shop!";
+    tutorialText.text = @"welcome to sock factory!";
     tutorialText.textAlignment = NSTextAlignmentCenter;
     tutorialText.adjustsFontSizeToFitWidth = true;
 //    tutorialText.layer.borderColor = [UIColor blackColor].CGColor;
@@ -170,9 +147,11 @@
     }];
 }
 
--(void)animateTutorialLabelOut {
+-(void)animateTutorialLabelOutAndRemoveTutorialView {
     [UIView animateWithDuration:0.5 animations:^void{
         tutorialText.frame = [self propToRect:CGRectMake(0.05, 1, .9, 0.1)];
+    } completion:^(BOOL finished){
+        [self removeFromSuperview];
     }];
 }
 
@@ -182,10 +161,13 @@
     __unsafe_unretained typeof(FocusOnRect*) weak = focus;
     
     [focus setTouchBlock:^void{
-        touched();
-        [weak hide:0 withDuration:0.5 withCompletion:^(BOOL completed){
-            [weak removeFromSuperview];
-        }];
+        if(![weak showNextLabel]){
+            touched();
+            
+            [weak hide:0 withDuration:0.5 withCompletion:^(BOOL completed){
+                [weak removeFromSuperview];
+            }];
+        }
     }];
     
     [focus show:0.3 withDuration:0.5 withCompletion:^(BOOL completed){

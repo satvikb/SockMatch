@@ -15,7 +15,8 @@ typedef void (^TouchFocusOnRect)(void);
 -(id)initWithRectToFocusOn:(CGRect)rect withLabels:(NSArray<UILabel*>*)labels screenSize:(CGSize)screen;
 -(void)show:(CGFloat)opacity withDuration:(NSTimeInterval)duration withCompletion:(void (^)(BOOL completed))completion;
 -(void)hide:(CGFloat)opacity withDuration:(NSTimeInterval)duration withCompletion:(void (^)(BOOL completed))completion;
-        
+-(bool)showNextLabel;
+
 @property (nonatomic, copy) TouchFocusOnRect touchBlock;
 
 @end

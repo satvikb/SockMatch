@@ -81,8 +81,7 @@ static NSString* const gameDataDifficultyCurveKey = @"difficultyCurve";
 {
     static NSString* filePath = nil;
     if (!filePath) {
-        filePath =
-        [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
+        filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
          stringByAppendingPathComponent:@"gamedata"];
     }
     return filePath;

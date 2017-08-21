@@ -107,6 +107,7 @@
     [self loadBufferImages];
     [self setupArrays];
     [self setupGameValues:true];
+    
     if(tutorial == true){
         tutorialView = [[TutorialView alloc] initWithScreenFrame:self.view.frame andSockImage:[sockMainImages objectAtIndex:0]];
         tutorialView.layer.zPosition = 110;
@@ -158,23 +159,42 @@
         [socks addObject:ws.tutorialView.sockTwo];
         [ws madePairBetweenMainSock:ws.tutorialView.sockOne andOtherSock:ws.tutorialView.sockTwo];
         
-        UILabel* efficiencyInfo = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.98, 0.3)]];
-        efficiencyInfo.text = @"this is the efficiency of the factory.\nletting socks through or building up socks reduces the efficiency.\n when efficiency reaches 0 you lose.";
-        efficiencyInfo.textAlignment = NSTextAlignmentCenter;
-        efficiencyInfo.numberOfLines = 0;
-//        efficiencyInfo.layer.borderWidth = 2;
-        efficiencyInfo.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:25]];
-        //                efficiencyInfo.adjustsFontSizeToFitWidth = true;
-        efficiencyInfo.textColor = [UIColor whiteColor];
+        UILabel* efficiencyInfo1 = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.98, 0.3)]];
+        efficiencyInfo1.text = @"this is the efficiency of the factory.";
+        efficiencyInfo1.textAlignment = NSTextAlignmentCenter;
+        efficiencyInfo1.numberOfLines = 0;
+//        efficiencyInfo1.layer.borderWidth = 2;
+        efficiencyInfo1.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:25]];
+        //                efficiencyInfo1.adjustsFontSizeToFitWidth = true;
+        efficiencyInfo1.textColor = [UIColor whiteColor];
+      
         
         
-        UILabel* tapToContinue = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.25, 0.5, 0.5, 0.1)]];
-        tapToContinue.text = @"tap to continue.";
-        tapToContinue.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:20]];
-        tapToContinue.textAlignment = NSTextAlignmentCenter;
-        tapToContinue.textColor = [UIColor whiteColor];
         
-        [ws.tutorialView focusOnRect:[ws propToRect:CGRectMake(0.13, 0.0225, 0.45, 0.125)] withLabels:@[efficiencyInfo, tapToContinue] touchBlock:^void{
+        UILabel* efficiencyInfo2 = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.98, 0.3)]];
+        efficiencyInfo2.text = @"letting socks through or building up socks reduces the efficiency.";
+        efficiencyInfo2.textAlignment = NSTextAlignmentCenter;
+        efficiencyInfo2.numberOfLines = 0;
+        //        efficiencyInfo2.layer.borderWidth = 2;
+        efficiencyInfo2.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:25]];
+        //                efficiencyInfo2.adjustsFontSizeToFitWidth = true;
+        efficiencyInfo2.textColor = [UIColor whiteColor];
+        
+        
+        
+        UILabel* efficiencyInfo3 = [[UILabel alloc] initWithFrame:[ws propToRect:CGRectMake(0.01, 0.15, 0.98, 0.3)]];
+        efficiencyInfo3.text = @"when efficiency reaches 0 you lose.";
+        efficiencyInfo3.textAlignment = NSTextAlignmentCenter;
+        efficiencyInfo3.numberOfLines = 0;
+        //        efficiencyInfo3.layer.borderWidth = 2;
+        efficiencyInfo3.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:25]];
+        //                efficiencyInfo3.adjustsFontSizeToFitWidth = true;
+        efficiencyInfo3.textColor = [UIColor whiteColor];
+        
+        
+        
+        
+        [ws.tutorialView focusOnRect:[ws propToRect:CGRectMake(0.13, 0.0225, 0.45, 0.125)] withLabels:@[efficiencyInfo1, efficiencyInfo2, efficiencyInfo3] touchBlock:^void{
             timerPaused = false;
             ws.tutorialView.tutorialState = Completed;
             ws.tutorialView.tutorialText.text = @"you can also match socks directly on the belt";
@@ -188,7 +208,7 @@
     }
 }
 
--(void)hideTutLabel{[tutorialView animateTutorialLabelOut];[tutorialView removeFromSuperview];}
+-(void)hideTutLabel{[tutorialView animateTutorialLabelOutAndRemoveTutorialView];}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -298,7 +318,7 @@
 //    [self.view addSubview:cbeltrect];
     
     UIView* topBackground = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(-1, 0, 3, 0.15)]];
-    topBackground.backgroundColor = [UIColor colorWithRed:(140.0/255.0) green:(174.0/255.0) blue:(0.0/255.0) alpha:1];
+    topBackground.backgroundColor = [UIColor colorWithRed:(66/255.0) green:(134/255.0) blue:(244/255.0) alpha:0.4];//[UIColor colorWithRed:(140.0/255.0) green:(174.0/255.0) blue:(0.0/255.0) alpha:1];
     topBackground.layer.zPosition = -5;
     [self.view addSubview:topBackground];
     
@@ -363,9 +383,9 @@
 //    test.layer.borderColor = UIColor.blueColor.CGColor;
 //    [self.view addSubview:test];
     
-    UIView* floorImages = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(-1, 0, 3, 1)]];
+    UIView* floorImages = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(-1, 0.25, 3, 0.85)]];
     floorImages.layer.zPosition = -10;
-    [self.view addSubview:floorImages];
+//    [self.view addSubview:floorImages];
     
     UIImage* floorImg = [UIImage imageNamed:@"floor"];
     CGFloat curX = -0.025;
@@ -378,13 +398,14 @@
     for(int y = 0; y < (floorImages.frame.size.height/width); y++){
         for(int x = 0; x < (floorImages.frame.size.width/width); x++){
             if(x % 1 == 0 && y % 1 == 0){
-                CGFloat x = [self propX:curX];
+                CGFloat x = [self propX:y % 2 == 0 ? curX : curX+0.05];
                 CGFloat y = [self propY:curY];
                 UIImageView* floor = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, width, width)];
                 floor.layer.magnificationFilter = kCAFilterNearest;
                 floor.contentMode = UIViewContentModeScaleAspectFit;
                 floor.transform = CGAffineTransformMakeRotation(0.7853981634);
-                //            floor.layer.borderWidth = 2;
+//                            floor.layer.borderWidth = 1;
+                floor.layer.borderColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4].CGColor;
                 floor.layer.zPosition = -10;
                 [floor setImage: floorImg];
                 [floorImages addSubview:floor];
@@ -869,7 +890,7 @@
 
 -(void)forceEndGame {
     [[GameData sharedGameData] clearSave];
-    [Flurry endTimedEvent:@"game" withParameters:@{@"score":[NSNumber numberWithInt:score], @"numSocks":[self analyticsNumSocks]}];
+    [Flurry endTimedEvent:@"game" withParameters:@{@"score":[NSNumber numberWithInt:score], @"numSocks":[self analyticsNumSocks], @"options":@{@"sound":@([[Settings sharedInstance] getCurrentSetting:Sound]), @"sockTypeAlerts":@([[Settings sharedInstance] getCurrentSetting:GameAlertSockType]), @"sockSizeAlerts":@([[Settings sharedInstance] getCurrentSetting:GameAlertSockSize])}}];
     if([self.delegate respondsToSelector:@selector(gameEndScore:)]){
         [self.delegate gameEndScore:score];
     }
@@ -946,7 +967,11 @@
     
     if(generateSockTimer >= difficultyCurve.timeToGenerateSock){
         if(currentGameState == Playing){
-            [self generateSock];
+            [self generateSock:(score > 5 && [Functions randomNumberBetween:0 maxNumber:100] < 2) ? true : false];
+            
+//            if(score > 5 && [Functions randomNumberBetween:0 maxNumber:100] < 2){
+//                [self generateSock];
+//            }
         }
         generateSockTimer = 0;
     }
@@ -999,6 +1024,28 @@
     CGRect screen = [self propToRect:CGRectMake(0, 0, 1, 1)];
     CGFloat beltAndTopSize = conveyorBeltRect.origin.y+conveyorBeltRect.size.height;
     return CGRectIntersectsRect([s getCoreRect], CGRectMake(screen.origin.x, screen.origin.y+beltAndTopSize, screen.size.width, screen.size.height-beltAndTopSize));
+}
+
+-(bool)_theoreticalSockInGameView:(Sock*)s{
+    CGRect screen = [self propToRect:CGRectMake(0, 0, 1, 1)];
+    CGFloat beltAndTopSize = conveyorBeltRect.origin.y+conveyorBeltRect.size.height;
+    return CGRectIntersectsRect([s getCoreTheoreticalRect], CGRectMake(screen.origin.x, screen.origin.y+beltAndTopSize, screen.size.width, screen.size.height-beltAndTopSize));
+}
+
+//-(CGRect)_getGameViewRect{
+//    CGRect screen = [self propToRect:CGRectMake(0, 0, 1, 1)];
+//    CGFloat beltAndTopSize = conveyorBeltRect.origin.y+conveyorBeltRect.size.height;
+//    return CGRectMake(screen.origin.x, screen.origin.y+beltAndTopSize, screen.size.width, screen.size.height-beltAndTopSize);
+//}
+
+-(bool)spaceForSock:(Sock*)s{
+    for(Sock* sock in socks){
+        if(CGRectIntersectsRect([s getCoreRect], [sock getCoreRect])){
+            
+        }
+    }
+    
+    return true;
 }
 
 -(void)animateBeltWithSpeed:(CGFloat)speed delta:(CGFloat)delta {
@@ -1186,7 +1233,7 @@
     [view removeFromSuperview];
 }
 
--(void) generateSock{
+-(void) generateSock:(bool)twoSocks{
     CGFloat y = [Functions randFromMin:0.15 toMax:0.3];
     
     NSArray* sockInfo = [difficultyCurve getNextSock:[self getMovableSocks]];
@@ -1195,8 +1242,36 @@
     
     CGPoint newSockPos = [self propToRect:CGRectMake(1.0, y, 0, 0)].origin;
     //imageName:[NSString stringWithFormat:@"sock%i", sockId]
-    [self createSockAtPos:newSockPos sockSize:size.intValue sockId:sockId.intValue onBelt:true];
+    Sock* one = [self createSockAtPos:newSockPos sockSize:size.intValue sockId:sockId.intValue onBelt:true];
     
+    if(twoSocks == true){
+        CGFloat y2 = [Functions randFromMin:0.15 toMax:0.3];
+      
+        NSArray* sockInfo2 = [difficultyCurve getNextSock:[self getMovableSocks]];
+        NSNumber* sockId2 = sockInfo2[0];
+        NSNumber* size2 = sockInfo2[1];
+        CGFloat width2 = [self propX: [Functions propSizeFromSockSize:(SockSize)size2]];
+        
+        do{
+            y2 = [Functions randFromMin:0.15 toMax:0.3];
+        }while(CGRectIntersectsRect([self increaseRect:[one getCoreRect] byPercentage:-0.5], CGRectMake([self propX:1], [self propY: y2], width2, width2)));
+        
+        
+        CGPoint newSockPos2 = [self propToRect:CGRectMake(1.0, y2, 0, 0)].origin;
+        //imageName:[NSString stringWithFormat:@"sock%i", sockId]
+        [self createSockAtPos:newSockPos2 sockSize:size2.intValue sockId:sockId2.intValue onBelt:true];
+        
+    }
+    
+}
+
+- (CGRect)increaseRect:(CGRect)rect byPercentage:(CGFloat)percentage
+{
+    CGFloat startWidth = CGRectGetWidth(rect);
+    CGFloat startHeight = CGRectGetHeight(rect);
+    CGFloat adjustmentWidth = (startWidth * percentage) / 2.0;
+    CGFloat adjustmentHeight = (startHeight * percentage) / 2.0;
+    return CGRectInset(rect, -adjustmentWidth, -adjustmentHeight);
 }
 
 -(NSMutableArray<SockData*>*)getMovableSocks{
@@ -1218,7 +1293,7 @@
     }
 }
 
--(void) createSockAtPos:(CGPoint)pos sockSize:(SockSize)size sockId:(int) sockId onBelt:(bool) onBelt {
+-(Sock*) createSockAtPos:(CGPoint)pos sockSize:(SockSize)size sockId:(int) sockId onBelt:(bool) onBelt {
     CGFloat width = [self propX: [Functions propSizeFromSockSize:size]];
     UIImage* sockImage = [sockMainImages objectAtIndex:sockId];
     Sock* newSock = [[Sock alloc] initWithFrame:pos width: width sockSize: size sockId: sockId image: sockImage onBelt:true extraPropTouchSpace:0.9];
@@ -1279,13 +1354,17 @@
         }
         
         if([self handleIntersection:s previousOverlap:false direction:0 recursionCount:0]){
-            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
-                s.frame = s.theoreticalFrame;
-                s.theoreticalFrame = s.frame;
-            } completion:^(BOOL completion){
-                [self updateWeatherSockOnBelt:s];
-                //                [self checkPairsWithSock:s];
-            }];
+            if([self _theoreticalSockInGameView:s]){
+                [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
+                    s.frame = s.theoreticalFrame;
+                    //                s.theoreticalFrame = s.frame;
+                } completion:^(BOOL completion){
+                    [self updateWeatherSockOnBelt:s];
+                    //                [self checkPairsWithSock:s];
+                }];
+            }else{
+                [self removeSock:s];
+            }
         }
     }];
     
@@ -1294,6 +1373,8 @@
     [self updateWeatherSockOnBelt:newSock];
     [self.view addSubview:newSock];
     [socks addObject:newSock];
+    
+    return newSock;
 }
 
 #define NSLog(FORMAT, ...) printf("%s\n", [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
@@ -1363,23 +1444,23 @@
                                 finalHeight = -resolveRect.size.height;
                                 break;
                             case 2:
-                                finalWidth = resolveRect.size.height;
+                                finalWidth = resolveRect.size.width;
                                 break;
                             case 3:
                                 finalHeight = resolveRect.size.height;
                                 break;
                             case 4:
-                                finalWidth = -resolveRect.size.height;
+                                finalWidth = -resolveRect.size.width;
                                 break;
                             default:
                                 break;
                         }
                     }else if(rc < 12){
-                        finalWidth = resolveRect.size.height;
+                        finalWidth = resolveRect.size.width;
                     }else if(rc < 16){
                         finalHeight = resolveRect.size.height;
                     }else if(rc < 20){
-                        finalWidth = -resolveRect.size.height;
+                        finalWidth = -resolveRect.size.width;
                     }else{
                         finalHeight = -resolveRect.size.height;
                     }
@@ -1429,9 +1510,8 @@
     sock.otherSockInPair = otherSock;
     
     otherSock.allowMovement = false;
-    otherSock.layer.zPosition = 150;
-    [otherSock animateDecreaseCoreScale];
-    
+    otherSock.layer.zPosition = 15;
+    sock.layer.zPosition = 16;
 //    otherSock.theoreticalFrame = otherSock.frame;
 //    [UIView animateWithDuration:0.25 animations:^void{
 //        CGRect f = CGRectOffset(otherSock.frame, (sock.frame.origin.x-otherSock.frame.origin.x)/2, (sock.frame.origin.y-otherSock.frame.origin.y)/2);
@@ -1548,10 +1628,15 @@
     [socks removeObjectsAtIndexes:discardedItems];
 }
 
+-(void)removeSock:(Sock*)s{
+    [socks removeObject:s];
+    [s removeFromSuperview];
+}
+
 -(void)createForklift:(Sock*)s givePoint:(BOOL)point{
     Forklift* lift = [[Forklift alloc] initWithSock:s forkliftAnimationFrames:forkLiftAnimationFrames wheelAnimationFrames:wheelFrames];
     lift.givePoint = point;
-    lift.layer.zPosition = 102;
+    lift.layer.zPosition = 8;
     [self.view addSubview:lift];
     [forklifts addObject:lift];
     

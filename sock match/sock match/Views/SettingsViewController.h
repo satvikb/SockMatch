@@ -12,6 +12,7 @@
 #import "Button.h"
 #import "Settings.h"
 #import "SettingView.h"
+#import "Flurry.h"
 
 @protocol SettingsDelegate;
 
@@ -21,6 +22,7 @@
 @property (nonatomic, strong) UIImageView* settingsTitle;
 @property (nonatomic, assign) CGRect titleFrame;
 @property (nonatomic, strong) Button* backButton;
+@property (nonatomic, strong) Button* creditsButton;
 
 @end
 

@@ -28,15 +28,15 @@
         if([[NSUserDefaults standardUserDefaults] objectForKey:SoundEnabledKey] != nil){
             sharedInstance.soundsEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:SoundEnabledKey];
         }else{
-            sharedInstance.soundsEnabled = true;
-            [[NSUserDefaults standardUserDefaults] setBool:true forKey:SoundEnabledKey];
+            sharedInstance.soundsEnabled = false;
+            [[NSUserDefaults standardUserDefaults] setBool:false forKey:SoundEnabledKey];
         }
         
         if([[NSUserDefaults standardUserDefaults] objectForKey:SockTypeAlertEnabledKey] != nil){
             sharedInstance.sockTypeAlertEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:SockTypeAlertEnabledKey];
         }else{
-            sharedInstance.sockTypeAlertEnabled = true;
-            [[NSUserDefaults standardUserDefaults] setBool:true forKey:SockTypeAlertEnabledKey];
+            sharedInstance.sockTypeAlertEnabled = false;
+            [[NSUserDefaults standardUserDefaults] setBool:false forKey:SockTypeAlertEnabledKey];
         }
         
         if([[NSUserDefaults standardUserDefaults] objectForKey:SockSizeAlertEnabledKey] != nil){
@@ -53,7 +53,7 @@
 -(NSString*)getSettingTextForType:(SettingTypes)type{
     switch (type) {
         case Sound:
-            return @"Sound";
+            return @"Sound (plz dont)";
         case GameAlertSockType:
             return @"Sock type alerts";
         case GameAlertSockSize:

@@ -52,6 +52,10 @@
     [super viewDidLoad];
     [self authenticateLocalPlayer];
     
+    
+    forkliftAnimateTimer = 0;
+    timeToAnimateForklift = 0.6;
+    
 //    [self testFile];
     content = [[UIView alloc] initWithFrame:[self propToRect:CGRectMake(-1, 0, 3, 1)]];
 //    content.layer.borderWidth = 20;
@@ -159,7 +163,7 @@
     
     bool loadingData = false;
     
-    if(currentGameData.efficiency > 0 && currentGameData.sockData.count > 0){
+    if(currentGameData.efficiency > 0 && (currentGameData.sockData.count > 0 || currentGameData.score > 0)){//} && currentGameData.sockData.count > 0){
         if([gameController loadGame:currentGameData]){
             loadingData = true;
             menuController.gameTitle.frame = CGRectOffset(menuController.gameTitle.frame, [self propX:-1], 0);
@@ -201,7 +205,7 @@
     
 //    for(Forklift* f in game)
     
-    [UIView animateWithDuration:1 animations:^void{
+    [UIView animateWithDuration:0.5 animations:^void{
         CGRect f = content.frame;
         f.origin.x -= [self propX:1];
         content.frame = f;
@@ -228,7 +232,7 @@
     [gameController animateOutExtraUI]; ///todo immediate
     [gameController removeAllSocks];
     
-    [UIView animateWithDuration:1 animations:^void{
+    [UIView animateWithDuration:0.5 animations:^void{
         CGRect f = content.frame;
         f.origin.x += [self propX:1];
         content.frame = f;
@@ -256,7 +260,7 @@
     [gameController animateInExtraUI]; ///todo immediate
     [gameController removeAllSocks];
     
-    [UIView animateWithDuration:1 animations:^void{
+    [UIView animateWithDuration:0.5 animations:^void{
         CGRect f = content.frame;
         f.origin.x += [self propX:1];
         content.frame = f;
@@ -314,7 +318,7 @@
     currentAppState = TransitioningFromMenuToSettings;
     [Flurry logEvent:@"Switch_MenuToSettings"];
     
-    [UIView animateWithDuration:1 animations:^void{
+    [UIView animateWithDuration:0.5 animations:^void{
         CGRect f = content.frame;
         f.origin.x += [self propX:1];
         content.frame = f;
@@ -329,7 +333,7 @@
     currentAppState = TransitioningFromSettingsToMenu;
     [Flurry logEvent:@"Switch_SettingsToMenu"];
     
-    [UIView animateWithDuration:1 animations:^void{
+    [UIView animateWithDuration:0.5 animations:^void{
         CGRect f = content.frame;
         f.origin.x -= [self propX:1];
         content.frame = f;
@@ -342,7 +346,7 @@
 
 -(void)animateFromViewController:(UIViewController*)vc toPoint:(CGPoint)point toViewController:(UIViewController*)otherVc toPoint:(CGPoint)otherPoint animationFinished:(void (^)(void)) completion{
 
-    [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
         otherVc.view.frame = CGRectMake(otherPoint.x, otherPoint.y, otherVc.view.frame.size.width, otherVc.view.frame.size.height);
         vc.view.frame = CGRectMake(point.x, point.y, vc.view.frame.size.width, vc.view.frame.size.height);
     } completion:^(BOOL finished){
@@ -429,7 +433,7 @@
             //not in tutorial
             if(gameController.currentGameState == WarmingUp){
                 gameController.currentGameState = Playing;
-                [gameController generateSock];
+                [gameController generateSock: false];
             }
         }
     }

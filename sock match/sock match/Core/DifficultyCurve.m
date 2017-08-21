@@ -10,10 +10,10 @@
 
 #define MAX_SOCK_SIZE (3)
 #define MAX_SOCK_TYPES (8)
-#define MAX_BELT_MOVE_MULTIPLIER (4)
+#define MAX_BELT_MOVE_MULTIPLIER_MAX (4)
 
 #define PROB_GEN_NEW_TYPE_MAX (45.0)
-#define PROB_GEN_EXIST_TYPE_EXIST_SIZE_MIN (25.0)
+#define PROB_GEN_EXIST_TYPE_EXIST_SIZE_MAX (75.0)
 
 
 @implementation DifficultyCurve {
@@ -43,7 +43,7 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
     incrementToUnlockSockSize = 0;
     thresholdToUnlockNextSockSize = 1;
     probGenNewType = 30.0;
-    probGenExistTypeExistSize = 40.0;
+    probGenExistTypeExistSize = 30.0;
     return self;
 }
 
@@ -81,9 +81,9 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
 }
 
 -(void)increaseBeltMoveSpeed{
-    _beltMoveSpeedMultiplier += 0.01;
-    if(_beltMoveSpeedMultiplier >= MAX_BELT_MOVE_MULTIPLIER){
-        _beltMoveSpeedMultiplier = MAX_BELT_MOVE_MULTIPLIER;
+    _beltMoveSpeedMultiplier += 0.015;
+    if(_beltMoveSpeedMultiplier >= MAX_BELT_MOVE_MULTIPLIER_MAX){
+        _beltMoveSpeedMultiplier = MAX_BELT_MOVE_MULTIPLIER_MAX;
     }
 }
 
@@ -93,10 +93,16 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
 
 -(void)tickNewSock{
     int oldNum = floor(_numOfDifferentSocksToGenerate);
-    //todo change the max dynamically to make it harder
-    CGFloat t = floor(_numOfDifferentSocksToGenerate)/(CGFloat)[Functions randFromMin:(10*(_numOfDifferentSocksToGenerate+1)) toMax:(14*(_numOfDifferentSocksToGenerate+1))];
-    CGFloat m = 0.1;
-    _numOfDifferentSocksToGenerate += [Functions randFromMin:0 toMax:m-(t >= m ? m : t)];
+    
+    if(_numOfDifferentSocksToGenerate >= 1){
+        //todo change the max dynamically to make it harder
+//        CGFloat t = floor(_numOfDifferentSocksToGenerate)/(CGFloat)[Functions randFromMin:(10*(_numOfDifferentSocksToGenerate+1)) toMax:(14*(_numOfDifferentSocksToGenerate+1))];
+//        CGFloat m = 0.1;
+//        _numOfDifferentSocksToGenerate += [Functions randFromMin:0 toMax:m-(t >= m ? m : t)];
+        _numOfDifferentSocksToGenerate += [Functions randFromMin:0 toMax:0.075];
+    }else{
+        _numOfDifferentSocksToGenerate += 0.2;
+    }
     
     if(floor(_numOfDifferentSocksToGenerate) == oldNum+1){
         if(oldNum+1 <= MAX_SOCK_TYPES-1){
@@ -123,9 +129,9 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
         probGenNewType = PROB_GEN_NEW_TYPE_MAX;
     }
     
-    probGenExistTypeExistSize -= 0.8;
-    if(probGenExistTypeExistSize <= PROB_GEN_EXIST_TYPE_EXIST_SIZE_MIN){
-        probGenExistTypeExistSize = PROB_GEN_EXIST_TYPE_EXIST_SIZE_MIN;
+    probGenExistTypeExistSize += 0.4;
+    if(probGenExistTypeExistSize <= PROB_GEN_EXIST_TYPE_EXIST_SIZE_MAX){
+        probGenExistTypeExistSize = PROB_GEN_EXIST_TYPE_EXIST_SIZE_MAX;
     }
 }
 
@@ -138,7 +144,7 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
     
     //todo maybe use types.count < max-1
     int n = [Functions randFromMin:1 toMax:100];
-    if((n <= probGenNewType && types.count <= max && types.count < sockData.count) || sockData.count < 1){
+    if((n <= 40/*probGenNewType*/ && types.count <= max && types.count < sockData.count) || sockData.count < 1){
         //create a random sock type that isn't already on screen
         do {
             type = [Functions randomNumberBetween:0 maxNumber: max > MAX_SOCK_TYPES-1 ? MAX_SOCK_TYPES-1 : max];
@@ -153,7 +159,7 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
         } while ([types containsObject:[NSNumber numberWithInt:type]] == false);
         
         //create a sock with a size of any sock that is _Type (this always produces a pair to a sock)
-        if([Functions randFromMin:1 toMax:100] <= probGenExistTypeExistSize){
+        if([Functions randFromMin:1 toMax:100] <= 40){
             NSMutableArray<NSNumber*>* sizes = [self getAllSockSizesForSockType:sockData type:type];
             
             do {

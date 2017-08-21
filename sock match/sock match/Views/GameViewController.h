@@ -70,7 +70,7 @@
 -(bool)loadGame:(GameData*)game;
 -(void)saveGame;
 
--(void)generateSock;
+-(void)generateSock:(bool)twoSocks;
 
 -(void)updateBarForEfficiency:(CGFloat)efficiency;
 

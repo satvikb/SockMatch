@@ -140,15 +140,16 @@
     scoreLabel.text = [NSString stringWithFormat:@"%i", s];
     self->score = s;
     
-    if([self.delegate respondsToSelector:@selector(gameEndScore:)]){
-        [self.delegate gameEndScore:s];
-    }
-    
     if([Storage getSavedHighScore] < score){
         NSLog(@"New high score!");
         highScoreLabel.text = @"new high score!";
     }else{
         highScoreLabel.text = @"";
+    }
+    
+    
+    if([self.delegate respondsToSelector:@selector(gameEndScore:)]){
+        [self.delegate gameEndScore:s];
     }
 }
 

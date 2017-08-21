@@ -7,6 +7,7 @@
 //
 
 #import "FocusOnRect.h"
+#import "Functions.h"
 
 @implementation FocusOnRect{
     UIView* top;
@@ -17,6 +18,7 @@
     bool visible;
     
     NSArray<UILabel*>* subLabels;
+    UILabel* currentLabel;
 }
 
 @synthesize touchBlock;
@@ -45,8 +47,20 @@
     bottom.layer.opacity = 0;
     [self addSubview:bottom];
     
-    for(UILabel* l in labels){
-        [self addSubview:l];
+//    for(UILabel* l in labels){
+//        [self addSubview:l];
+//    }
+    
+    UILabel* tapToContinue = [[UILabel alloc] initWithFrame:CGRectMake(0.25*screen.width, 0.5*screen.height, 0.5*screen.width, 0.1*screen.height)];
+    tapToContinue.text = @"tap to continue.";
+    tapToContinue.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:20]];
+    tapToContinue.textAlignment = NSTextAlignmentCenter;
+    tapToContinue.textColor = [UIColor whiteColor];
+    [self addSubview:tapToContinue];
+    
+    if(labels.count > 0){
+        [self addSubview:[labels objectAtIndex:0]];
+        currentLabel = [labels objectAtIndex:0];
     }
     
     subLabels = labels;
@@ -83,6 +97,19 @@
     if(visible){
         touchBlock();
     }
+}
+
+-(bool)showNextLabel {
+    NSInteger nextIndex = [subLabels indexOfObject:currentLabel]+1;
+    
+    if(nextIndex <= subLabels.count-1){
+        [currentLabel removeFromSuperview];
+        currentLabel = [subLabels objectAtIndex:nextIndex];
+        [self addSubview:currentLabel];
+        return true;
+    }
+    
+    return false;
 }
 
 @end
