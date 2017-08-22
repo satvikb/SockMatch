@@ -1054,7 +1054,7 @@
         CGFloat moveX = [self propX:propMoveX];
         CGFloat moveDelta = -moveX*delta;
         
-        if(img.frame.origin.x <= [self propX:-1]){
+        if(img.frame.origin.x <= [self propX:-1]-img.frame.size.width){
             CGRect f = img.frame;
             CGFloat overflow = img.frame.origin.x - (-img.frame.size.width);
             

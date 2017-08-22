@@ -142,9 +142,8 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
     int size = [Functions randomNumberBetween:0 maxNumber:_maxSockSize];
     NSMutableArray<NSNumber*>* types = [self getAllDifferentTypesInSockArray:sockData];
     
-    //todo maybe use types.count < max-1
     int n = [Functions randFromMin:1 toMax:100];
-    if((n <= 40/*probGenNewType*/ && types.count <= max && types.count < sockData.count) || sockData.count < 1){
+    if((n <= 40/*probGenNewType*/ && types.count < max && types.count < sockData.count) || sockData.count < 1){
         //create a random sock type that isn't already on screen
         do {
             type = [Functions randomNumberBetween:0 maxNumber: max > MAX_SOCK_TYPES-1 ? MAX_SOCK_TYPES-1 : max];

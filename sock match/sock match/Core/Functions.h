@@ -21,6 +21,11 @@ typedef enum SockSize {
     Large = 2
 } SockSize;
 
+typedef enum GameMode {
+    Normal = 0,
+    Hard = 1
+} GameMode;
+
 typedef enum AppState {
     MainMenu = 0,
     TransitioningFromMainMenuToGame = 1,

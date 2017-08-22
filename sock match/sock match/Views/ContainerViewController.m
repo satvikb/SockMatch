@@ -98,6 +98,11 @@
     menuController.delegate = self;
     menuController.highScoreLabel.text = [NSString stringWithFormat:@"high score: %i", highScore];
     
+    if([self haveGameToLoad]){
+        menuController.playButton.textLabel.text = @"continue";
+    }else{
+        menuController.playButton.textLabel.text = @"play";
+    }
     
     settingsController = [[SettingsViewController alloc] init];
     settingsController.view.layer.zPosition = 100;
@@ -161,14 +166,11 @@
     
     [Flurry logEvent:@"Switch_MenuToGame"];
     
-    bool loadingData = false;
+    bool loadingData = [self haveGameToLoad];
     
-    if(currentGameData.efficiency > 0 && (currentGameData.sockData.count > 0 || currentGameData.score > 0)){//} && currentGameData.sockData.count > 0){
+    if(loadingData){
         if([gameController loadGame:currentGameData]){
-            loadingData = true;
             menuController.gameTitle.frame = CGRectOffset(menuController.gameTitle.frame, [self propX:-1], 0);
-        }else{
-//            [gameController turnLightsOff];
         }
     }
     
@@ -191,6 +193,14 @@
     }];
 }
 
+
+-(bool)haveGameToLoad{
+    bool loadingData = false;
+    if(currentGameData.efficiency > 0 && (currentGameData.sockData.count > 0 || currentGameData.score > 0)){//} && currentGameData.sockData.count > 0){
+        loadingData = true;
+    }
+    return loadingData;
+}
 //-(void) switchFromGameToMenu:(GameViewController *)game{
 //    currentAppState = TransitioningFromGameToMenu;
 //    [Flurry logEvent:@"Switch_GameToMenu"];
@@ -228,6 +238,7 @@
     [Flurry logEvent:@"Switch_GameOverToMenu"];
     
     gameController.scoreLabel.text = @"0";
+    menuController.playButton.textLabel.text = @"play";
     menuController.view.frame = [self propToRect:CGRectMake(1, 0, 1, 1)];
     [gameController animateOutExtraUI]; ///todo immediate
     [gameController removeAllSocks];

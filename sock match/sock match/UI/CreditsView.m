@@ -29,21 +29,36 @@
     titleLabel.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:40]];
     [self addSubview:titleLabel];
     
-    [self createLabelsForPerson:@"Satvik Borra" reason:@"Creating this okay mediocre game." atY:0.2];
-    [self createLabelsForPerson:@"Virindh B." reason:@"Being too busy to make tangible contributions." atY:0.4];
-    [self createLabelsForPerson:@"Vamsi L." reason:@"Trying to help after a lot of encouragement." atY:0.3];
-    [self createLabelsForPerson:@"Aashish T." reason:@"Avoided downloading the beta at all costs." atY:0.5];
-    [self createLabelsForPerson:@"Hemanth L." reason:@"Being as far from this game as possible." atY:0.6];
-
     
-    UILabel* miscCredits = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.1, 0.8, 0.8, 0.1)]];
-    miscCredits.text = @"average font by me.\nhorrible sound effects also by me.";
-    miscCredits.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:10]];
-    miscCredits.textAlignment = NSTextAlignmentCenter;
-    miscCredits.numberOfLines = 2;
-//    miscCredits.layer.borderWidth = 2;
-    miscCredits.textColor = [UIColor whiteColor];
-    [self addSubview:miscCredits];
+    
+    UILabel* nameLabel = [self createLabel:[self propToRect:CGRectMake(0.05, 0.2, 0.35, 0.4)] fontSize:30];
+    nameLabel.text = @"Satvik B.";
+    
+    UILabel* stuffDoneLabel = [self createLabel:[self propToRect:CGRectMake(0.45, 0.225, 0.5, 0.4)] fontSize:30];
+    stuffDoneLabel.text = @"Concept\nDesign\nProgramming\nGraphics\n\"Sound\"\nFont";
+    stuffDoneLabel.layer.borderWidth = 3;
+    stuffDoneLabel.numberOfLines = 6;
+    
+    UILabel* minorContributions = [self createLabel:[self propToRect:CGRectMake(0.05, 0.7, 0.9, 0.1)] fontSize:10];
+    minorContributions.text = @"with minor contributions from virindh borra, vamsi lolla,\n aashish thoutam, and hemanth lolla.";
+//    minorContributions.layer.borderWidth = 3;
+    minorContributions.numberOfLines = 2;
+    
+//    [self createLabelsForPerson:@"Satvik Borra" reason:@"Creating this okay mediocre game." atY:0.2];
+//    [self createLabelsForPerson:@"Virindh B." reason:@"Being too busy." atY:0.4];
+//    [self createLabelsForPerson:@"Vamsi L." reason:@"Trying." atY:0.3];
+//    [self createLabelsForPerson:@"Aashish T." reason:@"Not downloading the beta." atY:0.5];
+//    [self createLabelsForPerson:@"Hemanth L." reason:@"Being as far from this game as possible." atY:0.6];
+//
+//
+//    UILabel* miscCredits = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.1, 0.8, 0.8, 0.1)]];
+//    miscCredits.text = @"average font by me.\nhorrible sound effects also by me.";
+//    miscCredits.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:10]];
+//    miscCredits.textAlignment = NSTextAlignmentCenter;
+//    miscCredits.numberOfLines = 2;
+////    miscCredits.layer.borderWidth = 2;
+//    miscCredits.textColor = [UIColor whiteColor];
+//    [self addSubview:miscCredits];
     
     UILabel* tapToContinue = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.9, 0.5, 0.1)]];
     tapToContinue.text = @"tap to close.";
@@ -53,6 +68,16 @@
     [self addSubview:tapToContinue];
     
     return self;
+}
+
+-(UILabel*)createLabel:(CGRect)frame fontSize:(CGFloat)fontSize{
+    UILabel* label = [[UILabel alloc] initWithFrame:CGRectIntegral(frame)];
+    label.text = @"";
+    label.textColor = UIColor.whiteColor;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.font = [UIFont fontWithName:@"Pixel_3" size:[Functions fontSize:fontSize]];
+    [self addSubview:label];
+    return label;
 }
 
 -(void)createLabelsForPerson:(NSString*)name reason:(NSString*)reason atY:(CGFloat)y{
