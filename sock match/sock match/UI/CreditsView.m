@@ -36,11 +36,17 @@
     
     UILabel* stuffDoneLabel = [self createLabel:[self propToRect:CGRectMake(0.45, 0.225, 0.5, 0.4)] fontSize:30];
     stuffDoneLabel.text = @"Concept\nDesign\nProgramming\nGraphics\n\"Sound\"\nFont";
-    stuffDoneLabel.layer.borderWidth = 3;
+//    stuffDoneLabel.layer.borderWidth = 3;
     stuffDoneLabel.numberOfLines = 6;
     
-    UILabel* minorContributions = [self createLabel:[self propToRect:CGRectMake(0.05, 0.7, 0.9, 0.1)] fontSize:10];
-    minorContributions.text = @"with minor contributions from virindh borra, vamsi lolla,\n aashish thoutam, and hemanth lolla.";
+    UILabel* contributions = [self createLabel:[self propToRect:CGRectMake(0.05, 0.7, 0.9, 0.05)] fontSize:10];
+    contributions.text = @"with contributions from vamsi lolla.";
+//    contributions.layer.borderWidth = 3;
+    contributions.numberOfLines = 1;
+    
+    
+    UILabel* minorContributions = [self createLabel:[self propToRect:CGRectMake(0.05, 0.75, 0.9, 0.05)] fontSize:10];
+    minorContributions.text = @"minor contributions from \nvirindh borra, aashish thoutam, and hemanth lolla.";
 //    minorContributions.layer.borderWidth = 3;
     minorContributions.numberOfLines = 2;
     

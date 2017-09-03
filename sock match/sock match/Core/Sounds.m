@@ -49,7 +49,7 @@
     beltSound.enableRate = true;
 //    beltSound.rate = 0;
     
-    NSURL *mainMenuBGSoundUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"BestSong" ofType:@"wav"]];
+    NSURL *mainMenuBGSoundUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"mainMenu" ofType:@"wav"]];
     mainMenuBackgroundMusic = [[AVAudioPlayer alloc] initWithContentsOfURL:mainMenuBGSoundUrl error:nil];
     //    beltSound.numberO
     mainMenuBackgroundMusic.numberOfLoops = -1;

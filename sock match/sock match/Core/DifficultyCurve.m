@@ -72,7 +72,7 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
             thresholdToUnlockNextSockSize *= 2;
             
             if([self.delegate respondsToSelector:@selector(newSockSize)]){
-                [self.delegate newSockSize];
+//                [self.delegate newSockSize];
             }
         }
         
@@ -137,9 +137,9 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
 
 -(NSArray*)getNextSock:(NSMutableArray<SockData*>*)sockData{
     
-    int max = (int)_numOfDifferentSocksToGenerate;
+    int max = MAX_SOCK_TYPES;//(int)_numOfDifferentSocksToGenerate;
     int type = 0;
-    int size = [Functions randomNumberBetween:0 maxNumber:_maxSockSize];
+    int size = 0;//[Functions randomNumberBetween:0 maxNumber:_maxSockSize];
     NSMutableArray<NSNumber*>* types = [self getAllDifferentTypesInSockArray:sockData];
     
     int n = [Functions randFromMin:1 toMax:100];
@@ -157,19 +157,21 @@ static NSString* const difficultyCurveProbGenExistTypeExistSizeKey = @"probGenEx
             type = [Functions randomNumberBetween:0 maxNumber: max > MAX_SOCK_TYPES-1 ? MAX_SOCK_TYPES-1 : max];
         } while ([types containsObject:[NSNumber numberWithInt:type]] == false);
         
-        //create a sock with a size of any sock that is _Type (this always produces a pair to a sock)
-        if([Functions randFromMin:1 toMax:100] <= 40){
-            NSMutableArray<NSNumber*>* sizes = [self getAllSockSizesForSockType:sockData type:type];
-            
-            do {
-                size = [Functions randomNumberBetween:0 maxNumber:_maxSockSize];
-            } while ([sizes containsObject:[NSNumber numberWithInt:size]] == false);
-            
-        }else{
-            //create a random sock size (that doesn't already exist?)
-            
-            // (this is already done when the size variable is initiated)
-        }
+        
+//      SIZE IS NOW ALWAYS MEDIUM
+//        //create a sock with a size of any sock that is _Type (this always produces a pair to a sock)
+//        if([Functions randFromMin:1 toMax:100] <= 40){
+//            NSMutableArray<NSNumber*>* sizes = [self getAllSockSizesForSockType:sockData type:type];
+//
+//            do {
+//                size = [Functions randomNumberBetween:0 maxNumber:_maxSockSize];
+//            } while ([sizes containsObject:[NSNumber numberWithInt:size]] == false);
+//
+//        }else{
+//            //create a random sock size (that doesn't already exist?)
+//
+//            // (this is already done when the size variable is initiated)
+//        }
     }
     
     

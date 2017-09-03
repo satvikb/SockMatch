@@ -524,7 +524,7 @@
 }
 
 -(void)animateInExtraUI{
-    [UIView animateWithDuration:0.5 animations:^void{
+    [UIView animateWithDuration:0.25 animations:^void{
         pauseButton.frame = [self propToRect:CGRectMake(0.025, 0.035, 0.1, 0.075)];
         bar.frame = [self propToRect:CGRectMake(0.15, 0.0725, 0.4, 0.05)];
         text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, 0.025, 0.4, 0.04)];
@@ -532,7 +532,7 @@
 }
 
 -(void)animateOutExtraUI{
-    [UIView animateWithDuration:0.5 animations:^void{
+    [UIView animateWithDuration:0.25 animations:^void{
         pauseButton.frame = [self propToRect:CGRectMake(0.025, -0.075, 0.1, 0.075)];
         bar.frame = [self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.05)];
         text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.0375)];
@@ -822,7 +822,6 @@
                 
                 if(animateBeltMoveSpeed <= 0){
                     animateBeltMoveSpeed = 0;
-                    [[Sounds sharedInstance].beltSound stop];
                     [self endGameIfPossible];
                 }
                 break;
@@ -881,6 +880,8 @@
     [self disableSockMovement];
     
     if([self canEndGame]){
+        [[Sounds sharedInstance].beltSound stop];
+
         [self forceEndGame];
         [self removeInfoBanners];
         [self transitionToGameOver];
@@ -1030,6 +1031,12 @@
     CGRect screen = [self propToRect:CGRectMake(0, 0, 1, 1)];
     CGFloat beltAndTopSize = conveyorBeltRect.origin.y+conveyorBeltRect.size.height;
     return CGRectIntersectsRect([s getCoreTheoreticalRect], CGRectMake(screen.origin.x, screen.origin.y+beltAndTopSize, screen.size.width, screen.size.height-beltAndTopSize));
+}
+
+-(bool)_theoreticalSockInBeltRect:(Sock*)s{
+    CGRect screen = [self propToRect:CGRectMake(0, 0, 1, 1)];
+    CGFloat topSize = conveyorBeltRect.origin.y;
+    return CGRectIntersectsRect([s getCoreTheoreticalRect], CGRectMake(screen.origin.x, screen.origin.y+topSize, screen.size.width, conveyorBeltRect.size.height));
 }
 
 //-(CGRect)_getGameViewRect{
@@ -1354,7 +1361,7 @@
         }
         
         if([self handleIntersection:s previousOverlap:false direction:0 recursionCount:0]){
-            if([self _theoreticalSockInGameView:s]){
+            if([self _theoreticalSockInGameView:s] || [self _theoreticalSockInBeltRect:s]){
                 [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
                     s.frame = s.theoreticalFrame;
                     //                s.theoreticalFrame = s.frame;
@@ -1657,7 +1664,8 @@
     }
     
     if(clear == true && lift.currentState == None){
-        [lift animateWithSpeed:1 withCompletion:^void{
+        CGFloat speed = (1.5/difficultyCurve.beltMoveSpeedMultiplier);
+        [lift animateWithSpeed:speed withCompletion:^void{
             [self forkliftAnimationComplete:lift.givePoint sock:[lift getSock] lift:lift];
             for(Forklift* t in forklifts){
                 [self handleForkliftNoOverlapAnimationsForLift:t];

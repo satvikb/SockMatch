@@ -14,7 +14,6 @@
 		401EB8591F2D266A00E7EA21 /* forkliftMoving.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB8511F2D24DD00E7EA21 /* forkliftMoving.wav */; };
 		401EB85A1F2D266A00E7EA21 /* pauseunpause.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB8531F2D24DD00E7EA21 /* pauseunpause.wav */; };
 		401EB85B1F2D266A00E7EA21 /* sockPassedFinal.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB84F1F2D24DD00E7EA21 /* sockPassedFinal.wav */; };
-		401EB85C1F2D266A00E7EA21 /* mainMenu.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB8551F2D25F400E7EA21 /* mainMenu.wav */; };
 		4028FEA31F023BF200E06D31 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4028FEA21F023BF200E06D31 /* GameKit.framework */; };
 		4031535A1F10D1B000203779 /* InfoBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 403153591F10D1B000203779 /* InfoBanner.m */; };
 		403519A51F36840B001AE533 /* gameTitle.png in Resources */ = {isa = PBXBuildFile; fileRef = 403519A41F368402001AE533 /* gameTitle.png */; };
@@ -32,6 +31,7 @@
 		40728D3A1F09A5E8008D2F36 /* SockData.m in Sources */ = {isa = PBXBuildFile; fileRef = 40728D391F09A5E8008D2F36 /* SockData.m */; };
 		40728D3D1F0ABD2F008D2F36 /* Countdown.m in Sources */ = {isa = PBXBuildFile; fileRef = 40728D3C1F0ABD2F008D2F36 /* Countdown.m */; };
 		40849FAB1F066B2700953616 /* TutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40849FAA1F066B2700953616 /* TutorialView.m */; };
+		4089D4B11F5CC32800EF2209 /* mainMenu.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 4089D4B01F5CC30E00EF2209 /* mainMenu.m4a */; };
 		408E6B4C1EEF88180011C450 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B4B1EEF88180011C450 /* AppDelegate.m */; };
 		408E6B541EEF88180011C450 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 408E6B531EEF88180011C450 /* Assets.xcassets */; };
 		408E6B5A1EEF88180011C450 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 408E6B591EEF88180011C450 /* main.m */; };
@@ -48,6 +48,8 @@
 		40D77E301F0ECF4D004577D7 /* TouchImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D77E2F1F0ECF4D004577D7 /* TouchImage.m */; };
 		40E14AD11F3936970082ACDF /* Pixel_3.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40E14AD01F39368B0082ACDF /* Pixel_3.ttf */; };
 		40E14AD31F3952700082ACDF /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E14AD21F3952650082ACDF /* splash.png */; };
+		40E389DA1F5CC4FD007782AC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40E389D91F5CC4FC007782AC /* AudioToolbox.framework */; };
+		40E389DC1F5CC503007782AC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40E389DB1F5CC503007782AC /* AVFoundation.framework */; };
 		40FA5E5C1F2EA05800BEA091 /* BestSong.wav in Resources */ = {isa = PBXBuildFile; fileRef = 40FA5E5B1F2EA04200BEA091 /* BestSong.wav */; };
 		40FA5E5F1F3137C900BEA091 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FA5E5E1F3137C900BEA091 /* SettingsViewController.m */; };
 		40FA5E631F31476000BEA091 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 40FA5E621F313DBF00BEA091 /* settings.png */; };
@@ -115,6 +117,7 @@
 		40728D3C1F0ABD2F008D2F36 /* Countdown.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Countdown.m; sourceTree = "<group>"; };
 		40849FA91F066B2700953616 /* TutorialView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TutorialView.h; sourceTree = "<group>"; };
 		40849FAA1F066B2700953616 /* TutorialView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TutorialView.m; sourceTree = "<group>"; };
+		4089D4B01F5CC30E00EF2209 /* mainMenu.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = mainMenu.m4a; sourceTree = "<group>"; };
 		408E6B471EEF88180011C450 /* sock match.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "sock match.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		408E6B4A1EEF88180011C450 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		408E6B4B1EEF88180011C450 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -144,6 +147,8 @@
 		40D77E2F1F0ECF4D004577D7 /* TouchImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchImage.m; sourceTree = "<group>"; };
 		40E14AD01F39368B0082ACDF /* Pixel_3.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Pixel_3.ttf; sourceTree = "<group>"; };
 		40E14AD21F3952650082ACDF /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = splash.png; path = ../../../../splash/splash.png; sourceTree = "<group>"; };
+		40E389D91F5CC4FC007782AC /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		40E389DB1F5CC503007782AC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		40FA5E5B1F2EA04200BEA091 /* BestSong.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = BestSong.wav; sourceTree = "<group>"; };
 		40FA5E5D1F3137C900BEA091 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		40FA5E5E1F3137C900BEA091 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
@@ -178,6 +183,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40E389DC1F5CC503007782AC /* AVFoundation.framework in Frameworks */,
+				40E389DA1F5CC4FD007782AC /* AudioToolbox.framework in Frameworks */,
 				404D1B1D1F060EC8003C9383 /* libFlurry_8.1.0.a in Frameworks */,
 				404D1B101F06002D003C9383 /* SystemConfiguration.framework in Frameworks */,
 				404D1AEB1F05F44D003C9383 /* Security.framework in Frameworks */,
@@ -276,6 +283,8 @@
 		4028FEA11F023BF200E06D31 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				40E389DB1F5CC503007782AC /* AVFoundation.framework */,
+				40E389D91F5CC4FC007782AC /* AudioToolbox.framework */,
 				404D1B0F1F060026003C9383 /* SystemConfiguration.framework */,
 				404D1AEA1F05F439003C9383 /* Security.framework */,
 				4028FEA21F023BF200E06D31 /* GameKit.framework */,
@@ -349,6 +358,7 @@
 				40FA5E5B1F2EA04200BEA091 /* BestSong.wav */,
 				401EB8551F2D25F400E7EA21 /* mainMenu.wav */,
 				40FA5E731F34C56100BEA091 /* Point.wav */,
+				4089D4B01F5CC30E00EF2209 /* mainMenu.m4a */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -464,6 +474,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4089D4B11F5CC32800EF2209 /* mainMenu.m4a in Resources */,
 				40E14AD31F3952700082ACDF /* splash.png in Resources */,
 				40E14AD11F3936970082ACDF /* Pixel_3.ttf in Resources */,
 				403519A51F36840B001AE533 /* gameTitle.png in Resources */,
@@ -476,7 +487,6 @@
 				401EB8591F2D266A00E7EA21 /* forkliftMoving.wav in Resources */,
 				401EB85A1F2D266A00E7EA21 /* pauseunpause.wav in Resources */,
 				401EB85B1F2D266A00E7EA21 /* sockPassedFinal.wav in Resources */,
-				401EB85C1F2D266A00E7EA21 /* mainMenu.wav in Resources */,
 				40FF79BA1F1A373400FFF03B /* animBox.png in Resources */,
 				40FF79BB1F1A373400FFF03B /* belt.png in Resources */,
 				40FF79BC1F1A373400FFF03B /* countdownNumbers.png in Resources */,

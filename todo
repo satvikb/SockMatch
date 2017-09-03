@@ -1,34 +1,14 @@
 all thats left
--powerup socks
-	-increase efficiency
-	-slow dow belt for time (put timer between score and efficiency bar)
-
-collision if theoretical frame out of view go to start of belt?
-
-
+-difficulty curve
+-sound timings
+-redo too many socks logic
 gameplay
 	-improve difficulty values
-	-combos
-		-extra score (+1 or +x based on combo's in a row) when multiple socks are packaged at once
 	-too many socks - remove efficiency with acceleration
-	*different efficiency lost based on sock size and belt speed
-
-graphics
-	-sock and package designs
-	-forklift tire trail?
-
-collisions
-	-IMPROVE COLLISIONS.
-	-back on belt when no space
 
 ui
 	-improve pause button
 	-top of screen
-	-fix setting image
-	-2nd small bar under
-
-settings
-	-credits
 
 sounds
 	-improve sock package
@@ -52,7 +32,7 @@ bugs
 	-prevent random forklift overlap
 	-warming up takes priority not moving title out of view
 	-belt moving audio not in sync with belt
-	-lag when pressing down on credit button
+
 crashes
 	-generating two large socks at once
 

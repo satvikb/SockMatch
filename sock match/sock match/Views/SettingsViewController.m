@@ -53,12 +53,12 @@
 
     CGFloat propHeight = ([self propX:0.9]*0.2)/self.view.frame.size.height;
     [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6, 0.9, propHeight) settingType:Sound];
-    [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6+propHeight, 0.9, propHeight) settingType:GameAlertSockType];
-    [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6+(propHeight*2), 0.9, propHeight) settingType:GameAlertSockSize];
+//    [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6+propHeight, 0.9, propHeight) settingType:GameAlertSockType];
+//    [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6+(propHeight*2), 0.9, propHeight) settingType:GameAlertSockSize];
     
     
     
-    creditsButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.4, 0.95, 0.2, 0.05)] withText:@"credits" withBlock:^void{
+    creditsButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.4, 0.925, 0.2, 0.05)] withText:@"credits" withBlock:^void{
         [Flurry logEvent:@"CreditsPressed"];
         [self pressCreditsButton:creditsButton];
     }];

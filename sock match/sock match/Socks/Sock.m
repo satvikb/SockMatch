@@ -78,7 +78,7 @@
     overlayImageView.layer.zPosition = 2;
     [self addSubview:overlayImageView];
     
-    veryTopImageView = [[UIImageView alloc] initWithFrame:CGRectMake(boxFrame.origin.x+boxFrame.size.width/4, boxFrame.origin.y+boxFrame.size.height/8, boxFrame.size.width/2, boxFrame.size.height/2)];
+    veryTopImageView = [[UIImageView alloc] initWithFrame:CGRectMake(boxFrame.origin.x+boxFrame.size.width/4, boxFrame.origin.y+boxFrame.size.height/4/*8*/, boxFrame.size.width/2, boxFrame.size.height/2)];
     veryTopImageView.contentMode = UIViewContentModeScaleAspectFit;
     veryTopImageView.layer.magnificationFilter = kCAFilterNearest;
 //    veryTopImageView.layer.borderColor = [UIColor yellowColor].CGColor;
@@ -94,7 +94,7 @@
 //        veryTopImageView2.layer.borderWidth = 1;
     veryTopImageView2.userInteractionEnabled = true;
     veryTopImageView2.layer.zPosition = 4;
-    [self addSubview:veryTopImageView2];
+//    [self addSubview:veryTopImageView2];
     return self;
 }
 
