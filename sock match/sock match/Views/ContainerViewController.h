@@ -30,9 +30,11 @@
 
 @property (nonatomic, assign) bool didCompleteTutorial;
 
+@property (nonatomic, assign) bool isAdDisplayed;
+
 - (void) displayContentController: (UIViewController*) content withFrame:(CGRect) frame;
--(void)authenticateLocalPlayer;
--(void)gcReportScore:(int)s;
+- (void)authenticateLocalPlayer;
+- (void)gcReportScore:(int)s;
 
 @end
 

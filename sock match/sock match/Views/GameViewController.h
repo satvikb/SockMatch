@@ -70,6 +70,8 @@
 -(bool)loadGame:(GameData*)game;
 -(void)saveGame;
 
+-(void)pauseGame;
+
 -(void)generateSock:(bool)twoSocks;
 
 -(void)updateBarForEfficiency:(CGFloat)efficiency;
@@ -86,4 +88,6 @@
 - (void) switchFromGameToGameOver:(GameViewController *)game withScore:(int)score;
 - (void) gameEndScore:(int)score;
 - (AppState) getAppState;
+- (bool) adIsDisplayed;
+-(CGFloat) getAdHeight;
 @end

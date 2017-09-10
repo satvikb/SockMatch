@@ -13,7 +13,7 @@
 #import "Settings.h"
 #import "SettingView.h"
 #import "Flurry.h"
-
+#import "CreditsView.h"
 @protocol SettingsDelegate;
 
 @interface SettingsViewController : UIViewController<UIGestureRecognizerDelegate>
@@ -23,12 +23,15 @@
 @property (nonatomic, assign) CGRect titleFrame;
 @property (nonatomic, strong) Button* backButton;
 @property (nonatomic, strong) Button* creditsButton;
+@property (nonatomic, strong) CreditsView* creditsView;
+@property (nonatomic, assign) bool showingCreditView;
 
 @end
 
 @protocol SettingsDelegate <NSObject>
 -(void)switchFromSettingsToMenu:(SettingsViewController*) settings;
 -(void)settingChanged:(SettingTypes)type;
+-(bool)adIsDisplayed;
 //-(void)menuGameCenterButton;
 @end
 

@@ -8,8 +8,9 @@
 
 #import "ContainerViewController.h"
 #import "Storage.h"
+@import GoogleMobileAds;
 
-@interface ContainerViewController () {
+@interface ContainerViewController () <GADBannerViewDelegate, GADInterstitialDelegate> {
     
     CADisplayLink* gameTimer;
     GameData* currentGameData;
@@ -36,6 +37,9 @@
 
 }
 
+@property(nonatomic, strong) GADBannerView *bannerView;
+@property(nonatomic, strong) GADInterstitial *interstitial;
+
 @end
 
 @implementation ContainerViewController
@@ -47,6 +51,7 @@
 @synthesize gameCenterEnabled;
 @synthesize leaderboardIdentifier;
 @synthesize didCompleteTutorial;
+@synthesize isAdDisplayed;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -120,6 +125,43 @@
         [[Sounds sharedInstance].mainMenuBackgroundMusic play];
     }
     
+    
+    self.bannerView = [[GADBannerView alloc]
+                       initWithAdSize:kGADAdSizeSmartBannerPortrait];
+    self.bannerView.adUnitID = @"ca-app-pub-2889096611002538/3176390270";
+    CGRect screenBounds = [self propToRect:CGRectMake(0, 0, 1, 1)];
+    [self.bannerView setFrame:CGRectMake(0, 0, screenBounds.size.width, self.bannerView.bounds.size.height)];
+    self.bannerView.center = CGPointMake(screenBounds.size.width / 2, screenBounds.size.height - (self.bannerView.bounds.size.height / 2));
+    self.bannerView.rootViewController = self;
+    self.bannerView.delegate = self;
+    
+    GADRequest *request = [GADRequest request];
+    request.testDevices = @[ kGADSimulatorID,                       // All simulators
+                             @"2e8fb434d98fb223f735071df2de6280"];
+    [self.bannerView loadRequest:request];
+    
+    
+    
+    self.interstitial = [self createAndLoadInterstitial];
+    NSLog(@"H: %f %f", [self AACStatusBarHeight], [UIApplication sharedApplication].statusBarFrame.size.height);
+    
+
+}
+
+-(CGFloat) AACStatusBarHeight
+{
+    CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
+    return MIN(statusBarSize.width, statusBarSize.height);
+}
+
+- (GADInterstitial *)createAndLoadInterstitial {
+    GADInterstitial *interstitial = [[GADInterstitial alloc] initWithAdUnitID:@"ca-app-pub-2889096611002538/5334228876"];
+    interstitial.delegate = self;
+    GADRequest *interstitialRequest = [GADRequest request];
+    interstitialRequest.testDevices = @[ kGADSimulatorID,                       // All simulators
+                                         @"2e8fb434d98fb223f735071df2de6280"];
+    [interstitial loadRequest:interstitialRequest];
+    return interstitial;
 }
 
 -(void)testFile{
@@ -222,6 +264,10 @@
     } completion:^(BOOL finished){
         currentAppState = GameOver;
         [gameOverController didMoveToParentViewController:self];
+        
+        if (self.interstitial.isReady) {
+            [self.interstitial presentFromRootViewController:self];
+        }
 //        [game animateOutExtraUI];
     }];
     
@@ -406,6 +452,14 @@
     }
 }
 
+- (bool)adIsDisplayed {
+    return isAdDisplayed;
+}
+
+-(CGFloat)getAdHeight {
+    return isAdDisplayed == true ? self.bannerView.bounds.size.height : 0;
+}
+
 -(void)startGameLoop {
     gameTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(gameLoop:)];
     //    if (@available(iOS 10.0, *)) {
@@ -456,40 +510,40 @@
     
     
     
-//        if(currentAppState == MainMenu || currentAppState == SettingsView || currentAppState == TransitioningFromSettingsToMenu || currentAppState == TransitioningFromMenuToSettings || currentAppState == TransitioningFromMainMenuToGame || currentAppState == TransitioningFromGameOverToGame){
+    //        if(currentAppState == MainMenu || currentAppState == SettingsView || currentAppState == TransitioningFromSettingsToMenu || currentAppState == TransitioningFromMenuToSettings || currentAppState == TransitioningFromMainMenuToGame || currentAppState == TransitioningFromGameOverToGame){
     
-            randomForkliftTimer += tmr.duration;
-            forkliftWheelTimer += tmr.duration;
-            
-            if(randomForkliftTimer >= timeToCreateRandomForklift && currentAppState != Game && currentAppState != TransitioningFromMainMenuToGame){
-                timeToCreateRandomForklift = [Functions randFromMin:1 toMax:4];
-                [self createRandomForklift];
-                randomForkliftTimer = 0;
+    randomForkliftTimer += tmr.duration;
+    forkliftWheelTimer += tmr.duration;
+    
+    if(randomForkliftTimer >= timeToCreateRandomForklift && currentAppState != Game && currentAppState != TransitioningFromMainMenuToGame){
+        timeToCreateRandomForklift = [Functions randFromMin:1 toMax:4];
+        [self createRandomForklift];
+        randomForkliftTimer = 0;
+    }
+    
+    if(forkliftWheelTimer >= timeToAnimateWheels){
+        for(Forklift* f in forklifts){
+            switch (f.currentState) {
+                case None:
+                    break;
+                case GoingToSock:
+                    [f animateWheels];
+                    break;
+                case PickingUpSock:
+                    break;
+                case GoingBack:
+                    [f animateWheelsBackward];
+                default:
+                    break;
             }
-            
-            if(forkliftWheelTimer >= timeToAnimateWheels){
-                for(Forklift* f in forklifts){
-                    switch (f.currentState) {
-                        case None:
-                            break;
-                        case GoingToSock:
-                            [f animateWheels];
-                            break;
-                        case PickingUpSock:
-                            break;
-                        case GoingBack:
-                            [f animateWheelsBackward];
-                        default:
-                            break;
-                    }
-                }
-                
-                forkliftWheelTimer = 0;
-            }
-            
-            [self handleForkliftAnimation:tmr.duration];
-//        }
-
+        }
+        
+        forkliftWheelTimer = 0;
+    }
+    
+    [self handleForkliftAnimation:tmr.duration];
+    //        }
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -648,7 +702,7 @@
     [forklifts addObject:fork];
     [content addSubview:fork];
     
-//    CGFloat speed = [Functions randFromMin:1.5 toMax:4];
+    //    CGFloat speed = [Functions randFromMin:1.5 toMax:4];
     CGFloat speed = [Functions randFromMin:3 toMax:8];
     
     [fork dummyAnimateWithSpeed:speed xTranslate:fromLeft == true ? [self propX:3]+fork.frame.size.width : -([self propX: 3]+fork.frame.size.width) withCompletion:^void{
@@ -665,14 +719,69 @@
     return 0;//[Functions randomNumberBetween:0 maxNumber:2];
 }
 
+- (void)adViewDidReceiveAd:(GADBannerView *)adView {
+    [Flurry logEvent:@"AdViewDidReceiveAd"];
+    NSLog(@"Ad %f", adView.bounds.size.height);
+    
+    //TODO Animate
+    if(isAdDisplayed == false){
+        [self adMovedByY:-adView.bounds.size.height];
+
+    }
+    
+    isAdDisplayed = true;
+
+    [self.view addSubview:adView];
+}
+
+-(void)adView:(GADBannerView *)adView didFailToReceiveAdWithError:(GADRequestError *)error{
+    //    menuController.settingsButton.frame.origin += adView.bounds.size.height;
+    
+    //TODO Animate
+    if(isAdDisplayed == true){
+        [self adMovedByY:adView.bounds.size.height];
+    }
+    isAdDisplayed = false;
+
+    NSLog(@"Should remove ad");
+}
+
+-(void)adMovedByY:(CGFloat)y{
+    menuController.settingsButton.frame = CGRectOffset(menuController.settingsButton.frame, 0, y);
+    menuController.gameCenterButton.frame = CGRectOffset(menuController.gameCenterButton.frame, 0, y);
+    settingsController.creditsButton.frame = CGRectOffset(settingsController.creditsButton.frame, 0, y);
+    settingsController.creditsView.tapToContinueLabel.frame = CGRectOffset(settingsController.creditsView.tapToContinueLabel.frame, 0, y);
+
+}
+
+-(void)interstitialDidDismissScreen:(GADInterstitial *)ad {
+    self.interstitial = [self createAndLoadInterstitial];
+}
+
+-(void)interstitialDidReceiveAd:(GADInterstitial *)ad {
+    [Flurry logEvent:@"Interstitial Receive Ad"];
+}
+
+-(void)interstitial:(GADInterstitial *)ad didFailToReceiveAdWithError:(GADRequestError *)error {
+    [Flurry logEvent:@"Interstitial Fail Ad" withParameters:@{@"error":[error localizedDescription]}];
+}
 
 
+-(void)adViewWillLeaveApplication:(GADBannerView *)bannerView{
+    [self adLeaveApplication];
+}
 
+-(void)interstitialWillLeaveApplication:(GADInterstitial *)ad {
+    [self adLeaveApplication];
+}
 
+-(void)adLeaveApplication{
+    [gameController pauseGame];
+}
 
-
-
-
+-(BOOL)prefersStatusBarHidden{
+    return true;
+}
 
 -(CGFloat) propX:(CGFloat) x {
     return x*self.view.frame.size.width;

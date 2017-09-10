@@ -143,7 +143,7 @@
 
 -(void)animateTutorialLabelIn {
     [UIView animateWithDuration:0.5 animations:^void{
-        tutorialText.frame = [self propToRect:CGRectMake(0.05, 0.85, .9, 0.1)];
+        tutorialText.frame = [self propToRect:CGRectMake(0.05, 0.75, .9, 0.1)];
     }];
 }
 

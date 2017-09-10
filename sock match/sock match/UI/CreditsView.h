@@ -10,6 +10,12 @@
 
 @interface CreditsView : UIView
 
+typedef void (^CreditsTouch)(void);
+
+-(id)initWithFrame:(CGRect)frame dismissBlock:(void (^)(void))dismissBlock;
+
 //@property (nonatomic, assign) bool showing;
+@property (nonatomic, strong) UILabel* tapToContinueLabel;
+@property (nonatomic, copy) CreditsTouch creditsTouchBlock;
 
 @end

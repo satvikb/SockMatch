@@ -11,7 +11,6 @@
 #import "Flurry.h"
 
 #import "GameAlertView.h"
-#import "CreditsView.h"
 
 @interface SettingsViewController () {
 
@@ -26,6 +25,8 @@
 @synthesize titleFrame;
 @synthesize backButton;
 @synthesize creditsButton;
+@synthesize creditsView;
+@synthesize showingCreditView;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -43,7 +44,7 @@
     
     titleFrame = settingsTitle.frame;
 
-    backButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.7, 0.05, 0.25, 0.1)] withText:@"back" withBlock:^void{
+    backButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.7, 0.04, 0.25, 0.1)] withText:@"back" withBlock:^void{
         [self pressBackButton:backButton];
     }];
     backButton.textLabel.font = [UIFont fontWithName:@"Pixel_3" size:25];
@@ -56,7 +57,12 @@
 //    [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6+propHeight, 0.9, propHeight) settingType:GameAlertSockType];
 //    [self createSettingViewWithPropFrame:CGRectMake(0.05, 0.6+(propHeight*2), 0.9, propHeight) settingType:GameAlertSockSize];
     
+//    __unsafe_unretained typeof(self) ws = self;
     
+    creditsView = [[CreditsView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 1, 1)] dismissBlock:^void{
+        self.showingCreditView = false;
+    }];
+    creditsView.layer.zPosition = 250;
     
     creditsButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.4, 0.925, 0.2, 0.05)] withText:@"credits" withBlock:^void{
         [Flurry logEvent:@"CreditsPressed"];
@@ -65,7 +71,8 @@
     creditsButton.textLabel.font = [UIFont fontWithName:@"Pixel_3" size:20];
     creditsButton.layer.zPosition = 113;
     [self.view addSubview:creditsButton];
-
+    
+    
 }
 
 -(void)createSettingViewWithPropFrame:(CGRect)propFrame settingType:(SettingTypes)type{
@@ -97,9 +104,8 @@
 }
 
 -(void)pressCreditsButton:(id)sender{
-    CreditsView* credits = [[CreditsView alloc] initWithFrame:[self propToRect:CGRectMake(0, 0, 1, 1)]];
-    credits.layer.zPosition = 250;
-    [self.view addSubview:credits];
+    [self.view addSubview:creditsView];
+    showingCreditView = true;
 }
 
 -(int) getRandomSockId {

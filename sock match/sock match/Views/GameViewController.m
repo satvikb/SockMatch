@@ -223,9 +223,9 @@
 -(void)loadBufferImages {
     boxAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"animBox"] withYRow:5 withXColumn:4 maxFrames:0];
     wheelFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"wheelAnimation"] withYRow:1 withXColumn:4 maxFrames:0];
-    sockPackages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockPackage"] withYRow:5 withXColumn:5 maxFrames:8];
+    sockPackages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockPackage"] withYRow:5 withXColumn:5 maxFrames:18];
     sockPackageSizes = [self getSplitImagesFromImage:[UIImage imageNamed:@"packageSizes"] withYRow:1 withXColumn:3 maxFrames:0];
-    sockMainImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockMain.png"] withYRow:5 withXColumn:5 maxFrames:8];
+    sockMainImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"sockMain.png"] withYRow:5 withXColumn:5 maxFrames:18];
     forkLiftAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"forklift"] withYRow:3 withXColumn:1 maxFrames:2];
     emissionAnimationFrames = [self getSplitImagesFromImage:[UIImage imageNamed:@"emissions"] withYRow:5 withXColumn:1 maxFrames:0];
     scoreDigitImages = [self getSplitImagesFromImage:[UIImage imageNamed:@"numbers"] withYRow:1 withXColumn:10 maxFrames:0];
@@ -332,7 +332,7 @@
 //    scoreDigits = [[NSMutableArray alloc] init];
 //    [self sizeDigits:4];
     
-    scoreLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.65, 0.0725, 0.325, 0.05)]];
+    scoreLabel = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.65, 0.0625, 0.325, 0.05)]];
     scoreLabel.text = @"0";
     scoreLabel.textAlignment = NSTextAlignmentRight;
     scoreLabel.textColor = [UIColor whiteColor];
@@ -364,7 +364,7 @@
 
     [self.view addSubview:text_factoryEfficiency];
     
-    text_score = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.825, 0.035, 0.15, 0.0375)]];
+    text_score = [[UILabel alloc] initWithFrame:[self propToRect:CGRectMake(0.825, 0.025, 0.15, 0.0375)]];
     text_score.text = @"score";
     text_score.layer.zPosition = 102;
 //    text_score.layer.borderWidth = 1;
@@ -429,18 +429,7 @@
     [pauseButton setBlock:^void{
         NSLog(@"pause");
         
-        //TODO  maybe just do currentGameState == Playing;
-        if(currentGameState == Playing){//!= WarmingUp && currentGameState != Tutorial && currentGameState != Paused){
-            [[Sounds sharedInstance] playSoundEffect:PauseUnpause loops:0];
-            [ws saveGame];
-            
-            for(Sock* s in [ws->socks copy]){
-                [s animateDecreaseCoreScale];
-                s.touchEndedBlock(s, CGPointZero);
-            }
-            [ws disableSockMovement];
-            [ws showPauseView];
-        }
+        [ws pauseGame];
     }];
     
     [self.view addSubview:pauseButton];
@@ -487,6 +476,21 @@
 //    [self newSockSize];
 }
 
+-(void)pauseGame{
+    //TODO  maybe just do currentGameState == Playing;
+    if(currentGameState == Playing){//!= WarmingUp && currentGameState != Tutorial && currentGameState != Paused){
+        [[Sounds sharedInstance] playSoundEffect:PauseUnpause loops:0];
+        [self saveGame];
+        
+        for(Sock* s in [self->socks copy]){
+            [s animateDecreaseCoreScale];
+            s.touchEndedBlock(s, CGPointZero);
+        }
+        [self disableSockMovement];
+        [self showPauseView];
+    }
+}
+
 - (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor{
     UIGraphicsBeginImageContextWithOptions (image.size, NO, image.scale); // for correct resolution on retina, thanks @MobileVet
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -525,9 +529,9 @@
 
 -(void)animateInExtraUI{
     [UIView animateWithDuration:0.25 animations:^void{
-        pauseButton.frame = [self propToRect:CGRectMake(0.025, 0.035, 0.1, 0.075)];
-        bar.frame = [self propToRect:CGRectMake(0.15, 0.0725, 0.4, 0.05)];
-        text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, 0.025, 0.4, 0.04)];
+        pauseButton.frame = [self propToRect:CGRectMake(0.025, 0.025, 0.1, 0.075)];
+        bar.frame = [self propToRect:CGRectMake(0.15, 0.0625, 0.4, 0.05)];
+        text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, 0.015, 0.4, 0.04)];
     }];
 }
 
@@ -1028,9 +1032,16 @@
 }
 
 -(bool)_theoreticalSockInGameView:(Sock*)s{
+    
+    CGFloat adHeight = 0;
+    if([self.delegate respondsToSelector:@selector(getAdHeight)]){
+        adHeight = [self.delegate getAdHeight];
+    }
+    
+    
     CGRect screen = [self propToRect:CGRectMake(0, 0, 1, 1)];
     CGFloat beltAndTopSize = conveyorBeltRect.origin.y+conveyorBeltRect.size.height;
-    return CGRectIntersectsRect([s getCoreTheoreticalRect], CGRectMake(screen.origin.x, screen.origin.y+beltAndTopSize, screen.size.width, screen.size.height-beltAndTopSize));
+    return CGRectIntersectsRect([s getCoreTheoreticalRect], CGRectMake(screen.origin.x, screen.origin.y+beltAndTopSize, screen.size.width, screen.size.height-beltAndTopSize-adHeight));
 }
 
 -(bool)_theoreticalSockInBeltRect:(Sock*)s{
@@ -1125,7 +1136,7 @@
 
 -(void)sockGotPastBelt {
     [[Sounds sharedInstance] playSoundEffect:SockPassed loops:0];
-    [self lostEfficiency:20.0];
+    [self lostEfficiency:10.0];
 }
 
 -(void) gotPoint {
@@ -1159,22 +1170,24 @@
 }
 
 -(void)tickEfficiency{
-    if([self getNumberOfSocksCanMove] > [self calculateTooManySockThreshold]){
-        [self lostEfficiency:1];
-        
-        if(![self alreadyHaveTooManySockBanner]){
-            InfoBanner* tooManySocksBanner = [self createInfoBanner:0 text:@"too many socks!"];
-            tooManySocksBanner.tag = 1;
-        }
-    }else{
-        [self gainEfficiency:1];
-        
-        for(InfoBanner* b in infoBanners){
-            if(b.tag == 1){
-                [b stopAnimating];
-            }
-        }
-    }
+    //TODO
+//    if([self getNumberOfSocksCanMove] > 13){
+//        [self lostEfficiency:1];
+//
+//        if(![self alreadyHaveTooManySockBanner]){
+//            InfoBanner* tooManySocksBanner = [self createInfoBanner:0 text:@"too many socks!"];
+//            tooManySocksBanner.tag = 1;
+//        }
+//    }else{
+//        [self gainEfficiency:1];
+//
+//        for(InfoBanner* b in infoBanners){
+//            if(b.tag == 1){
+//                [b stopAnimating];
+//            }
+//        }
+//    }
+    [self gainEfficiency:1];
 }
 
 -(bool)alreadyHaveTooManySockBanner{
@@ -1198,13 +1211,13 @@
     return i;
 }
 
--(int)calculateTooManySockThreshold{
-    return 5+((difficultyCurve.maxSockSize+1)*[self getNumberOfDifferentSockTypes]);
-}
+//-(int)calculateTooManySockThreshold{
+//    return 5+((difficultyCurve.maxSockSize+1)*[self getNumberOfDifferentSockTypes]);
+//}
 
--(int)getNumberOfDifferentSockTypes{
-    return (int)difficultyCurve.numOfDifferentSocksToGenerate;
-}
+//-(int)getNumberOfDifferentSockTypes{
+//    return (int)difficultyCurve.numOfDifferentSocksToGenerate;
+//}
 
 -(void)lostEfficiency:(CGFloat)efficiencyLost {
     efficiency -= efficiencyLost;
@@ -1361,17 +1374,20 @@
         }
         
         if([self handleIntersection:s previousOverlap:false direction:0 recursionCount:0]){
-            if([self _theoreticalSockInGameView:s] || [self _theoreticalSockInBeltRect:s]){
-                [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
-                    s.frame = s.theoreticalFrame;
-                    //                s.theoreticalFrame = s.frame;
-                } completion:^(BOOL completion){
+            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
+                s.frame = s.theoreticalFrame;
+                //                s.theoreticalFrame = s.frame;
+            } completion:^(BOOL completion){
+                if([self _theoreticalSockInGameView:s] || [self _theoreticalSockInBeltRect:s]){
                     [self updateWeatherSockOnBelt:s];
-                    //                [self checkPairsWithSock:s];
-                }];
-            }else{
-                [self removeSock:s];
-            }
+                }else{
+                    [self removeSock:s];
+                }
+                //                [self checkPairsWithSock:s];
+            }];
+            
+
+            
         }
     }];
     
@@ -1695,34 +1711,34 @@
     }
 }
 
--(void)newSockSize{
-//    InfoBanner* b = [self createInfoBanner:3 text:@"new sock size!"];
-//    b.tag = 2;
-    
-    // TODO use a alert view
-    if([[Settings sharedInstance] getCurrentSetting:GameAlertSockSize] == true){
-        UIImage* sockAlertImage = [sockMainImages objectAtIndex:0];
-        
-        GameAlertView* gav = [[GameAlertView alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.5)] screenFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) title:@"new sock size!" text:@"you must match socks that are also the same size!" image: sockAlertImage smallerImg:sockAlertImage];
-        gav.layer.zPosition = 251;
-        timerPaused = true;
-        __unsafe_unretained typeof(GameAlertView*) weak = gav;
-        
-        [gav setButtonPressBlock:^void{
-            timerPaused = false;
-            [self enableSockMovement];
-            [weak hideAndRemove];
-        }];
-        
-        for(Sock* s in [self->socks copy]){
-            [s animateDecreaseCoreScale];
-            s.touchEndedBlock(s, CGPointZero);
-        }
-        [self disableSockMovement];
-        
-        [self.view addSubview:gav];
-    }
-}
+//-(void)newSockSize{
+////    InfoBanner* b = [self createInfoBanner:3 text:@"new sock size!"];
+////    b.tag = 2;
+//
+//    // TODO use a alert view
+//    if([[Settings sharedInstance] getCurrentSetting:GameAlertSockSize] == true){
+//        UIImage* sockAlertImage = [sockMainImages objectAtIndex:0];
+//
+//        GameAlertView* gav = [[GameAlertView alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.5)] screenFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) title:@"new sock size!" text:@"you must match socks that are also the same size!" image: sockAlertImage smallerImg:sockAlertImage];
+//        gav.layer.zPosition = 251;
+//        timerPaused = true;
+//        __unsafe_unretained typeof(GameAlertView*) weak = gav;
+//
+//        [gav setButtonPressBlock:^void{
+//            timerPaused = false;
+//            [self enableSockMovement];
+//            [weak hideAndRemove];
+//        }];
+//
+//        for(Sock* s in [self->socks copy]){
+//            [s animateDecreaseCoreScale];
+//            s.touchEndedBlock(s, CGPointZero);
+//        }
+//        [self disableSockMovement];
+//
+//        [self.view addSubview:gav];
+//    }
+//}
 //
 //- (UIImage*)getNewSockSizeImage:(UIImage*)img {
 //    UIImage* newImage = [self resizeImage:img newSize:CGSizeMake(img.size.width*0.4, img.size.height*0.4)];
@@ -1772,38 +1788,38 @@
 //    return newImage;
 //}
 
--(void)newSockType{
-//    InfoBanner* b = [self createInfoBanner:3 text:@"new sock type!"];
-//    b.tag = 0;
-    
-    if([[Settings sharedInstance] getCurrentSetting:GameAlertSockType] == true){
-        
-        UIImage* sockAlertImage = nil;
-        
-        if(floor(difficultyCurve.numOfDifferentSocksToGenerate) < sockMainImages.count){
-            sockAlertImage = [sockMainImages objectAtIndex:floor(difficultyCurve.numOfDifferentSocksToGenerate)];
-        }
-        
-        GameAlertView* gav = [[GameAlertView alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.5)] screenFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) title:@"new sock type!" text:@"there is a new sock to match!" image: sockAlertImage];
-        gav.layer.zPosition = 251;
-        timerPaused = true;
-        __unsafe_unretained typeof(GameAlertView*) weak = gav;
-        
-        [gav setButtonPressBlock:^void{
-            timerPaused = false;
-            [self enableSockMovement];
-            [weak hideAndRemove];
-        }];
-        
-        for(Sock* s in [self->socks copy]){
-            [s animateDecreaseCoreScale];
-            s.touchEndedBlock(s, CGPointZero);
-        }
-        [self disableSockMovement];
-        
-        [self.view addSubview:gav];
-    }
-}
+//-(void)newSockType{
+////    InfoBanner* b = [self createInfoBanner:3 text:@"new sock type!"];
+////    b.tag = 0;
+//
+//    if([[Settings sharedInstance] getCurrentSetting:GameAlertSockType] == true){
+//
+//        UIImage* sockAlertImage = nil;
+//
+//        if(floor(difficultyCurve.numOfDifferentSocksToGenerate) < sockMainImages.count){
+//            sockAlertImage = [sockMainImages objectAtIndex:floor(difficultyCurve.numOfDifferentSocksToGenerate)];
+//        }
+//
+//        GameAlertView* gav = [[GameAlertView alloc] initWithFrame:[self propToRect:CGRectMake(0.25, 0.25, 0.5, 0.5)] screenFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) title:@"new sock type!" text:@"there is a new sock to match!" image: sockAlertImage];
+//        gav.layer.zPosition = 251;
+//        timerPaused = true;
+//        __unsafe_unretained typeof(GameAlertView*) weak = gav;
+//
+//        [gav setButtonPressBlock:^void{
+//            timerPaused = false;
+//            [self enableSockMovement];
+//            [weak hideAndRemove];
+//        }];
+//
+//        for(Sock* s in [self->socks copy]){
+//            [s animateDecreaseCoreScale];
+//            s.touchEndedBlock(s, CGPointZero);
+//        }
+//        [self disableSockMovement];
+//
+//        [self.view addSubview:gav];
+//    }
+//}
 
 -(InfoBanner*)createInfoBanner:(int)times text:(NSString*)text{
     CGFloat y = 0.55+(((int)infoBanners.count-1)*0.05);
