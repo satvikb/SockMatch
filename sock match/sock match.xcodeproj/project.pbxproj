@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		401168B41F61EA87009B05E1 /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401168B31F61EA67009B05E1 /* GoogleMobileAds.framework */; };
 		40154E6D1F0D9177005AFFDD /* EfficiencyBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 40154E6C1F0D9177005AFFDD /* EfficiencyBar.m */; };
 		401EB8561F2D266A00E7EA21 /* beltNoise.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB8521F2D24DD00E7EA21 /* beltNoise.wav */; };
 		401EB8571F2D266A00E7EA21 /* boxPackaging.wav in Resources */ = {isa = PBXBuildFile; fileRef = 401EB8501F2D24DD00E7EA21 /* boxPackaging.wav */; };
@@ -27,7 +26,6 @@
 		404D1AEB1F05F44D003C9383 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404D1AEA1F05F439003C9383 /* Security.framework */; };
 		404D1B101F06002D003C9383 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404D1B0F1F060026003C9383 /* SystemConfiguration.framework */; };
 		404D1B1A1F060DE6003C9383 /* Lockbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 404D1AE81F05F1FD003C9383 /* Lockbox.m */; };
-		404D1B1D1F060EC8003C9383 /* libFlurry_8.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 404D1B191F060DCF003C9383 /* libFlurry_8.1.0.a */; };
 		40728D371F099FB3008D2F36 /* GameData.m in Sources */ = {isa = PBXBuildFile; fileRef = 40728D361F099FB3008D2F36 /* GameData.m */; };
 		40728D3A1F09A5E8008D2F36 /* SockData.m in Sources */ = {isa = PBXBuildFile; fileRef = 40728D391F09A5E8008D2F36 /* SockData.m */; };
 		40728D3D1F0ABD2F008D2F36 /* Countdown.m in Sources */ = {isa = PBXBuildFile; fileRef = 40728D3C1F0ABD2F008D2F36 /* Countdown.m */; };
@@ -79,7 +77,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		401168B31F61EA67009B05E1 /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		40154E6B1F0D9177005AFFDD /* EfficiencyBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EfficiencyBar.h; sourceTree = "<group>"; };
 		40154E6C1F0D9177005AFFDD /* EfficiencyBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EfficiencyBar.m; sourceTree = "<group>"; };
 		401EB84F1F2D24DD00E7EA21 /* sockPassedFinal.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sockPassedFinal.wav; sourceTree = "<group>"; };
@@ -109,9 +106,6 @@
 		404D1AE91F05F1FD003C9383 /* Lockbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Lockbox.h; sourceTree = "<group>"; };
 		404D1AEA1F05F439003C9383 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		404D1B0F1F060026003C9383 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		404D1B171F060DCF003C9383 /* Flurry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		404D1B181F060DCF003C9383 /* FlurrySessionBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlurrySessionBuilder.h; sourceTree = "<group>"; };
-		404D1B191F060DCF003C9383 /* libFlurry_8.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_8.1.0.a; sourceTree = "<group>"; };
 		40728D351F099FB3008D2F36 /* GameData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameData.h; sourceTree = "<group>"; };
 		40728D361F099FB3008D2F36 /* GameData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameData.m; sourceTree = "<group>"; };
 		40728D381F09A5E8008D2F36 /* SockData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SockData.h; sourceTree = "<group>"; };
@@ -188,8 +182,6 @@
 			files = (
 				40E389DC1F5CC503007782AC /* AVFoundation.framework in Frameworks */,
 				40E389DA1F5CC4FD007782AC /* AudioToolbox.framework in Frameworks */,
-				401168B41F61EA87009B05E1 /* GoogleMobileAds.framework in Frameworks */,
-				404D1B1D1F060EC8003C9383 /* libFlurry_8.1.0.a in Frameworks */,
 				404D1B101F06002D003C9383 /* SystemConfiguration.framework in Frameworks */,
 				404D1AEB1F05F44D003C9383 /* Security.framework in Frameworks */,
 				4028FEA31F023BF200E06D31 /* GameKit.framework in Frameworks */,
@@ -220,7 +212,6 @@
 		400BC5041F065EE400D465D7 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				404D1B111F06003F003C9383 /* Flurry */,
 				400BC5031F065ED900D465D7 /* Lockbox */,
 			);
 			path = Libraries;
@@ -287,7 +278,6 @@
 		4028FEA11F023BF200E06D31 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				401168B31F61EA67009B05E1 /* GoogleMobileAds.framework */,
 				40E389DB1F5CC503007782AC /* AVFoundation.framework */,
 				40E389D91F5CC4FC007782AC /* AudioToolbox.framework */,
 				404D1B0F1F060026003C9383 /* SystemConfiguration.framework */,
@@ -295,16 +285,6 @@
 				4028FEA21F023BF200E06D31 /* GameKit.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		404D1B111F06003F003C9383 /* Flurry */ = {
-			isa = PBXGroup;
-			children = (
-				404D1B171F060DCF003C9383 /* Flurry.h */,
-				404D1B181F060DCF003C9383 /* FlurrySessionBuilder.h */,
-				404D1B191F060DCF003C9383 /* libFlurry_8.1.0.a */,
-			);
-			path = Flurry;
 			sourceTree = "<group>";
 		};
 		408E6B3E1EEF88180011C450 = {
@@ -672,7 +652,7 @@
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "$(PROJECT_DIR)/sock match/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -695,7 +675,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(PROJECT_DIR)/sock match/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

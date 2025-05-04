@@ -12,7 +12,6 @@
 #import "Button.h"
 #import "Settings.h"
 #import "SettingView.h"
-#import "Flurry.h"
 #import "CreditsView.h"
 @protocol SettingsDelegate;
 

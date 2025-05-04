@@ -8,7 +8,6 @@
 
 #import "SettingsViewController.h"
 #import "Sock.h"
-#import "Flurry.h"
 
 #import "GameAlertView.h"
 
@@ -65,7 +64,6 @@
     creditsView.layer.zPosition = 250;
     
     creditsButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.4, 0.925, 0.2, 0.05)] withText:@"credits" withBlock:^void{
-        [Flurry logEvent:@"CreditsPressed"];
         [self pressCreditsButton:creditsButton];
     }];
     creditsButton.textLabel.font = [UIFont fontWithName:@"Pixel_3" size:20];

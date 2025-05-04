@@ -8,7 +8,6 @@
 
 #import "MenuViewController.h"
 #import "Sock.h"
-#import "Flurry.h"
 
 #import "GameAlertView.h"
 
@@ -46,7 +45,7 @@
     UIImage* playImage = [UIImage imageNamed:@"UIFrame"];
     UIImage* playImageDown = [UIImage imageNamed:@"playPressed"];
     playImage = [self image:playImage WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
-    playImageDown = [self image:playImageDown WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
+    playImageDown = [self image:playImageDown withTintColor:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
     playButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)] withText:@"play" withBlock:^void{
         [self pressPlayButton:playButton];
     }];
@@ -125,33 +124,39 @@
     [self.view addSubview:highScoreLabel];
 }
 
-- (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor{
-    UIGraphicsBeginImageContextWithOptions (image.size, NO, image.scale); // for correct resolution on retina, thanks @MobileVet
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextTranslateCTM(context, 0, image.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    
-    CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
-    
-    // image drawing code here
-    CGContextSetBlendMode(context, kCGBlendModeNormal);
-    CGContextDrawImage(context, rect, image.CGImage);
-    
-    // tint image (loosing alpha) - the luminosity of the original image is preserved
-    CGContextSetBlendMode(context, kCGBlendModeMultiply);
-    [tintColor setFill];
-    CGContextFillRect(context, rect);
-    
-    // mask by alpha values of original image
-    CGContextSetBlendMode(context, kCGBlendModeDestinationIn);
-    CGContextDrawImage(context, rect, image.CGImage);
-    
-    UIImage *coloredImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return coloredImage;
-}
+//- (UIImage *)image:(UIImage*)image WithTint:(UIColor *)tintColor{
+//    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] init];
+////    UIImage *resizedImage = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+////        [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+////    }];
+//    
+//    renderer.
+//    UIGraphicsBeginImageContextWithOptions (image.size, NO, image.scale); // for correct resolution on retina, thanks @MobileVet
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    
+//    CGContextTranslateCTM(context, 0, image.size.height);
+//    CGContextScaleCTM(context, 1.0, -1.0);
+//    
+//    CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
+//    
+//    // image drawing code here
+//    CGContextSetBlendMode(context, kCGBlendModeNormal);
+//    CGContextDrawImage(context, rect, image.CGImage);
+//    
+//    // tint image (loosing alpha) - the luminosity of the original image is preserved
+//    CGContextSetBlendMode(context, kCGBlendModeMultiply);
+//    [tintColor setFill];
+//    CGContextFillRect(context, rect);
+//    
+//    // mask by alpha values of original image
+//    CGContextSetBlendMode(context, kCGBlendModeDestinationIn);
+//    CGContextDrawImage(context, rect, image.CGImage);
+//    
+//    UIImage *coloredImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    
+//    return coloredImage;
+//}
 
 -(void)pressPlayButton:(id)sender{
 //    id<MenuTransition> strongDelegate = self.delegate;
@@ -163,7 +168,6 @@
 
 -(void)pressGCButton:(id)sender{
     NSLog(@"GAME CENTER");
-    [Flurry logEvent:@"GameCenterButtonPress"];
     
     if([self.delegate respondsToSelector:@selector(menuGameCenterButton)]){
         [self.delegate menuGameCenterButton];
@@ -172,7 +176,6 @@
 
 -(void)pressSettingButton:(id)sender{
     NSLog(@"GAME CENTER");
-    [Flurry logEvent:@"GameCenterButtonPress"];
     
     if([self.delegate respondsToSelector:@selector(switchFromMenuToSettings:)]){
         [self.delegate switchFromMenuToSettings:self];

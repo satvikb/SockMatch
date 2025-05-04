@@ -8,7 +8,6 @@
 
 #import "GameViewController.h"
 #import "Functions.h"
-#import "Flurry.h"
 #import "Storage.h"
 
 #define PAUSE_VIEW_TAG (10)
@@ -145,7 +144,6 @@
         
         [self.view addSubview:tutorialView];
         doingTutorial = true;
-        [Flurry logEvent:@"tutorial" timed:true];
     }
     
     return self;
@@ -199,7 +197,6 @@
             ws.tutorialView.tutorialState = Completed;
             ws.tutorialView.tutorialText.text = @"you can also match socks directly on the belt";
             currentGameState = Playing;
-            [Flurry endTimedEvent:@"tutorial" withParameters:nil];
             //TODO uncomment for final
             [Storage completeTutorial];
             doingTutorial = false;
@@ -895,7 +892,6 @@
 
 -(void)forceEndGame {
     [[GameData sharedGameData] clearSave];
-    [Flurry endTimedEvent:@"game" withParameters:@{@"score":[NSNumber numberWithInt:score], @"numSocks":[self analyticsNumSocks], @"options":@{@"sound":@([[Settings sharedInstance] getCurrentSetting:Sound]), @"sockTypeAlerts":@([[Settings sharedInstance] getCurrentSetting:GameAlertSockType]), @"sockSizeAlerts":@([[Settings sharedInstance] getCurrentSetting:GameAlertSockSize])}}];
     if([self.delegate respondsToSelector:@selector(gameEndScore:)]){
         [self.delegate gameEndScore:score];
     }

@@ -11,7 +11,6 @@
 #import "GameViewController.h"
 #import "MenuViewController.h"
 #import "Sounds.h"
-@import GoogleMobileAds;
 
 @interface AppDelegate ()
 
@@ -23,18 +22,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
 
-    [GADMobileAds configureWithApplicationID:@"ca-app-pub-2889096611002538~3751105345"];
-    
     // Override point for customization after application launch.
     [Sounds sharedInstance];
-    FlurrySessionBuilder* builder = [[[[[FlurrySessionBuilder new]
-                                        withLogLevel:FlurryLogLevelNone]
-                                       withCrashReporting:YES]
-                                      withSessionContinueSeconds:10]
-                                     withAppVersion:@"1.0"];
-    
-    [Flurry startSession:@"V96ZNZW9Q9SB9SG6RFTJ" withSessionBuilder:builder];
-    
+
     srand48(time(0));    
     containerController = [[ContainerViewController alloc] init];
     
