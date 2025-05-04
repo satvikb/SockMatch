@@ -38,7 +38,7 @@
     [s1 setTouchMovedBlock:^void (Sock* s, CGPoint p, CGPoint oldPos) {
         if(s.allowMovement){
             s.onConvayorBelt = false;
-            sockOneTouchMoveBlock(s);
+            self->sockOneTouchMoveBlock(s);
             
             CGPoint delta = CGPointMake(p.x-oldPos.x, p.y-oldPos.y);
             
@@ -51,7 +51,7 @@
     
     [s1 setTouchEndedBlock:^void (Sock* s, CGPoint p) {
         if(s.allowMovement){
-            sockOneTouchEndBlock(s);
+            self->sockOneTouchEndBlock(s);
         }
     }];
     
@@ -70,7 +70,7 @@
         if(s.allowMovement){
             s.onConvayorBelt = false;
             
-            sockTwoTouchMoveBlock(s);
+            self->sockTwoTouchMoveBlock(s);
             
             CGPoint delta = CGPointMake(p.x-oldPos.x, p.y-oldPos.y);
             
@@ -111,15 +111,15 @@
     tutorialState = AnimatingSockOne;
     
     [UIView animateWithDuration:animateTime delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
-        CGRect core = CGRectMake(xPos, [sockOne getCoreRect].origin.y, 0, 0);
-        [sockOne setRectFromCoreRect:core];
-        [sockOne setTheoreticalRectFromCoreTheoreticalRect:core];
+        CGRect core = CGRectMake(xPos, [self->sockOne getCoreRect].origin.y, 0, 0);
+        [self->sockOne setRectFromCoreRect:core];
+        [self->sockOne setTheoreticalRectFromCoreTheoreticalRect:core];
     } completion:^(BOOL finished){
-        tutorialText.text = @"move socks from the belt to the matching area";
-        tutorialState = WaitingToMoveSockOne;
-        sockOne.allowMovement = true;
-        sockOne.theoreticalFrame = sockOne.frame;
-        animateSockOneCompleteBlock(sockOne);
+        self->tutorialText.text = @"move socks from the belt to the matching area";
+        self->tutorialState = WaitingToMoveSockOne;
+        self->sockOne.allowMovement = true;
+        self->sockOne.theoreticalFrame = self->sockOne.frame;
+        self->animateSockOneCompleteBlock(self->sockOne);
     }];
 }
 
@@ -129,27 +129,27 @@
     tutorialState = AnimatingSockTwo;
     
     [UIView animateWithDuration:animateTime delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
-        CGRect core = CGRectMake(xPos, [sockTwo getCoreRect].origin.y, 0, 0);
-        [sockTwo setRectFromCoreRect:core];
-        [sockTwo setTheoreticalRectFromCoreTheoreticalRect:core];
+        CGRect core = CGRectMake(xPos, [self->sockTwo getCoreRect].origin.y, 0, 0);
+        [self->sockTwo setRectFromCoreRect:core];
+        [self->sockTwo setTheoreticalRectFromCoreTheoreticalRect:core];
     } completion:^(BOOL finished){
-        tutorialText.text = @"combine socks of similar colors to form a package";
-        tutorialState = WaitingToMoveSockTwo;
-        sockTwo.allowMovement = true;
-        sockTwo.theoreticalFrame = sockTwo.frame;
-        animateSockTwoCompleteBlock(sockTwo);
+        self->tutorialText.text = @"combine socks of similar colors to form a package";
+        self->tutorialState = WaitingToMoveSockTwo;
+        self->sockTwo.allowMovement = true;
+        self->sockTwo.theoreticalFrame = self->sockTwo.frame;
+        self->animateSockTwoCompleteBlock(self->sockTwo);
     }];
 }
 
 -(void)animateTutorialLabelIn {
     [UIView animateWithDuration:0.5 animations:^void{
-        tutorialText.frame = [self propToRect:CGRectMake(0.05, 0.75, .9, 0.1)];
+        self->tutorialText.frame = [self propToRect:CGRectMake(0.05, 0.75, .9, 0.1)];
     }];
 }
 
 -(void)animateTutorialLabelOutAndRemoveTutorialView {
     [UIView animateWithDuration:0.5 animations:^void{
-        tutorialText.frame = [self propToRect:CGRectMake(0.05, 1, .9, 0.1)];
+        self->tutorialText.frame = [self propToRect:CGRectMake(0.05, 1, .9, 0.1)];
     } completion:^(BOOL finished){
         [self removeFromSuperview];
     }];

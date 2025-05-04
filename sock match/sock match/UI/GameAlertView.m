@@ -136,15 +136,15 @@
 
 -(void)show{
     [UIView animateWithDuration:0.5 animations:^void{
-        backgroundView.layer.opacity = 0.3;
-        containerView.layer.opacity = 1;
+        self->backgroundView.layer.opacity = 0.3;
+        self->containerView.layer.opacity = 1;
     }];
 }
 
 -(void)hideAndRemove{
     [UIView animateWithDuration:0.5 animations:^void{
-        backgroundView.layer.opacity = 0;
-        containerView.layer.opacity = 0;
+        self->backgroundView.layer.opacity = 0;
+        self->containerView.layer.opacity = 0;
     } completion:^(BOOL completed){
         [self removeFromSuperview];
     }];

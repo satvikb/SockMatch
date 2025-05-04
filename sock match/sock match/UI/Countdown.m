@@ -37,9 +37,9 @@
     currentNumberImage.animationDuration = 3;
     currentNumberImage.animationRepeatCount = 1;
     [currentNumberImage startAnimatingWithCompletionBlock:^(BOOL success){
-        animationCompleteBlock(success);
+        self->animationCompleteBlock(success);
     } KeyBlock: ^void{
-        digitCompleteBlock();
+        self->digitCompleteBlock();
     }];
 //
     [self addSubview:currentNumberImage];

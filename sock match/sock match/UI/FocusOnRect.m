@@ -70,24 +70,24 @@
 
 -(void)hide:(CGFloat)opacity withDuration:(NSTimeInterval)duration withCompletion:(void (^)(BOOL completed))completion{
     [UIView animateWithDuration:duration animations:^void{
-        top.layer.opacity = left.layer.opacity = right.layer.opacity = bottom.layer.opacity = opacity;
-        for(UILabel* l in subLabels){
+        self->top.layer.opacity = self->left.layer.opacity = self->right.layer.opacity = self->bottom.layer.opacity = opacity;
+        for(UILabel* l in self->subLabels){
             l.layer.opacity = opacity;
         }
     } completion:^(BOOL finished){
-        visible = false;
+        self->visible = false;
         completion(finished);
     }];
 }
 
 -(void)show:(CGFloat)opacity withDuration:(NSTimeInterval)duration withCompletion:(void (^)(BOOL completed))completion{
     [UIView animateWithDuration:duration animations:^void{
-        top.layer.opacity = left.layer.opacity = right.layer.opacity = bottom.layer.opacity = opacity;
+        self->top.layer.opacity = self->left.layer.opacity = self->right.layer.opacity = self->bottom.layer.opacity = opacity;
 //        for(UILabel* l in subLabels){
 //            l.layer.opacity = opacity;
 //        }
     } completion:^(BOOL finished){
-        visible = true;
+        self->visible = true;
         completion(finished);
     }];
 }

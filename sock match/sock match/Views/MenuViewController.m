@@ -42,12 +42,10 @@
     
     titleFrame = gameTitle.frame;
     
-    UIImage* playImage = [UIImage imageNamed:@"UIFrame"];
-    UIImage* playImageDown = [UIImage imageNamed:@"playPressed"];
-    playImage = [self image:playImage WithTint:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
-    playImageDown = [self image:playImageDown withTintColor:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
+//    UIImage* playImage = [[UIImage imageNamed:@"UIFrame"] imageWithTintColor: [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
+//    UIImage* playImageDown = [[UIImage imageNamed:@"playPressed"] imageWithTintColor:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]];
     playButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.25, 0.6, 0.5, 0.1)] withText:@"play" withBlock:^void{
-        [self pressPlayButton:playButton];
+        [self pressPlayButton:self->playButton];
     }];
 //    playButton.layer.borderWidth = 3;
     playButton.layer.zPosition = 103;

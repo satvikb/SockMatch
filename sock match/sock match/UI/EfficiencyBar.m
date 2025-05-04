@@ -67,7 +67,7 @@
     percentLabel.text = [NSString stringWithFormat:@"%i%%", (int)(percent*100)];
     
     [UIView animateWithDuration:0.5 animations:^void{
-        innerImageView.frame = f;
+        self->innerImageView.frame = f;
     }];
 //    innerImageView.frame = CGRectInset(innerImageView.frame, -(innerBarStartWidth-(innerBarStartWidth*percent)), 0);
 }

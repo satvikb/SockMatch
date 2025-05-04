@@ -47,7 +47,7 @@
             [UIView animateWithDuration:0.4 animations:^void{
                 self.layer.opacity = 0;// = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
             } completion:^(BOOL finished){
-                repeatTimesLeft -= 1;
+                self->repeatTimesLeft -= 1;
                 [self animate];
             }];
         }];

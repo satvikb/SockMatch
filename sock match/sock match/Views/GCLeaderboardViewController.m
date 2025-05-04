@@ -105,8 +105,8 @@
 
 -(void)animateIn{
     [UIView animateWithDuration:0.25 animations:^{
-        navBar.frame = CGRectOffset(navBar.frame, [self propX:1], 0);
-        background.frame = CGRectOffset(background.frame, [self propX:1], 0);
+        self->navBar.frame = CGRectOffset(self->navBar.frame, [self propX:1], 0);
+        self->background.frame = CGRectOffset(self->background.frame, [self propX:1], 0);
     }];
     
     CGFloat currentDelay = 0;
@@ -125,8 +125,8 @@
 
 -(void)animateOutWithCompletion:(void (^)(void))completion{
     [UIView animateWithDuration:0.25 animations:^{
-        navBar.frame = CGRectOffset(navBar.frame, [self propX:-1], 0);
-        background.frame = CGRectOffset(background.frame, [self propX:-1], 0);
+        self->navBar.frame = CGRectOffset(self->navBar.frame, [self propX:-1], 0);
+        self->background.frame = CGRectOffset(self->background.frame, [self propX:-1], 0);
     }];
 
     CGFloat currentDelay = 0;

@@ -192,7 +192,7 @@
     }
         
     [self animateFromViewController:menu toPoint:[self propToRect:CGRectMake(0, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointMake([self propX:1], 0) animationFinished:^{
-        NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
+        NSLog(@"STARTING GAME %@", NSStringFromCGRect(self->gameController.view.frame));
         
         
     }];
@@ -215,12 +215,12 @@
 //    for(Forklift* f in game)
     
     [UIView animateWithDuration:0.5 animations:^void{
-        CGRect f = content.frame;
+        CGRect f = self->content.frame;
         f.origin.x -= [self propX:1];
-        content.frame = f;
+        self->content.frame = f;
     } completion:^(BOOL finished){
-        currentAppState = GameOver;
-        [gameOverController didMoveToParentViewController:self];
+        self->currentAppState = GameOver;
+        [self->gameOverController didMoveToParentViewController:self];
         
 //        [game animateOutExtraUI];
     }];
@@ -243,12 +243,12 @@
     [gameController removeAllSocks];
     
     [UIView animateWithDuration:0.5 animations:^void{
-        CGRect f = content.frame;
+        CGRect f = self->content.frame;
         f.origin.x += [self propX:1];
-        content.frame = f;
+        self->content.frame = f;
     } completion:^(BOOL finished){
-        currentAppState = MainMenu;
-        [menuController didMoveToParentViewController:self];
+        self->currentAppState = MainMenu;
+        [self->menuController didMoveToParentViewController:self];
         
         if([[Settings sharedInstance] getCurrentSetting:Sound] == true){
             [[Sounds sharedInstance].mainMenuBackgroundMusic play];
@@ -270,12 +270,12 @@
     [gameController removeAllSocks];
     
     [UIView animateWithDuration:0.5 animations:^void{
-        CGRect f = content.frame;
+        CGRect f = self->content.frame;
         f.origin.x += [self propX:1];
-        content.frame = f;
+        self->content.frame = f;
     } completion:^(BOOL finished){
 //        currentAppState = Game;
-        [gameController didMoveToParentViewController:self];
+        [self->gameController didMoveToParentViewController:self];
         
         if([[Settings sharedInstance] getCurrentSetting:Sound] == true){
 //            [[Sounds sharedInstance].mainMenuBackgroundMusic play];
@@ -317,7 +317,7 @@
     }
     
     [self animateFromViewController:menuController toPoint:[self propToRect:CGRectMake(-1, 0, 0, 0)].origin toViewController:gameController toPoint:CGPointMake([self propX:1], 0) animationFinished:^{
-        NSLog(@"STARTING GAME %@", NSStringFromCGRect(gameController.view.frame));
+        NSLog(@"STARTING GAME %@", NSStringFromCGRect(self->gameController.view.frame));
 
 
     }];
@@ -327,12 +327,12 @@
     currentAppState = TransitioningFromMenuToSettings;
     
     [UIView animateWithDuration:0.5 animations:^void{
-        CGRect f = content.frame;
+        CGRect f = self->content.frame;
         f.origin.x += [self propX:1];
-        content.frame = f;
+        self->content.frame = f;
     } completion:^(BOOL finished){
-        currentAppState = SettingsView;
-        [settingsController didMoveToParentViewController:self];
+        self->currentAppState = SettingsView;
+        [self->settingsController didMoveToParentViewController:self];
         //        [game animateOutExtraUI];
     }];
 }
@@ -341,12 +341,12 @@
     currentAppState = TransitioningFromSettingsToMenu;
     
     [UIView animateWithDuration:0.5 animations:^void{
-        CGRect f = content.frame;
+        CGRect f = self->content.frame;
         f.origin.x -= [self propX:1];
-        content.frame = f;
+        self->content.frame = f;
     } completion:^(BOOL finished){
-        currentAppState = MainMenu;
-        [menuController didMoveToParentViewController:self];
+        self->currentAppState = MainMenu;
+        [self->menuController didMoveToParentViewController:self];
         //        [game animateOutExtraUI];
     }];
 }
@@ -501,7 +501,7 @@
         }
         else{
             if ([GKLocalPlayer localPlayer].authenticated) {
-                gameCenterEnabled = YES;
+                self->gameCenterEnabled = YES;
                 
                 // Get the default leaderboard identifier.
                 [[GKLocalPlayer localPlayer] loadDefaultLeaderboardIdentifierWithCompletionHandler:^(NSString *li, NSError *error) {
@@ -510,13 +510,13 @@
                         NSLog(@"_ERROR_%@", [error localizedDescription]);
                     }
                     else{
-                        leaderboardIdentifier = li;
+                        self->leaderboardIdentifier = li;
                     }
                 }];
             }
             
             else{
-                gameCenterEnabled = NO;
+                self->gameCenterEnabled = NO;
             }
         }
     };
@@ -646,7 +646,7 @@
     
     [fork dummyAnimateWithSpeed:speed xTranslate:fromLeft == true ? [self propX:3]+fork.frame.size.width : -([self propX: 3]+fork.frame.size.width) withCompletion:^void{
         [fork removeFromSuperview];
-        [forklifts removeObject:fork];
+        [self->forklifts removeObject:fork];
     }];
 }
 

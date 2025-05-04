@@ -44,7 +44,7 @@
     titleFrame = settingsTitle.frame;
 
     backButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.7, 0.04, 0.25, 0.1)] withText:@"back" withBlock:^void{
-        [self pressBackButton:backButton];
+        [self pressBackButton:self->backButton];
     }];
     backButton.textLabel.font = [UIFont fontWithName:@"Pixel_3" size:25];
     //    playButton.layer.borderWidth = 3;
@@ -64,7 +64,7 @@
     creditsView.layer.zPosition = 250;
     
     creditsButton = [[Button alloc] initBoxButtonWithFrame:[self propToRect:CGRectMake(0.4, 0.925, 0.2, 0.05)] withText:@"credits" withBlock:^void{
-        [self pressCreditsButton:creditsButton];
+        [self pressCreditsButton:self->creditsButton];
     }];
     creditsButton.textLabel.font = [UIFont fontWithName:@"Pixel_3" size:20];
     creditsButton.layer.zPosition = 113;

@@ -268,38 +268,6 @@
             endingLineNumber = "1680"
             landmarkName = "-handleForkliftNoOverlapAnimationsForLift:"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "1CEA4529-A20A-41F6-AC96-E93F03973DFC - 6f85c447b041aa70"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[GameViewController handleForkliftNoOverlapAnimationsForLift:]"
-                  moduleName = "sock match"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Satvik/Desktop/SockMatch/sock%20match/sock%20match/Views/GameViewController.m"
-                  timestampString = "526173462.383094"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1668"
-                  endingLineNumber = "1668">
-               </Location>
-               <Location
-                  uuid = "1CEA4529-A20A-41F6-AC96-E93F03973DFC - 9da6d66ebedff5e3"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__63-[GameViewController handleForkliftNoOverlapAnimationsForLift:]_block_invoke"
-                  moduleName = "sock match"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Satvik/Desktop/SockMatch/sock%20match/sock%20match/Views/GameViewController.m"
-                  timestampString = "526173462.385518"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1668"
-                  endingLineNumber = "1668">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -315,8 +283,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1030"
             endingLineNumber = "1030"
-            landmarkName = "GameViewController"
-            landmarkType = "3">
+            landmarkName = "-_theoreticalSockInGameView:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

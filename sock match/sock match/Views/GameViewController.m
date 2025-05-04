@@ -114,7 +114,7 @@
         __unsafe_unretained typeof(self) ws = self;
         
         [tutorialView setAnimateSockOneCompleteBlock:^(Sock* s){
-            timerPaused = true;
+            self->timerPaused = true;
         }];
         
         [tutorialView setSockOneTouchMoveBlock:^void(Sock* s){
@@ -126,7 +126,7 @@
             
             if(ws.tutorialView.tutorialState <= 3){
                 if(!onBelt){
-                    timerPaused = false;
+                    self->timerPaused = false;
                     [ws.tutorialView animateSockTwoToX:[ws propX:0.5] withBeltMoveSpeed:[ws getFinalBeltMoveSpeed:ws.beltMoveSpeed]];
                     ws.tutorialView.sockOne.allowMovement = false;
                 }
@@ -134,7 +134,7 @@
         }];
         
         [tutorialView setAnimateSockTwoCompleteBlock:^(Sock* s){
-            timerPaused = true;
+            self->timerPaused = true;
             ws.tutorialView.sockOne.allowMovement = true;
         }];
         
@@ -193,13 +193,13 @@
         
         
         [ws.tutorialView focusOnRect:[ws propToRect:CGRectMake(0.13, 0.0225, 0.45, 0.125)] withLabels:@[efficiencyInfo1, efficiencyInfo2, efficiencyInfo3] touchBlock:^void{
-            timerPaused = false;
+            self->timerPaused = false;
             ws.tutorialView.tutorialState = Completed;
             ws.tutorialView.tutorialText.text = @"you can also match socks directly on the belt";
-            currentGameState = Playing;
+            self->currentGameState = Playing;
             //TODO uncomment for final
             [Storage completeTutorial];
-            doingTutorial = false;
+            self->doingTutorial = false;
             [ws performSelector:@selector(hideTutLabel) withObject:nil afterDelay:5];
         }];
     }
@@ -526,17 +526,17 @@
 
 -(void)animateInExtraUI{
     [UIView animateWithDuration:0.25 animations:^void{
-        pauseButton.frame = [self propToRect:CGRectMake(0.025, 0.025, 0.1, 0.075)];
-        bar.frame = [self propToRect:CGRectMake(0.15, 0.0625, 0.4, 0.05)];
-        text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, 0.015, 0.4, 0.04)];
+        self->pauseButton.frame = [self propToRect:CGRectMake(0.025, 0.025, 0.1, 0.075)];
+        self->bar.frame = [self propToRect:CGRectMake(0.15, 0.0625, 0.4, 0.05)];
+        self->text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, 0.015, 0.4, 0.04)];
     }];
 }
 
 -(void)animateOutExtraUI{
     [UIView animateWithDuration:0.25 animations:^void{
-        pauseButton.frame = [self propToRect:CGRectMake(0.025, -0.075, 0.1, 0.075)];
-        bar.frame = [self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.05)];
-        text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.0375)];
+        self->pauseButton.frame = [self propToRect:CGRectMake(0.025, -0.075, 0.1, 0.075)];
+        self->bar.frame = [self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.05)];
+        self->text_factoryEfficiency.frame = [self propToRect:CGRectMake(0.15, -0.05, 0.4, 0.0375)];
     }];
 }
 
@@ -546,9 +546,9 @@
         currentGameState = Paused; //todo use functino to switch
         timerPaused = true;
         [UIView animateWithDuration:0.5 animations:^void{
-            pauseView.layer.opacity = 0.75;
+            self->pauseView.layer.opacity = 0.75;
         } completion:^(BOOL completed){
-            animatingInPauseView = false;
+            self->animatingInPauseView = false;
             [self pauseAllSubviewAnimations];
         }];
         animatingInPauseView = true;
@@ -559,15 +559,15 @@
     if(!animatingInPauseView){
         [[Sounds sharedInstance] playSoundEffect:PauseUnpause loops:0];
         [UIView animateWithDuration:0.5 animations:^void{
-            pauseView.layer.opacity = 0;
+            self->pauseView.layer.opacity = 0;
         } completion:^(BOOL completed){
-            [pauseView removeFromSuperview];
+            [self->pauseView removeFromSuperview];
             [self disableSockMovement];
             [self createCountdown:^{
                 [self enableSockMovement];
-                currentGameState = Playing; //todo use function to switch
-                timerPaused = false;
-                animatingInPauseView = false;
+                self->currentGameState = Playing; //todo use function to switch
+                self->timerPaused = false;
+                self->animatingInPauseView = false;
                 [self resumeAllSubviewAnimations];
             }];
         }];
@@ -1557,10 +1557,10 @@
             sock.frame = f;
         } completion:^(BOOL completed){
             [sock removeFromSuperview];
-            [socks removeObject:sock];
+            [self->socks removeObject:sock];
 
-            [otherSock.overlayImageView setImage:[boxAnimationFrames objectAtIndex:0]];
-            [socksBeingAnimatedIntoBox addObject:otherSock];
+            [otherSock.overlayImageView setImage:[self->boxAnimationFrames objectAtIndex:0]];
+            [self->socksBeingAnimatedIntoBox addObject:otherSock];
         }];
     }else{
         //TODO animating here is wierd cuz it is also moving on the belt
@@ -1679,7 +1679,7 @@
         CGFloat speed = (1.5/difficultyCurve.beltMoveSpeedMultiplier);
         [lift animateWithSpeed:speed withCompletion:^void{
             [self forkliftAnimationComplete:lift.givePoint sock:[lift getSock] lift:lift];
-            for(Forklift* t in forklifts){
+            for(Forklift* t in self->forklifts){
                 [self handleForkliftNoOverlapAnimationsForLift:t];
             }
         }];
@@ -1824,7 +1824,7 @@
     __unsafe_unretained typeof(InfoBanner*) wb = banner;
     
     [banner setBlock:^void{
-        [infoBanners removeObject:wb];
+        [self->infoBanners removeObject:wb];
         [self updateInfoBannerPositions];
     }];
     

@@ -222,36 +222,36 @@
     AVAudioPlayer* s = [[Sounds sharedInstance] playSoundEffect:ForkliftMoving loops:-1];
     
     [UIView animateWithDuration:animateSpeed animations:^{
-        self.frame = CGRectMake(forkliftFacesRight == true ? [sock getCoreRect].origin.x-((1-forkliftForkLength+pickupPadding)*self.frame.size.width) : [sock getCoreRect].origin.x+((forkliftForkLength+pickupPadding)*self.frame.size.width)-(self.frame.size.width*forkliftForkLength), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+        self.frame = CGRectMake(self->forkliftFacesRight == true ? [self->sock getCoreRect].origin.x-((1-self->forkliftForkLength+self->pickupPadding)*self.frame.size.width) : [self->sock getCoreRect].origin.x+((self->forkliftForkLength+self->pickupPadding)*self.frame.size.width)-(self.frame.size.width*self->forkliftForkLength), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
     } completion:^(BOOL finished){
-        [sock removeFromSuperview];
+        [self->sock removeFromSuperview];
         
-        [sock setRectFromCoreRect: CGRectMake(forkliftFacesRight == true ? self.frame.size.width*(1-forkliftForkLength+pickupPadding) : (-pickupPadding*self.frame.size.width), 0, sock.frame.size.width, sock.frame.size.height)];
-        sock.layer.anchorPoint = CGPointMake(0.5, 0.5);
-        [self addSubview:sock];
+        [self->sock setRectFromCoreRect: CGRectMake(self->forkliftFacesRight == true ? self.frame.size.width*(1-self->forkliftForkLength+self->pickupPadding) : (-self->pickupPadding*self.frame.size.width), 0, self->sock.frame.size.width, self->sock.frame.size.height)];
+        self->sock.layer.anchorPoint = CGPointMake(0.5, 0.5);
+        [self addSubview:self->sock];
         
-        currentState = PickingUpSock;
+        self->currentState = PickingUpSock;
         
         [s stop];
         //TODO forklift picking up sock sound here
         
         //increase sock package size
         [UIView animateWithDuration:animateSpeed/2 animations:^void{
-            CGAffineTransform t = CGAffineTransformMakeScale(1+pickupScaleExtra, 1+pickupScaleExtra);
-            sock.transform = t;
+            CGAffineTransform t = CGAffineTransformMakeScale(1+self->pickupScaleExtra, 1+self->pickupScaleExtra);
+            self->sock.transform = t;
         } completion:^(BOOL completed){
-            currentState = GoingBack;
-            CGRect transformedBounds = CGRectApplyAffineTransform(sock.bounds, sock.transform);
+            self->currentState = GoingBack;
+            CGRect transformedBounds = CGRectApplyAffineTransform(self->sock.bounds, self->sock.transform);
             [s play];
-            [UIView animateWithDuration:forkliftFacesRight == false ? animateSpeed*2 : animateSpeed animations:^{
-                CGRect newRect = CGRectMake(forkliftFacesRight == true ? -(self.frame.size.width+(transformedBounds.size.width-sock.bounds.size.width)) : (screenSize.width*2)+(transformedBounds.size.width-sock.bounds.size.width), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+            [UIView animateWithDuration:self->forkliftFacesRight == false ? animateSpeed*2 : animateSpeed animations:^{
+                CGRect newRect = CGRectMake(self->forkliftFacesRight == true ? -(self.frame.size.width+(transformedBounds.size.width-self->sock.bounds.size.width)) : (self->screenSize.width*2)+(transformedBounds.size.width-self->sock.bounds.size.width), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
                 self.frame = newRect;
             } completion:^(BOOL finished){
-                currentlyAnimating = false;
-                currentState = Finished;
+                self->currentlyAnimating = false;
+                self->currentState = Finished;
                 completion();
-                if(extraAnimationCompleteBlock != nil){
-                    extraAnimationCompleteBlock();
+                if(self->extraAnimationCompleteBlock != nil){
+                    self->extraAnimationCompleteBlock();
                 }
             }];
         }];
@@ -263,10 +263,10 @@
     [UIView animateWithDuration:speed delay:0 options:UIViewAnimationOptionCurveLinear animations:^void{
         self.frame = CGRectOffset(self.frame, xTranslate, 0);
     } completion:^(BOOL completed){
-        currentState = Finished;
+        self->currentState = Finished;
         completion();
-        if(extraAnimationCompleteBlock != nil){
-            extraAnimationCompleteBlock();
+        if(self->extraAnimationCompleteBlock != nil){
+            self->extraAnimationCompleteBlock();
         }
     }];
 }

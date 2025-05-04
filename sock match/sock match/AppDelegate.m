@@ -72,8 +72,4 @@
     [containerController.gameController saveGame];
 }
 
--(void)application:(UIApplication *)application willChangeStatusBarFrame:(CGRect)newStatusBarFrame{
-    
-}
-
 @end
