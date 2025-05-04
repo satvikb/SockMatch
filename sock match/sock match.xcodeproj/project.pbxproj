@@ -673,7 +673,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/sock\\ match/Libraries/Flurry",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.3;
 				OTHER_CFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vborra.sock-match";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -701,7 +701,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/sock\\ match/Libraries/Flurry",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.3;
 				OTHER_CFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vborra.sock-match";
 				PRODUCT_NAME = "$(TARGET_NAME)";
